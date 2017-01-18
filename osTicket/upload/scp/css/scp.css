@@ -3052,10 +3052,15 @@ span.avatar{
     margin-right: 6px;
 }
 
-.opening_info{
+.opening_info,
+.subject{
     padding: 10px;
     background: aliceblue;
     border-radius: 10px;
+}
+
+.subject{
+    margin-top: 15px;
 }
 
 .ticketProperty h5{
@@ -3457,4 +3462,65 @@ span.avatar{
     line-height: 24px;
     padding: 1px 10px;
     font-size: 0.95em;
+}
+
+#contrat{
+    background: white;
+    padding: 15px;
+    padding-bottom: 50px;
+}
+
+#contrat button{
+    float:right;
+    margin-top: 15px;
+}
+
+.contrat.table.table-striped{
+    border:1px solid lightblue;
+}
+
+.contrat.table.table-striped thead{
+    background: lightblue;
+}
+
+.contrat.table.table-striped thead tr th,
+.contrat.table.table-striped tbody tr td{
+    border-bottom: 0px;
+    border-top:0px;
+}
+
+.contrat.table.table-striped tbody tr{
+    background: white;
+}
+
+.fa.fa-exclamation-triangle{
+    color:red;
+    font-size:20px;
+}
+
+/*ALERT*/
+.alert.alert-danger{
+    /*height: 200px;*/
+}
+
+input[type="radio"]{
+    margin-right: 10px;
+}
+
+#response_options div#rapport{
+    padding: 10px 5px;
+    background: #f9f9f9;
+    border: 1px solid #aaa;
+    border-top: none;
+}
+.fa.fa-check{
+    font-size: 22px;
+}
+
+@media (min-width:992px){
+    .fixed-right{
+        position: fixed;
+        max-height: 600px;
+        overflow-y: scroll;
+    }
 }

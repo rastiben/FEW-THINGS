@@ -130,7 +130,6 @@ class StaffNav {
             if (count($this->getRegisteredApps()))
                 $this->tabs['apps']=array('desc'=>__('Applications'),'href'=>'apps.php','title'=>__('Applications'));
         }
-
         return $this->tabs;
     }
 
@@ -150,7 +149,7 @@ class StaffNav {
                     if($staff) {
                         if(($assigned=$staff->getNumAssignedTickets()))
                             $subnav[]=array('desc'=>__('My&nbsp;Tickets')." ($assigned)",
-                                            'href'=>'tickets.php?status=assigned',
+                                            'href'=>'tickets.php?status=assigned'/*assigned*/,
                                             'iconclass'=>'assignedTickets',
                                             'droponly'=>true);
 

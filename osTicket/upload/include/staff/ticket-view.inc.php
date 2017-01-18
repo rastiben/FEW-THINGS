@@ -59,7 +59,7 @@ if($ticket->isOverdue())
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="./js/moment.js"></script>
 <div>
-    <div class="sticky bar col-md-12">
+    <div class="sticky bar col-md-12" data_ticket_id="<?php echo $ticket->getId(); ?>" data_agent_id="<?php echo $ticket->getStaff()->getId(); ?>">
        <div class="content col-md-12">
         <div class="ticketName">
              <h2><a href="tickets.php?id=<?php echo $ticket->getId(); ?>"
@@ -238,12 +238,6 @@ if($ticket->isOverdue())
     <hr>
 <div class="ticket_left col-md-9">
 
-<div class="clear tixTitle has_bottom_border">
-    <h3>Sujet :
-        <?php $subject_field = TicketForm::getInstance()->getField('subject');
-        echo $subject_field->display($ticket->getSubject()); ?>
-    </h3>
-</div>
 
 <ul  class="tabs clean threads" id="ticket_tabs" >
     <li class="active"><a id="ticket-thread-tab" href="#ticket_thread"><?php
@@ -280,6 +274,8 @@ if($ticket->isOverdue())
                <th>Numero du rapport</th>
                <th>Date création rapport</th>
                <th>Intervenant</th>
+               <th>Contrat</th>
+               <th>Instal</th>
                <th>Impression</th>
            </thead>
            <tbody>
@@ -292,7 +288,9 @@ if($ticket->isOverdue())
                 <td><?php $dateRapport = new DateTime($rapport['date_rapport']);
                     echo $dateRapport->format('d/m/Y'); ?></td>
                 <td><?php echo $rapport['firstname'] . ' ' . $rapport['lastname'] ?></td>
-                <td><a class="no-pjax" target="_blank" href="./tickets.php?a=printR&id=<?php echo $rapport['id'] ?>"><i class="fa fa-print fa-2x" id="<?php echo $rapport['id'] ?>" aria-hidden="true" style="color:black"></i></a></td>
+                <td><?php if(empty($rapport['instal'])) echo '<i class="fa fa-check" aria-hidden="true"></i>'?></td>
+                <td><?php if(empty($rapport['contrat'])) echo '<i class="fa fa-check" aria-hidden="true"></i>'?></td>
+                <td><a class="no-pjax" target="_blank" href="./tickets.php?id=<?php echo $ticket->getId() ?>&a=printR&idR=<?php echo $rapport['id'] ?>"><i class="fa fa-print fa-2x" id="<?php echo $rapport['id'] ?>" aria-hidden="true" style="color:black"></i></a></td>
             </tr>
 
         <?php
@@ -322,6 +320,7 @@ if($ticket->isOverdue())
                                       </label>
             <select name="depart_inter" id="b22c0215f6129f94:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
             <br><br>
+
             <label class="required" for="symptomesObservations">
                           Symptômes et observations :
                                         <span class="error">*</span>
@@ -407,12 +406,12 @@ if($ticket->isOverdue())
                 <div>
                     <span class="greenLine"><?php
 
-                            $days = $totalHours / 86400;
-                            if($days > 1){
-                                $totalHours = $totalHours - (intval($days) * 86400);
+                            $days = $totalHours / 27900;
+                            if($days >= 1){
+                                $totalHours = $totalHours - (intval($days) * 27900);
                             }
                             $hours = $totalHours / 3600;
-                            if($hours > 1){
+                            if($hours >= 1){
                                 $totalHours = $totalHours - (intval($hours) * 3600);
                             }
                             $minutes = $totalHours / 60;
@@ -807,11 +806,7 @@ if ($errors['err'] && isset($_POST['a'])) {
            <input class="" type="reset" value="<?php echo __('Reset');?>">
        </p>
    </form>
-   <form id="rapport"
-       style="display:none"
-       action="./Request/Rapport.php"
-       name="rapport"
-       method="post">
+   <div name="rapport" style="display:none" id="rapport">
        <input type="hidden" name="ticket_id" value="<?php echo $ticket->getId(); ?>">
        <input type="hidden" name="agent_id" value="<?php echo $thisstaff->getId(); ?>">
        <div>
@@ -820,19 +815,18 @@ if ($errors['err'] && isset($_POST['a'])) {
                           Date d'intervention :
                                         <span class="error">*</span>
                                       </label>
-                <input type="text" name="date_inter" id="_b22c0215f6129f93" style="display:inline-block;width:auto" value="" size="12" autocomplete="off" class="dp hasDatepicker"><button type="button" class="ui-datepicker-trigger"><img src="./images/cal.png" alt="..." title="..."></button>
-                <script type="text/javascript">
 
-                        $('input[name="date_inter"]').datepicker({
-                            numberOfMonths: 2,
-                            showButtonPanel: true,
+                <input type="text" name="date_new_inter">
+                <!--<script type="text/javascript">
+
+                        $('input[name="date_new_inter"]').datepicker({
                             startView: 1,
-                            showOn:'both',
+                            defaultDate: debut,
                             format: 'dd/mm/yyyy',
                             autoclose: true
                         });
 
-                </script>
+                </script>-->
             <label class="required" for="b22c0215f6129f93:time">
                           Heure d'arrivé :
                                         <span class="error">*</span>
@@ -845,6 +839,33 @@ if ($errors['err'] && isset($_POST['a'])) {
             <select name="depart_inter" id="b22c0215f6129f94:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
        </div>
        <br>
+                   <!--Gestion des type de rapport-->
+
+            <table class="table table-striped contrat instal">
+                <thead>
+                    <tr>
+                        <th colspan="4"><input type="radio" name="type" value="Contrat" checked>Contrat</th>
+                        <th colspan="1"><input type="radio" name="type" value="Instal">Instal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Hotline</td>
+                        <td>Atelier/Sur site</td>
+                        <td>Régie</td>
+                        <td>Téléphonie</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><input type="checkbox"></td>
+                        <td><input type="checkbox"></td>
+                        <td><input type="checkbox"></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
        <label class="required" for="symptomesObservations">
                           Symptômes et observations :
                                         <span class="error">*</span>
@@ -863,13 +884,14 @@ if ($errors['err'] && isset($_POST['a'])) {
     echo $attrs; ?>><?php echo $_POST ? $info['response'] : $draft;
                     ?></textarea>
         <br>
-       <input class="save pending" type="submit" name="addRapport">
-   </form>
+       <input class="horaire add save pending" type="submit" name="addRapport">
+   </div>
  </div>
  </div>
 </div>
 </div>
 <div class="ticket_right col-md-3">
+<div class="col-md-2 fixed-right">
 <!--<div class="clear tixTitle has_bottom_border">
     <h3>
     <?php $subject_field = TicketForm::getInstance()->getField('subject');
@@ -887,6 +909,15 @@ if ($errors['err'] && isset($_POST['a'])) {
     <td class="col-md-6"><?php echo Format::datetime($ticket->getCreateDate()); ?></td>-->
 </div>
 
+<div class="infoDemandeur">
+    <hr>
+    <h4>Sujet : </h4>
+    <p>
+        <?php $subject_field = TicketForm::getInstance()->getField('subject');
+        echo $subject_field->display($ticket->getSubject()); ?>
+    </p>
+</div>
+
 <div class='infoDemandeur'>
     <hr>
     <h4>Infos du demandeur</h4>
@@ -899,7 +930,7 @@ if ($errors['err'] && isset($_POST['a'])) {
         <img width="20" src="../assets/default/images/company.png">
         <a href="./orgs.php?id=<?php echo Format::htmlchars($ticket->getOwner()->getOrgId()) ?>#users"><span><?php echo Format::htmlchars($ticket->getOwner()->getOrganization()) ?></span></a>
     </div>
-    <div class="mail icon">
+    <div class="mail icon org" id="<?php echo $ticket->getOwner()->getOrgId(); ?>">
         <img width="20" src="../assets/default/images/mail.png">
         <a href="mailto:<?php echo Format::htmlchars($ticket->getEmail()) ?>"><span><?php echo Format::htmlchars($ticket->getEmail()) ?></span></a>
     </div>
@@ -1116,6 +1147,7 @@ echo $v;
     </table>
 </div>-->
 </div>
+</div>
 <?php } ?>
 
 <?php
@@ -1273,7 +1305,7 @@ $(function() {
 
     $(document).ready(function(){
 
-        $('#addTimeDiv input[name="date_new_inter"]').datepicker({
+        $('input[name="date_new_inter"]').datepicker({
                             startView: 1,
                             dateFormat: 'dd/mm/yy',
                             autoclose: true
@@ -1305,52 +1337,84 @@ $(function() {
             }
         });
 
-        $(document).on('click','.horaire.add.save.pending',function(){
-            //alert("coucou");
-            var parent = $(this).parent();
-            var id = parent.parent().attr('id');
+        var isClicked = false;
+        $(document).on('click','.horaire.add.save.pending',function(e){
+            if(!isClicked){
+                isClicked = true;
+                //alert("coucou");
+                var parent = $(this).parent();
+                var id = parent.parent().attr('id');
 
-            var date_inter = $('input[name="date_new_inter"]',parent).val();
-            var arrive = $('select[name="arrive_inter"]',parent).val();
-            var depart = $('select[name="depart_inter"]',parent).val();
-            var comment = $('#symptomesObservations').val();
+                if(id == "response_options") id = null;
 
-            /*var hour = moment.utc(moment(date_inter + ' ' + depart,"DD/MM/YYYY HH:mm").diff(moment(date_inter + ' ' + arrive,"DD/MM/YYYY HH:mm"))).format("HH");
-            var minutes = moment.utc(moment(date_inter + ' ' + depart,"DD/MM/YYYY HH:mm").diff(moment(date_inter + ' ' + arrive,"DD/MM/YYYY HH:mm"))).format("mm");*/
+                var contrat = "";
+                var instal = 0;
+                var date_inter = $('input[name="date_new_inter"]',parent).val();
+                var arrive = $('select[name="arrive_inter"]',parent).val();
+                var depart = $('select[name="depart_inter"]',parent).val();
+                var comment = $('#symptomesObservations',parent).val();
 
-            if(/^\d+$/.test(id)){
-                $.ajax({
-                   method:"POST",
-                   url:"./Request/Rapport.php",
-                   data:{
-                       addHoraires:'',
-                       rapport_id:id,
-                       date_inter: date_inter,
-                       arrive_inter: arrive,
-                       depart_inter: depart,
-                       symptomesObservations: comment
-                   },
-                    success:function(data){
-                        location.reload();
-                    }
-                });
-            } else {
-                id = id.substr(7);
-                $.ajax({
-                   method:"POST",
-                   url:"./Request/Rapport.php",
-                   data:{
-                       updateHoraire:'',
-                       horaire_id:id,
-                       date_inter: date_inter,
-                       arrive_inter: arrive,
-                       depart_inter: depart,
-                       symptomesObservations: comment
-                   },
-                    success:function(data){
-                        location.reload();
-                    }
-                });
+                if($('input[value="Contrat"]').is(':checked')){
+                    var i = 1;
+                    $.each($('.contrat.table.table-striped tbody tr:last-child td'),function(){
+                        if($('input',this).is(':checked')){
+                            contrat = contrat + i + ";";
+                        }
+                        i += 1;
+                    });
+                } else {
+                    instal = 1;
+                }
+
+                /*var hour = moment.utc(moment(date_inter + ' ' + depart,"DD/MM/YYYY HH:mm").diff(moment(date_inter + ' ' + arrive,"DD/MM/YYYY HH:mm"))).format("HH");
+                var minutes = moment.utc(moment(date_inter + ' ' + depart,"DD/MM/YYYY HH:mm").diff(moment(date_inter + ' ' + arrive,"DD/MM/YYYY HH:mm"))).format("mm");*/
+
+                if(/^\d+$/.test(id) || id == null){
+                    $.ajax({
+                       method:"POST",
+                       url:"./Request/Rapport.php",
+                       data:{
+                           addHoraires:'',
+                           ticket_id: $('.sticky.bar.col-md-12').attr('data_ticket_id'),
+                           rapport_id:id,
+                           agent_id:$('.sticky.bar.col-md-12').attr('data_agent_id'),
+                           date_inter: date_inter,
+                           arrive_inter: arrive,
+                           depart_inter: depart,
+                           symptomesObservations: comment,
+                           contrat:contrat,
+                           instal:instal
+                       },
+                        success:function(data){
+                            location.reload();
+                        },
+                        complete: function() {
+                            isClicked = false;
+                        }
+                    });
+                } else {
+                    id = id.substr(7);
+                    $.ajax({
+                       method:"POST",
+                       url:"./Request/Rapport.php",
+                       data:{
+                           updateHoraire:'',
+                           horaire_id:id,
+                           date_inter: date_inter,
+                           arrive_inter: arrive,
+                           depart_inter: depart,
+                           symptomesObservations: comment,
+                           contrat:contrat,
+                           instal:instal
+                       },
+                        success:function(data){
+                            location.reload();
+                        },
+                        complete: function() {
+                            isClicked = false;
+                        }
+                    });
+                }
             }
         });
 
@@ -1380,6 +1444,55 @@ $(function() {
         $('.cancel.pending').click(function(){
             $(this).parent().parent().css('display','none');
         });
+
+
+        $('input[name="type"]').click(function(){
+            if($(this).val() == 'Contrat'){
+                $('.table.table-striped.contrat.instal tbody input').attr('disabled',false);
+            } else {
+                $('.table.table-striped.contrat.instal tbody input').attr('disabled',true);
+            }
+        });
+
+        $.ajax({
+            method:"POST",
+            url:"./Request/Contrat.php",
+            data:{
+                getContrat:'',
+                id_org: $('.mail.icon.org').attr('id')
+            },
+            success:function(data){
+                var json = $.parseJSON(data);
+                if(json['commentaire'] != ""){
+                    $.notify({
+                        title: "<b style='font-size:18px'>Informations : </b><br><br>",
+                        icon: 'fa fa-exclamation-triangle',
+                        message: "<p style='font-size:16px'>" + json['commentaire'] + '</p>'
+                    },{
+                        type: 'danger',
+                        placement: {
+                            from: "top",
+                            align: "center"
+                        },
+                    });
+                }
+
+            }
+        });
+
+        $(window).scroll(function() {
+            //console.log($(document).scrollTop());
+            if($(document).scrollTop() > 208 && $(document).width() > 974){
+                $('.fixed-right').css('position','fixed');
+                $('.fixed-right').css('top','60px');
+                $('.fixed-right').css('width','18.4%');
+            } else if($(document).width() > 974) {
+                $('.fixed-right').css('position','relative');
+                $('.fixed-right').css('top','initial');
+                $('.fixed-right').css('width','100%');
+            }
+        });
+
 
         /*$('.fa.fa-print.fa-2x').click(function(){
 

@@ -26,8 +26,8 @@
 <body>
 
 <?php
-    $rapport = Rapport::getInstance()->getRapports($_GET['id']);
-    $horaires = Rapport::getInstance()->getRapportsHoraires($_GET['id']);
+    $rapport = Rapport::getInstance()->getRapports($_GET['idR']);
+    $horaires = Rapport::getInstance()->getRapportsHoraires($_GET['idR']);
 ?>
 
 <!--<htmlpageheader name="def" style="display:none">

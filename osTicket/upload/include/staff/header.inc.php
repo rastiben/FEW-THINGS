@@ -29,6 +29,7 @@ if ($lang) {
     <![endif]-->
     <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/jquery-1.11.2.min.js?901e5ea"></script>
     <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/bootstrap.js"></script>
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/bootstrap-notify.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.fr.min.js"></script>

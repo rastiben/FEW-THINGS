@@ -22,6 +22,7 @@ require_once(INCLUDE_DIR.'class.canned.php');
 require_once(INCLUDE_DIR.'class.json.php');
 require_once(INCLUDE_DIR.'class.dynamic_forms.php');
 require_once(INCLUDE_DIR.'class.export.php');       // For paper sizes
+require_once(SCP_DIR.'Request/GetInfos.php');
 
 $page='';
 $ticket = $user = null; //clean start.
@@ -376,7 +377,7 @@ if($cfg->showAnsweredTickets()) {
 
     if ($stats) {
 
-        $nav->addSubMenu(array('desc'=>$open_name.' ('.number_format($stats['open']).')',
+        $nav->addSubMenu(array('desc'=>$open_name.' ('.number_format(TicketsInfos::getInstance()->numberOfOpenTickets()).')',
                                'title'=>__('Open Tickets'),
                                'href'=>'tickets.php?status=open',
                                'iconclass'=>'Ticket'),

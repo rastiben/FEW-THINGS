@@ -2699,7 +2699,6 @@ implements RestrictedAccess, Threadable {
             elseif (!$thisstaff || !($psize = $thisstaff->getDefaultPaperSize()))
                 $psize = 'Letter';
         }
-
         if($rapport){
             $pdf = new Ticket2PDF($this, $psize, $notes,true);
         }

@@ -62,6 +62,11 @@ class TicketsInfos
         $res->execute(array(':ticketID'=>$ticketID));
         return $res->fetchAll()[0]['phone'];
     }*/
+    public function numberOfOpenTickets(){
+        $res = $this->dbh->prepare("SELECT COUNT(*) FROM ost_ticket WHERE ost_ticket.status_id = '1'");
+        $res->execute();
+        return $res->fetchAll()[0]['COUNT(*)'];
+    }
 
     public function ticket_user_id($ticketID)
     {
