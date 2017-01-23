@@ -325,6 +325,7 @@ class UserNav {
     function getNavLinks(){
         global $cfg;
 
+        require_once('./scp/Request/GetInfos.php');
         //Paths are based on the root dir.
         if(!$this->navs){
 
@@ -343,7 +344,10 @@ class UserNav {
                 $navs['new']=array('desc'=>__('Open a New Ticket'),'href'=>'open.php','title'=>'');
             if($user && $user->isValid()) {
                 if(!$user->isGuest()) {
-                    $navs['tickets']=array('desc'=>sprintf(__('Tickets (%d)'),$user->getNumTickets($user->canSeeOrgTickets())),
+                    /*$navs['tickets']=array('desc'=>sprintf(__('Tickets (%d)'),$user->getNumTickets($user->canSeeOrgTickets())),
+                                           'href'=>'tickets.php',
+                                            'title'=>__('Show all tickets'));*/
+                    $navs['tickets']=array('desc'=>sprintf(__('Tickets (%d)'),TicketsInfos::getInstance()->numberOfOpenTicketsForOrg($user->getOrgId())),
                                            'href'=>'tickets.php',
                                             'title'=>__('Show all tickets'));
                 } else {

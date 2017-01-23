@@ -1,6 +1,8 @@
 <?php
 if(!defined('OSTCLIENTINC') || !is_object($thisclient) || !$thisclient->isValid()) die('Access Denied');
 
+require_once("./scp/Request/GetInfos.php");
+
 $settings = &$_SESSION['client:Q'];
 
 // Unpack search, filter, and sort requests
@@ -194,68 +196,55 @@ if ($closedTickets) {?>
     </small>
 </div>
 </h1>-->
-<table class="table" border="0" cellspacing="0" cellpadding="0">
-    <caption><?php echo $showing; ?></caption>
+<table class="table tickets" border="0" cellspacing="0" cellpadding="0" style="word-break: break-word;">
+    <caption>
+        <span>Tickets : </span>
+        <span style="color:#006699;cursor:pointer">Ouverts</span> -
+        <span style="cursor:pointer">Fermés</span>
+    </caption>
     <thead>
         <tr>
-            <th nowrap>
+            <th width="140">
                 <p><?php echo __('TICKET #');?></p>
             </th>
             <th width="150">
                 <p><?php echo __('DATE DE CREATION');?></p>
             </th>
-            <th width="100">
-                <p><?php echo __('STATUT');?></p>
-            </th>
             <th width="280">
                 <p><?php echo __('SUJET');?></p>
             </th>
-            <th width="120">
-                <p><?php echo __('SERVICE');?></p>
+            <th width="280">
+                <p><?php echo __('AUTEUR');?></p>
             </th>
         </tr>
     </thead>
     <tbody>
     <?php
-     $subject_field = TicketForm::objects()->one()->getField('subject');
-     $defaultDept=Dept::getDefaultDeptName(); //Default public dept.
-     if ($tickets->exists(true)) {
-         foreach ($tickets as $T) {
-            $dept = $T['dept__ispublic']
-                ? Dept::getLocalById($T['dept_id'], 'name', $T['dept__name'])
-                : $defaultDept;
-            $subject = $subject_field->display(
-                $subject_field->to_php($T['cdata__subject']) ?: $T['cdata__subject']
-            );
-            $status = TicketStatus::getLocalById($T['status_id'], 'value', $T['status__name']);
-            if (false) // XXX: Reimplement attachment count support
-                $subject.='  &nbsp;&nbsp;<span class="Icon file"></span>';
-
-            $ticketNumber=$T['number'];
-            if($T['isanswered'] && !strcasecmp($T['status__state'], 'open')) {
-                $subject="<b>$subject</b>";
-                $ticketNumber="<b>$ticketNumber</b>";
-            }
-            ?>
-            <tr id="<?php echo $T['ticket_id']; ?>">
-                <td>
-                <a class="Icon <?php echo strtolower($T['source']); ?>Ticket" title="<?php echo $T['user__default_email__address']; ?>"
-                    href="tickets.php?id=<?php echo $T['ticket_id']; ?>"><?php echo $ticketNumber; ?></a>
-                </td>
-                <td><p><?php echo Format::date($T['created']); ?></p></td>
-                <td><p><?php echo $status; ?></p></td>
-                <td>
-                    <div style="max-height: 1.2em; max-width: 320px;" class="link truncate" href="tickets.php?id=<?php echo $T['ticket_id']; ?>"><?php echo $subject; ?></div>
-                </td>
-                <td><span class="truncate"><p><?php echo $dept; ?></p></span></td>
-            </tr>
-        <?php
-        }
-
-     } else {
-         echo '<tr><td colspan="5">'.__('Your query did not match any records').'</td></tr>';
-     }
+        $ticketsClose = TicketsInfos::getInstance()->ticket_close_org($thisclient->getOrgId());
+        $ticketsOpen = TicketsInfos::getInstance()->ticket_open_org($thisclient->getOrgId());
+        foreach($ticketsOpen as $ticket){
     ?>
+    <tr class="active" id="<?php echo $ticket['ticket_id']; ?>">
+        <td><a href="./tickets.php?id=<?php echo $ticket['ticket_id'] ?>"><?php echo $ticket['number'] ?></a></td>
+        <td><?php echo substr($ticket['created'],0,10) ?></td>
+        <td><?php echo $ticket['subject'] ?></td>
+        <td><?php echo ucwords($ticket['name'] . ' ' . $ticket['firsname']) ?></td>
+    </tr>
+    <?php
+        }
+        ?>
+    <?php
+        foreach($ticketsClose as $ticket){
+    ?>
+    <tr id="<?php echo $ticket['ticket_id']; ?>">
+        <td><a href="./tickets.php?id=<?php echo $ticket['ticket_id'] ?>"><?php echo $ticket['number'] ?></a></td>
+        <td><?php echo substr($ticket['created'],0,10) ?></td>
+        <td><?php echo $ticket['subject'] ?></td>
+        <td><?php echo $ticket['name'] . ' ' . $ticket['firsname'] ?></td>
+    </tr>
+    <?php
+        }
+        ?>
     </tbody>
 </table>
 <?php
@@ -265,3 +254,19 @@ if ($total) {
 ?>
 </div>
 </div>
+
+<script>
+
+    $('table caption span').click(function(){
+        if($(this).text() != "Tickets : "){
+            var spans = $(this).siblings().not(':first');
+            $(this).css('color','#006699');
+            $(spans).css('color','##777');
+            /*SWITCH TR*/
+            var tr = $('table.tickets tbody tr:not(.active)');
+            $('table.tickets tbody tr.active').removeClass('active');
+            tr.addClass('active');
+        }
+    });
+
+</script>

@@ -167,6 +167,7 @@ else
         $ids=($errors && is_array($_POST['ids']))?$_POST['ids']:null;
         foreach ($users as $U) {
                 // Default to email address mailbox if no name specified
+                //print_r($U);
                 if (!$U['name'])
                     list($name) = explode('@', $U['default_email__address']);
                 else

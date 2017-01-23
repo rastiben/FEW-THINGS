@@ -3225,7 +3225,7 @@ span.avatar{
 
 .rapport .identity{
     padding: 0px;
-    padding-bottom: 15px;
+    /*padding-bottom: 15px;*/
     min-height: 100%;
     border: 1px solid lightgray;
     background: white;
@@ -3233,9 +3233,39 @@ span.avatar{
     box-shadow: 2px 2px 2px 1px rgba(189,189,189,1);
 }
 
+/*total*/
+.rapport .identity #totalTitle{
+    height: 25px;
+    background: skyblue;
+}
+
+.rapport .identity #totalTitle span{
+    line-height: 25px;
+}
+
+.rapport .identity #total{
+    height: 84px;
+    background: lightblue;
+}
+
+.rapport .identity #total p{
+    color:white;
+    margin: 0px;
+    padding: 0px;
+}
+
+.rapport .identity #total p:first-child{
+    font-size: 25px;
+    padding-top: 15px;
+}
+
+.rapport .identity #total p:last-child{
+
+}
+
 .rapport .identity .content{
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 
 .rapport .property{
@@ -3324,7 +3354,7 @@ span.avatar{
 .totalHour{
     border-top: 1px solid lightgray;
     text-align: center;
-    padding-top: 15px;
+    /*padding-top: 15px;*/
 }
 
 .totalHour span{
@@ -3382,7 +3412,7 @@ span.avatar{
     width: 60%;
     margin-left: auto;
     margin-right: auto;
-    background-color: #4fc14f;
+    background-color: lightblue;
 }
 
 .addTime{
@@ -3407,7 +3437,7 @@ span.avatar{
 }
 
 .titleComment div.green{
-    background-color: #4fc14f;
+    background-color: lightseagreen;
     width: 15px;
     width: 15px;
     height: 100%;

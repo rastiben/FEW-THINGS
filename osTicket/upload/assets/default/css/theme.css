@@ -364,13 +364,14 @@ body {
 #container {
     background: #fff;
     width: 840px;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    /*box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
     -moz-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
-    -webkit-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);*/
     /*max-height: 590px;*/
     margin: auto;
     width: 100%;
     position: relative;
+    padding-bottom: 30px;
 }
 
 .valign-helper {
@@ -1832,8 +1833,10 @@ input:-webkit-autofill {
 
 #createAccount {
     text-align: center;
-    width: 100%;
-    padding-bottom: 30px;
+    width: 800px;
+    margin: 0 auto;
+    margin-top: 50px;
+    background: whitesmoke;
 }
 
 #createAccount table {
@@ -1977,4 +1980,25 @@ input:-webkit-autofill {
 .content {
     padding-top: 75px;
     padding-bottom: 50px;
+}
+
+#accountRegistered{
+    width: 800px;
+    background: whitesmoke;
+    margin: 0px auto;
+    padding: 10px;
+    margin-top: 30px;
+}
+
+/*TABLE ACTIVE*/
+table.tickets tbody tr{
+    display:none;
+}
+
+table.tickets tbody tr td{
+    vertical-align: middle;
+}
+
+table.tickets tbody tr.active{
+    display:table-row;
 }

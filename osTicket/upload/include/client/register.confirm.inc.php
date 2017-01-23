@@ -1,10 +1,12 @@
 <?php if ($content) {
     list($title, $body) = $ost->replaceTemplateVariables(
         array($content->getName(), $content->getBody())); ?>
+<div id="accountRegistered">
 <h1><?php echo Format::display($title); ?></h1>
 <p><?php
 echo Format::display($body); ?>
 </p>
+</div>
 <?php } else { ?>
 <h1><?php echo __('Account Registration'); ?></h1>
 <p>

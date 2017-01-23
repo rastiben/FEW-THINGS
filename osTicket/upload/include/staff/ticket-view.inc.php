@@ -59,7 +59,8 @@ if($ticket->isOverdue())
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="./js/moment.js"></script>
 <div>
-    <div class="sticky bar col-md-12" data_ticket_id="<?php echo $ticket->getId(); ?>" data_agent_id="<?php echo $ticket->getStaff()->getId(); ?>">
+    <div class="sticky bar col-md-12" data_ticket_id="<?php echo $ticket->getId(); ?>"
+      data_agent_id="<?php echo $thisstaff->getId(); ?>">
        <div class="content col-md-12">
         <div class="ticketName">
              <h2><a href="tickets.php?id=<?php echo $ticket->getId(); ?>"
@@ -400,11 +401,11 @@ if($ticket->isOverdue())
                 <?php  } ?>
             </div>
             <div class="totalHour">
-                <div>
+                <div id="totalTitle">
                     <span>Total</span>
                 </div>
-                <div>
-                    <span class="greenLine"><?php
+                <div id="total">
+                            <?php
 
                             $days = $totalHours / 27900;
                             if($days >= 1){
@@ -415,8 +416,9 @@ if($ticket->isOverdue())
                                 $totalHours = $totalHours - (intval($hours) * 3600);
                             }
                             $minutes = $totalHours / 60;
-                            echo intval($days) . ' J ' . intval($hours) . ' H ' . intval($minutes) . ' M';
-                            ?></span>
+                            ?>
+                    <p><?php echo intval($days) . ' Jours' ; ?></p>
+                    <p><?php echo intval($hours) . ' Heures & ' . intval($minutes) . ' Minutes' ?></p>
                 </div>
             </div>
         </div>

@@ -1425,9 +1425,10 @@ implements RestrictedAccess, Threadable {
         echo $phone;
 
         $html = '<h3>Nom du contact : ' . $this->getOwner()->getFullName() . '</h3>'.
-            '<span>Souci : ' . $_POST['message'] . ' <span></br>'.
-            '<span>Mail : ' . $this->getOwner()->getDefaultEmail() . ' <span></br>'.
-            '<span>Souci : ' . $phone . ' <span></br>';
+            '<span>Souci : ' . $_POST['message'] . ' </span></br>'.
+            '<span>Mail : ' . $this->getOwner()->getDefaultEmail() . ' </span></br>'.
+            '<span>Telephone : ' . $phone . ' </span></br>'.
+            '<span>Lien vers le ticket : http://192.168.0.37:8080/osTicket/upload/scp/tickets.php?id=' . $this->getId() . '</span>';
         $subject = $this->getPriority() . ' : ' . $this->getSubject();
         $email->sendAlert('brastier@viennedoc.com', $subject , $html, null, $options);
 

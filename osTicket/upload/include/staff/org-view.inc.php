@@ -330,7 +330,7 @@ if(!defined('OSTSCPINC') || !$thisstaff || !is_object($org)) die('Invalid path')
                commentaire:commentaire
            },
            success : function(code_html, statut){ // code_html contient le HTML renvoyé
-
+                location.reload();
            }
         });
     });

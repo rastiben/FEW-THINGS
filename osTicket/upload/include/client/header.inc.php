@@ -55,6 +55,7 @@ if ($lang) {
     <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/select2.min.js?901e5ea"></script>
     <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/fabric.min.js?901e5ea"></script>
     <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/bootstrap.js"></script>
+
     <?php
     if($ost && ($headers=$ost->getExtraHeaders())) {
         echo "\n\t".implode("\n\t", $headers)."\n";
@@ -79,6 +80,10 @@ if ($lang) {
 <?php
     }
     ?>
+
+    <?php
+    require_once("./scp/Request/GetInfos.php");
+    ?>
 </head>
 <body>
    <div class="connected">
@@ -89,7 +94,7 @@ if ($lang) {
                  echo Format::htmlchars($thisclient->getName()).'&nbsp;|';
                  ?>
                 <a href="<?php echo ROOT_PATH; ?>profile.php"><?php echo __('Profile'); ?></a> |
-                <a href="<?php echo ROOT_PATH; ?>tickets.php"><?php echo sprintf(__('Tickets <b>(%d)</b>'), $thisclient->getNumTickets()); ?></a> -
+                <a href="<?php echo ROOT_PATH; ?>tickets.php"><?php echo sprintf(__('Tickets <b>(%d)</b>'), TicketsInfos::getInstance()->numberOfOpenTicketsForOrg($thisclient->getOrgId())); ?></a> -
                 <a href="<?php echo $signout_url; ?>"><?php echo __('Sign Out'); ?></a>
             <?php
             } elseif($nav) {
@@ -144,8 +149,8 @@ if ($lang) {
         } ?>
     </div>
     <?php
-    if(strstr("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]","index.php") != false ||
-      "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" == "http://$_SERVER[HTTP_HOST]/osTicket/upload/"){
+    if(strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"index.php") != false ||
+      strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]") == strtolower("http://$_SERVER[HTTP_HOST]/osTicket/upload/")){
     echo "<div class='clear'></div>";
         //if(strstr("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]","index.php") != false){
         echo '<div id="presentation">
@@ -156,21 +161,21 @@ if ($lang) {
     echo "</div>";
     echo "<div id='container'>";
        /* break;*/
-    } else if(strstr("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]","login.php") != false){
+    } else if(strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"login.php") != false){
         echo "<div class='clear'></div>";
          echo '<div id="presentationConnexion">
            <p>Connexion</p>';
         echo "</div>";
         echo "<div id='container'>";
-    } else if(strstr("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]","view.php") != false){
+    } else if(strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"view.php") != false){
         echo "<div class='clear'></div>";
         echo '<div id="presentationConnexion">
            <p>Vérifier le statut d\'un ticket</p>';
         echo "</div>";
         echo "<div id='container'>";
-    } else if(strstr("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]","open.php") != false ||
-             strstr("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]","tickets.php") != false){
-        if (strstr("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]","tickets.php?id=") != false){
+    } else if(strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"open.php") != false ||
+             strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"tickets.php") != false){
+        if (strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"tickets.php?id=") != false){
 
         echo "<div class='clear'></div>";
         echo '<div id="presentationConnexion">';
@@ -179,7 +184,7 @@ if ($lang) {
         echo "<div id='container'>";
 
         }
-        else if(strstr("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]","open.php?newTicket=true") != false || strstr("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]","tickets.php") != false){
+        else if(strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"open.php?newTicket=true") != false || strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"tickets.php") != false){
         echo "<div class='clear'></div>";
         echo '<div id="presentationConnexion">
            <p>Nouveau ticket</p>';
@@ -192,6 +197,14 @@ if ($lang) {
         echo "</div>";
         echo "<div id='container'>";
         }
+    }
+    else if(strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"account.php?do=create") != false ||
+           $_POST['do'] == 'create'){
+            echo "<div class='clear'></div>";
+            echo '<div id="presentationConnexion">
+               <p>Enregistrement d\'un compte</p>';
+            echo "</div>";
+            echo "<div id='container'>";
     }
        ?>
         <!--<div id="header">

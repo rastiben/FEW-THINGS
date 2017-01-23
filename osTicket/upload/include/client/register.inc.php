@@ -14,8 +14,6 @@ if (isset($user) && $user instanceof ClientCreateRequest) {
 $info = Format::htmlchars(($errors && $_POST)?$_POST:$info);
 
 ?>
-<h1 style="text-align:center">Enregistrement d'un compte</h1>
-
 <form action="account.php" id="createAccount" method="post">
   <?php csrf_token(); ?>
   <input type="hidden" name="do" value="<?php echo Format::htmlchars($_REQUEST['do']
@@ -87,7 +85,7 @@ $info = Format::htmlchars(($errors && $_POST)?$_POST:$info);
 </tbody>
 </table>
 <hr>
-<p style="text-align: center;margin:0;margin-bottom:30px">
+<p style="text-align: center;margin:0;margin-bottom:30px;padding-bottom:20px;">
     <input type="submit" value="Register"/>
     <input type="button" value="Cancel" onclick="javascript:
         window.location.href='index.php';"/>
