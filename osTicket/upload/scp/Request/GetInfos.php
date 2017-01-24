@@ -29,6 +29,18 @@ class TicketsInfos
         return self::$instance;
     }
 
+    public function ticket_open_org_count($org){
+        $res = $this->dbh->prepare("SELECT COUNT(*) FROM ost_ticket,ost_user,ost_user__cdata,ost_ticket__cdata WHERE ost_ticket.user_id = ost_user.id AND ost_user.id = ost_user__cdata.user_id AND ost_ticket.ticket_id = ost_ticket__cdata.ticket_id AND ost_user.org_id = :org AND ost_ticket.status_id = '1'");
+        $res->execute(array(':org'=>$org));
+        return $res->fetchAll()[0]['COUNT(*)'];
+    }
+
+    public function ticket_close_org_count($org){
+        $res = $this->dbh->prepare("SELECT COUNT(*) FROM ost_ticket,ost_user,ost_user__cdata,ost_ticket__cdata WHERE ost_ticket.user_id = ost_user.id AND ost_user.id = ost_user__cdata.user_id AND ost_ticket.ticket_id = ost_ticket__cdata.ticket_id AND ost_user.org_id = :org AND ost_ticket.status_id != '1'");
+        $res->execute(array(':org'=>$org));
+        return $res->fetchAll()[0]['COUNT(*)'];
+    }
+
     public function ticket_open_org($org){
         $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,ost_ticket.number,ost_ticket.created,subject,ost_user.name,firsname FROM ost_ticket,ost_user,ost_user__cdata,ost_ticket__cdata WHERE ost_ticket.user_id = ost_user.id AND ost_user.id = ost_user__cdata.user_id AND ost_ticket.ticket_id = ost_ticket__cdata.ticket_id AND ost_user.org_id = :org AND ost_ticket.status_id = '1'");
         $res->execute(array(':org'=>$org));

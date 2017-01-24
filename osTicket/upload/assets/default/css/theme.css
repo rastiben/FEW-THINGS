@@ -1888,7 +1888,7 @@ input:-webkit-autofill {
 }
 
 #ticketSearchForm {
-    width: 558px;
+    width: 342px;
     margin: auto;
 }
 
@@ -2001,4 +2001,9 @@ table.tickets tbody tr td{
 
 table.tickets tbody tr.active{
     display:table-row;
+}
+
+.openPage,
+.closePage{
+    display:inline-block;
 }

@@ -141,7 +141,7 @@ $tickets->values(
 <form action="tickets.php" method="get" id="ticketSearchForm">
     <input type="hidden" name="a"  value="search">
     <input type="text" name="keywords" size="30" value="<?php echo Format::htmlchars($settings['keywords']); ?>">
-    <select name="topic_id" class="nowarn" onchange="javascript: this.form.submit(); ">
+    <!--<select name="topic_id" class="nowarn" onchange="javascript: this.form.submit(); ">
         <option value="">&mdash; <?php echo __('All Help Topics');?> &mdash;</option>
         <?php
         foreach (Topic::getHelpTopics(true) as $id=>$name) {
@@ -154,7 +154,7 @@ $tickets->values(
                     ><?php echo sprintf('%s (%d)', Format::htmlchars($name),
                         $thisclient->getNumTopicTickets($id)); ?></option>
         <?php } ?>
-    </select>
+    </select>-->
     <input type="submit" value="<?php echo __('Search');?>">
     <a href="<?php echo Format::htmlchars($_SERVER['REQUEST_URI']); ?>"
         >
@@ -220,53 +220,130 @@ if ($closedTickets) {?>
     </thead>
     <tbody>
     <?php
+        //keywords
+        $keywords = $_GET['keywords'];
         $ticketsClose = TicketsInfos::getInstance()->ticket_close_org($thisclient->getOrgId());
         $ticketsOpen = TicketsInfos::getInstance()->ticket_open_org($thisclient->getOrgId());
+        $iO = 0;
         foreach($ticketsOpen as $ticket){
+            if(empty($keywords) ||
+                strpos(strtolower($ticket['number']),strtolower($keywords)) !== FALSE ||
+                strpos(strtolower(substr($ticket['created'],0,10)),strtolower($keywords)) !== FALSE ||
+                strpos(strtolower($ticket['subject']),strtolower($keywords)) !== FALSE ||
+                strpos(strtolower($ticket['name'] . ' ' . $ticket['firsname']),strtolower($keywords)) !== FALSE )
+            {
     ?>
-    <tr class="active" id="<?php echo $ticket['ticket_id']; ?>">
-        <td><a href="./tickets.php?id=<?php echo $ticket['ticket_id'] ?>"><?php echo $ticket['number'] ?></a></td>
+    <tr class="open <?php if($iO < 2) echo " active"; ?>" id="<?php echo $ticket['ticket_id']; ?>">
+        <td><a class="Icon Ticket" href="./tickets.php?id=<?php echo $ticket['ticket_id'] ?>"><?php echo $ticket['number'] ?></a></td>
         <td><?php echo substr($ticket['created'],0,10) ?></td>
         <td><?php echo $ticket['subject'] ?></td>
         <td><?php echo ucwords($ticket['name'] . ' ' . $ticket['firsname']) ?></td>
     </tr>
     <?php
+            $iO++;
+            }
         }
         ?>
     <?php
+        $iC = 0;
         foreach($ticketsClose as $ticket){
+            if(empty($keywords) ||
+                strpos(strtolower($ticket['number']),strtolower($keywords)) !== FALSE ||
+                strpos(strtolower(substr($ticket['created'],0,10)),strtolower($keywords)) !== FALSE ||
+                strpos(strtolower($ticket['subject']),strtolower($keywords)) !== FALSE ||
+                strpos(strtolower($ticket['name'] . ' ' . $ticket['firsname']),strtolower($keywords)) !== FALSE )
+            {
     ?>
-    <tr id="<?php echo $ticket['ticket_id']; ?>">
-        <td><a href="./tickets.php?id=<?php echo $ticket['ticket_id'] ?>"><?php echo $ticket['number'] ?></a></td>
+    <tr class="closed" id="<?php echo $ticket['ticket_id']; ?>">
+        <td><a class="Icon Ticket" href="./tickets.php?id=<?php echo $ticket['ticket_id'] ?>"><?php echo $ticket['number'] ?></a></td>
         <td><?php echo substr($ticket['created'],0,10) ?></td>
         <td><?php echo $ticket['subject'] ?></td>
         <td><?php echo $ticket['name'] . ' ' . $ticket['firsname'] ?></td>
     </tr>
     <?php
+        $iC++;
+            }
         }
         ?>
     </tbody>
 </table>
 <?php
-if ($total) {
-    echo '<div>&nbsp;'.__('Page').':'.$pageNav->getPageLinks().'&nbsp;</div>';
-}
+    $count = $iO;
+    echo '<span style="color:#777">Pages : </span>';
+    echo '<div class="openPage">';
+    for($i = 0; $i<($count/2);$i++){
+        echo '<span class="page" style="' . ($i == 0 ? 'color:#006699;' : 'color:#777;') . 'cursor:pointer" >'.($i+1).'</span>' . (($i+1)<($count/2) ? ' - ' : '');
+    }
+    echo '</div>';
+    $count = $iC;
+    echo '<div class="closePage" style="display:none;">';
+    for($i = 0; $i<($count/2);$i++){
+        echo '<span class="page" style="' . ($i == 0 ? 'color:#006699;' : 'color:#777;') . 'cursor:pointer" >'.($i+1).'</span>' . (($i+1)<($count/2) ? ' - ' : '');
+    }
+    echo '</div>';
 ?>
 </div>
 </div>
 
 <script>
 
+    var oPage = 1;
+    var cPage = 1;
+
     $('table caption span').click(function(){
         if($(this).text() != "Tickets : "){
+            /*SWITCH OUVERTS-FERMES*/
             var spans = $(this).siblings().not(':first');
             $(this).css('color','#006699');
             $(spans).css('color','##777');
-            /*SWITCH TR*/
-            var tr = $('table.tickets tbody tr:not(.active)');
-            $('table.tickets tbody tr.active').removeClass('active');
-            tr.addClass('active');
+            /*SWITCH PAGE AND TR*/
+            if($(this).text() == 'Ouverts'){
+                var tr = $('table.tickets tbody tr.open').splice(0,2);
+                $('table.tickets tbody tr.closed').removeClass('active');
+                $('.openPage').css('display','inline-block');
+                $('.closePage').css('display','none');
+                oPage = 1;
+                $('.openPage span').css('color','#777');
+                $('.openPage span:first').css('color','#006699');
+            } else {
+                var tr = $('table.tickets tbody tr.closed').splice(0,2);
+                $('table.tickets tbody tr.open').removeClass('active');
+                $('.closePage').css('display','inline-block');
+                $('.openPage').css('display','none');
+                cPage = 1;
+                $('.closePage span').css('color','#777');
+                $('.closePage span:first').css('color','#006699');
+            }
+            $(tr).addClass('active');
         }
+    });
+
+    $('.page').click(function(){
+        /*SWITCH SPANS*/
+        var spans = $(this).siblings("span");
+        $(this).css('color','#006699');
+        $(spans).css('color','##777');
+        /*SWITCH LIST*/
+        if($(this).parent().hasClass('openPage')){
+            if(parseInt($(this).text()) > oPage){
+                var actives = $('.open.active:last').nextAll().splice(0,2);
+            } else {
+                var actives = $('.open.active:first').prevAll().splice(0,2);
+            }
+            $('.open.active').removeClass('active');
+            $(actives).addClass('active');
+            oPage = parseInt($(this).text());
+        } else {
+            if(parseInt($(this).text()) > cPage){
+                var actives = $('.closed.active:last').nextAll().splice(0,2);
+            } else {
+                var actives = $('.closed.active:first').prevAll().splice(0,2);
+            }
+            $('.closed.active').removeClass('active');
+            $(actives).addClass('active');
+            cPage = parseInt($(this).text());
+        }
+
     });
 
 </script>
