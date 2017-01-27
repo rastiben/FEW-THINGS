@@ -18,18 +18,20 @@ if ($user && $cfg->isAvatarsEnabled())
 <?php
 $toWrite = "";
 if($entry->getType() == 'M')
-    $toWrite = 'blue';
+    $toWrite = 'message';
 else if($entry->getType() == 'N')
-    $toWrite = 'green';
+    $toWrite = 'note';
 else
-    $toWrite = 'beige';
+    $toWrite = 'answer';
 ?>
 
-<div class="thread-entry note <?php echo $toWrite ?> <?php if ($avatar) echo 'avatar'; ?>">
+<div class="thread-entry <?php echo $toWrite ?>">
 
+<?php if($toWrite == 'message'){ ?>
 <span class="<?php echo 'pull-left'; ?> avatar">
     <img class="avatar" alt="Avatar" src="../assets/default/images/avatar.png"><?php echo '<span>' .  strtoupper(substr(Format::htmlchars($name),0,1)) . '</span>'?></img>
 </span>
+<?php } ?>
 <!--<?php if ($avatar) { ?>
     <span class="<?php echo 'pull-left'; ?> avatar">
 <?php echo $avatar; ?>
@@ -82,10 +84,13 @@ else
                 Format::daydatetime($entry->created),
                 $timeFormat ? $timeFormat($entry->created) : Format::datetime($entry->created)
             )
-        ); ?>
-        <span style="max-width:400px" class="faded title truncate"><?php
-            echo $entry->title; ?></span>
-        </span>
+        );
+        if($toWrite == 'note'){
+        ?>
+
+           <img src="<?php echo ROOT_PATH ?>assets/default/images/private.png" alt="private"/>
+
+        <?php } ?>
     </div>
     <div class="thread-body no-pjax">
         <div><?php echo $entry->getBody()->toHtml(); ?></div>
@@ -127,4 +132,10 @@ else
         </script>
 <?php
     } ?>
+<?php if($toWrite == 'answer'){ ?>
+<span class="pull-right avatar">
+    <img class="avatar" alt="Avatar" src="../assets/default/images/avatar.png"><?php echo '<span>' .  strtoupper(substr(Format::htmlchars($name),0,1)) . '</span>'?></img>
+</span>
+<?php } ?>
 </div>
+

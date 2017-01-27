@@ -927,9 +927,19 @@ a#post-note:hover {
 .thread-entry {
     margin-bottom: 15px;
     margin-left: 127px;
+    margin-right: 127px;
     margin-top: 15px;
     z-index: 0;
+    position: relative;
 }
+
+.thread-entry.message{
+    margin-right: 200px;
+}
+.thread-entry.answer{
+    margin-left: 200px;
+}
+
 .thread-entry::after {
   content: "";
   border-bottom: 2px solid whitesmoke;
@@ -943,32 +953,34 @@ a#post-note:hover {
 .thread-entry.avatar {
     /*margin-left: 60px;*/
 }
-.thread-entry.message.avatar {
-    margin-right: 60px;
-    /*margin-left: 0;*/
+
+.thread-entry.message > .avatar {
+    position: absolute;
+    width: 48px;
+    left: -76px;
+    top:-8px;
 }
-.thread-entry > .avatar {
-    margin-left: -76px;
-    display:inline-block;
-    width:48px;
-    height:auto;
-    margin-top: -10px;
+
+.thread-entry.answer > .avatar {
+    position: absolute;
+    width: 48px;
+    right: -76px;
+    top:-8px;
 }
 
 .thread-entry > .avatar span{
     position: absolute;
-    top: 10px;
-    left: 17px;
+    top: 8px;
     font-size: 23px;
+    display: block;
+    width: 100%;
+    text-align: center;
 }
 
 .avatar {
     border-radius: 50%;
 }
-.thread-entry.message > .avatar {
-    margin-left: initial;
-    margin-right: -60px;
-}
+
 img.avatar {
     border-radius: inherit;
     vertical-align: middle;
@@ -978,23 +990,34 @@ img.avatar {
     width: 100%;
     height: auto;
 }
+
+.thread-entry .header img{
+    width: 36px;
+    position: absolute;
+    top: 1px;
+    left: 50%;
+    margin-left: -30px;
+}
+
 .thread-entry .header {
     padding: 8px 0.9em;
     border: 1px solid #ccc;
     border-color: rgba(0,0,0,0.2);
     border-radius: 5px 5px 0 0;
 }
-.thread-entry.avatar .header:before {
+.thread-entry.message .header:before,
+.thread-entry.answer .header:before{
   position: absolute;
   top: 7px;
   right: -8px;
   content: '';
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
-  border-left: 8px solid #9cadcc;
   display: inline-block;
 }
-.thread-entry.avatar .header:after {
+
+.thread-entry.message .header:after,
+.thread-entry.answer .header:after{
   position: absolute;
   top: 7px;
   right: -8px;
@@ -1005,55 +1028,53 @@ img.avatar {
   margin-top: 1px;
 }
 
-.thread-entry.avatar .header {
+.thread-entry .header {
     position: relative;
 }
 
-.thread-entry.message .header {
-    background:#C3D9FF;
-}
-.thread-entry.avatar.message .header:after {
-    border-left: 7px solid #C3D9FF;
-    margin-right: 1px;
-}
-
-.thread-entry.response .header {
-    background:#FFE0B3;
-}
-.thread-entry.avatar.response .header:before,
-.thread-entry.avatar.note .header:before {
+.thread-entry.message .header:before {
+    border-right: 8px solid darkgray;
     top: 7px;
     left: -8px;
     right: initial;
     border-left: none;
-    border-right: 8px solid #CCC;
 }
+.thread-entry.answer .header:before{
+    border-left: 8px solid #a69c81;
+    top: 7px;
+    right: -8px;
+    left: initial;
+    border-right: none;
+}
+
 .thread-entry.system .header {
     background-color: #f4f4f4;
 }
 
-.thread-entry.avatar.response .header:before {
-    border-right-color: #ccb3af;
-}
-.thread-entry.avatar.note .header:before {
-    border-right-color: #ccccb0;
-}
-.thread-entry.avatar.response .header:after,
-.thread-entry.avatar.note .header:after {
+.thread-entry.message .header:after{
+    border-left: 7px solid #C3D9FF;
+    margin-right: 1px;
     top: 7px;
     left: -8px;
     right: initial;
     border-left: none;
-    border-right: 7px solid #FFE0B3;
     margin-left: 1px;
 }
 
-.thread-entry.note .header {
-    background:#FFE;
+.thread-entry.answer .header:after{
+    border-left: 7px solid beige;
+    margin-right: 1px;
+    top: 7px;
+    right: -8px;
+    left: initial;
+    border-right: none;
+    margin-left: 1px;
 }
-.thread-entry.avatar.note .header:after {
-    border-right-color: #FFE;
+
+.thread-entry.message .header:after{
+    border-right: 7px solid aliceblue;
 }
+
 .thread-entry .header .title {
     max-width: 500px;
     vertical-align: bottom;
@@ -1065,7 +1086,7 @@ img.avatar {
 }
 
 .thread-entry .thread-body {
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     border-top: none;
     border-bottom:2px solid #aaa;
     border-radius: 0 0 5px 5px;
@@ -2755,11 +2776,24 @@ td.indented {
   margin-left: 74px;
   z-index: -1;
   content: "";
-  top: 0;
+  top: -25px;
   bottom: 0;
   right: 0;
   left: 0;
 }
+
+#thread-items::after {
+    border-left: 2px dotted #ddd;
+    border-bottom-color: rgba(0,0,0,0.1);
+    position: absolute;
+    margin-right: 74px;
+    z-index: -1;
+    content: "";
+    top: -25px;
+    bottom: 0;
+    right: 0;
+}
+
 #thread-items {
   z-index: 0;
   position: relative;
@@ -2767,14 +2801,26 @@ td.indented {
   padding-bottom: 15px;
   margin-top: 5px;
 }
-.thread-event {
+
+.thread-event.user {
     padding: 0 2px 15px;
     margin-left: 60px;
+    text-align: left;
 }
+.thread-event.staff {
+    padding: 0 2px 15px;
+    margin-right: 54px;
+    text-align: right;
+}
+
+.thread-event.staff span:first-child{
+    margin-right: 35px;
+}
+
 .thread-event a {
     color: inherit;
 }
-.type-icon {
+.thread-event .type-icon {
     border-radius: 8px;
     background-color: #f4f4f4;
     padding: 4px 6px;
@@ -2786,6 +2832,7 @@ td.indented {
     vertical-align: top;
     position: relative;
 }
+
 .thread-event .type-icon::after {
   content: "";
   border: 16px solid #f8f8f8;
@@ -3086,20 +3133,16 @@ span.avatar{
     border-left: 2px dotted #444;
 }
 
-.thread-entry.note.blue .header{
+.thread-entry.message .header{
     background: aliceblue;
 }
 
-.thread-entry.note.blue .header:after{
-    border-right-color: aliceblue;
+.thread-entry.answer .header{
+    background: beige;
 }
 
-.thread-entry.note.green .header{
-    background: lightgreen;
-}
-
-.thread-entry.note.green .header:after{
-    border-right-color: lightgreen;
+.thread-entry.note .header{
+    background-color: lightgreen;
 }
 
 #sub_nav div{
@@ -3236,7 +3279,7 @@ span.avatar{
 /*total*/
 .rapport .identity #totalTitle{
     height: 25px;
-    background: skyblue;
+    background: lightskyblue;
 }
 
 .rapport .identity #totalTitle span{
@@ -3249,7 +3292,7 @@ span.avatar{
 }
 
 .rapport .identity #total p{
-    color:white;
+    color:black;
     margin: 0px;
     padding: 0px;
 }
@@ -3547,10 +3590,46 @@ input[type="radio"]{
     font-size: 22px;
 }
 
+.fixed-right{
+    height: 80%;
+    min-height: 680px;
+}
+
 @media (min-width:992px){
     .fixed-right{
         position: fixed;
-        max-height: 600px;
         overflow-y: scroll;
     }
+}
+
+.addRapport{
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 15px;
+    height: 50px;
+}
+
+.addRapport h4{
+    background-color: lightskyblue;
+    line-height: 50px;
+    width: 100%;
+    box-shadow: 2px 2px 2px 1px rgba(189,189,189,1);
+    cursor: pointer;
+    margin: 0px;
+}
+
+.addRapport h4:hover{
+    background-color: powderblue;
+}
+
+#rapport{
+    margin-bottom: 30px;
+}
+
+#rapport div:first-child{
+    border: 1px solid lightgray;
+    padding: 15px;
+    background: white;
+    position: relative;
+    box-shadow: 2px 2px 2px 1px rgba(189,189,189,1);
 }

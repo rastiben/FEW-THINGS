@@ -56,9 +56,8 @@ class Rapport
     }
 
     public function getRapport($id){
-        $res = $this->dbh->prepare("SELECT date_rapport,date_inter,lastname,contrat,instal FROM ost_rapport,ost_staff WHERE ost_rapport.id_agent = ost_staff.staff_id AND id = :ID");
+        $res = $this->dbh->prepare("SELECT id,date_rapport,date_inter,firstname,lastname,contrat,instal FROM ost_rapport,ost_staff WHERE ost_rapport.id_agent = ost_staff.staff_id AND id = :ID");
         $res->execute(array(':ID'=>$id));
-
         return $res->fetchAll();
     }
 

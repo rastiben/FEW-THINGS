@@ -326,18 +326,18 @@ if ($closedTickets) {?>
         /*SWITCH LIST*/
         if($(this).parent().hasClass('openPage')){
             if(parseInt($(this).text()) > oPage){
-                var actives = $('.open.active:last').nextAll().splice(0,2);
+                var actives = $('.open.active:last').nextAll('.open').splice(0,2);
             } else {
-                var actives = $('.open.active:first').prevAll().splice(0,2);
+                var actives = $('.open.active:first').prevAll('.open').splice(0,2);
             }
             $('.open.active').removeClass('active');
             $(actives).addClass('active');
             oPage = parseInt($(this).text());
         } else {
             if(parseInt($(this).text()) > cPage){
-                var actives = $('.closed.active:last').nextAll().splice(0,2);
+                var actives = $('.closed.active:last').nextAll('.closed').splice(0,2);
             } else {
-                var actives = $('.closed.active:first').prevAll().splice(0,2);
+                var actives = $('.closed.active:first').prevAll('.closed').splice(0,2);
             }
             $('.closed.active').removeClass('active');
             $(actives).addClass('active');

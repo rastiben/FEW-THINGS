@@ -19,6 +19,15 @@
             background-clip: border-box;
         }
 
+        .signature{
+            float:right;
+            width: 300px;
+            height: 150px;
+            border: 1px solid black;
+            margin-top: 15px;
+            padding-left: 15px;
+        }
+
 <?php include ROOT_DIR . 'css/thread.css';?>
 
     </style>
@@ -26,7 +35,7 @@
 <body>
 
 <?php
-    $rapport = Rapport::getInstance()->getRapports($_GET['idR']);
+    $rapport = Rapport::getInstance()->getRapport($_GET['idR']);
     $horaires = Rapport::getInstance()->getRapportsHoraires($_GET['idR']);
 ?>
 
@@ -58,7 +67,6 @@
 
 <!-- Ticket metadata -->
 <!--<h1>Ticket #<?php echo $ticket->getNumber(); ?></h1>-->
-<!--<span><?php print_r($rapport)?></span>-->
 <table style="border-collapse: collapse;border-spacing: 0;border:1px solid black;margin-bottom:15px" width="100%">
   <tbody>
     <tr>
@@ -71,14 +79,10 @@
 		Email:gclemenceau@viennedoc.com<br>
 		Site internet: http://www.viennedoc.com</td>
 		<td colspan="3"><span>
-           ADSEA _<br>
-           ADSEA <br>
-           MR LAFON <br>
-           1 RUE DU SENTIER <br>
-           - <br>
-           86180 BUXEROLLES<br>
-           France
-       </span></td>
+		    APE Etiquettes<br>
+		    12 Avenue de l'Europe<br>
+		    86170 Neuville-de-Poitou
+		</span></td>
     </tr>
     <tr style="text-align:center">
        <th colspan="6" style="text-align:center;border-top:1px solid black;border-bottom:1px solid black" height="30">
@@ -110,11 +114,11 @@
         <?php echo $ticket->getId(); ?>
         </td>
         <td style="text-align:center;border-left:1px solid black;border-right:1px solid black;">
-                   <?php $createDate = new DateTime($ticket->getCreateDate());
-                    echo $createDate->format('d/m/Y'); ?>
+                   <!--<?php $createDate = new DateTime($ticket->getCreateDate());
+                    echo $createDate->format('d/m/Y'); ?>-->23/01/2017
                     </td>
         <td style="text-align:center;border-left:1px solid black;border-right:1px solid black;">
-        <?php echo $createDate->format('H:i'); ?>
+        <!--<?php echo $createDate->format('H:i'); ?>-->10h30
         </td>
         <td style="text-align:center;border-left:1px solid black;border-right:1px solid black;">
         <?php echo $rapport[0]['lastname']; ?>
@@ -123,7 +127,7 @@
 
         </td>
         <td style="text-align:center;border-left:1px solid black;border-right:1px solid black;">
-        <?php echo $ticket->getOwner()->getOrganization()->getName(); ?>
+
         </td>
     </tr>
     <tr>
@@ -131,8 +135,11 @@
         <th colspan="5" style="text-align:center;border-top:1px solid black;border-left:1px solid black;">Sujet</th>
     </tr>
     <tr>
-        <td colspan="1" style="text-align:center;border-top:1px solid black;border-right:1px solid black;"><?php echo $rapport[0]['firstname'] . ' ' . $rapport[0]['lastname'] ?>
-        <td colspan="5" style="text-align:center;border-top:1px solid black;border-left:1px solid black;"><?php echo $ticket->getSubject(); ?></td></td>
+        <td colspan="1" style="text-align:center;border-top:1px solid black;border-right:1px solid black;">
+            David Becot
+        </td>
+        <td colspan="5" style="text-align:center;border-top:1px solid black;border-left:1px solid black;"><?php echo $ticket->getSubject(); ?>
+        </td>
     </tr>
     </tbody>
 </table>
@@ -142,18 +149,19 @@
 <table style="border-collapse: collapse;border-spacing: 0;border-right:1px solid black;margin-top:15px" width="100%">
     <tbody>
     <tr>
-        <th></th>
         <th style="border:1px solid black;" >Libellé article et commentaires</th>
         <th style="border:1px solid black;">quantité</th>
         <th style="border:1px solid black;">P.U.</th>
         <th style="border-bottom:1px solid black;border-left:1px solid black;border-top:1px solid black">Prix total</th>
     </tr>
     <tr>
-        <td><div class="round">BLABLA</div></td>
        <td style="border:1px solid black;">
 
             <span>Note d'intervention du <?php $arriveInter = new DateTime($horaire['arrive_inter']);
-                    echo $arriveInter->format('d/m/Y'); ?></span><br><br>
+                    $departInter = new DateTime($horaire['depart_inter']);
+                    echo $arriveInter->format('d/m/Y'); ?></span><br>
+            <span>De : <?php echo $arriveInter->format('H:i') . ' à ' . $departInter->format('H:i')  ?></span>
+            <br><br>
             <span>Commentaires : </span><br><br>
             <?php echo $horaire['comment'] ?>
             <br><br>
@@ -165,5 +173,8 @@
     </tbody>
 </table>
        <?php } ?>
+<div class="signature">
+    <h5>Cachet et signature du client le</h5>
+</div>
 </body>
 </html>

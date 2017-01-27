@@ -76,15 +76,6 @@ $queue_columns = array(
             'heading' => __('Priority'),
             'sort_col' => 'cdata__:priority__priority_urgency',
             ),
-        'assignee' => array(
-            'width' => '16%',
-            'heading' => __('Agent'),
-            ),
-        'dept' => array(
-            'width' => '16%',
-            'heading' => __('Department'),
-            'sort_col'  => 'dept__name',
-            ),
         );
 
 $use_subquery = true;
@@ -477,15 +468,10 @@ return false;">
 
             <?php
             // Swap some columns based on the queue.
-            if ($showassigned ) {
-                unset($queue_columns['dept']);
-                if (!strcasecmp($status,'closed'))
-                    $queue_columns['assignee']['heading'] =  __('Closed By');
-                else
-                    $queue_columns['assignee']['heading'] =  __('Assigned To');
-            } else {
-                unset($queue_columns['assignee']);
-            }
+
+            unset($queue_columns['dept']);
+            unset($queue_columns['assignee']);
+
             if ($search && !$status)
                 unset($queue_columns['priority']);
             else
@@ -517,16 +503,16 @@ return false;">
         $total=0;
         $ids=($errors && $_POST['tids'] && is_array($_POST['tids']))?$_POST['tids']:null;
 
-        /*STOCKAGE DES ORGANISATION DANS $TICKETS*/
-        /*$_tickets = [];
-        foreach($tickets as $T){
-            $T['org__org_name'] = TicketsInfos::getInstance()->ticket_org_name($T['ticket_id']);
-            array_push($_tickets,$T);
+
+        /*CREATION D'UN RAPPORT*/
+        $status = $_GET['status'];
+        if($status == 'assigned'){
+            $tickets = TicketsInfos::getInstance()->tickets_assigned($thisstaff->getId());
+        } else {
+            $tickets = TicketsInfos::getInstance()->tickets($_GET['status']);
         }
-        $tickets = $_tickets;*/
 
         foreach ($tickets as $T) {
-            //print_r($T);
             $total += 1;
                 $tag=$T['staff_id']?'assigned':'openticket';
                 $flag=null;
@@ -572,7 +558,7 @@ return false;">
                     ><?php echo $tid; ?></a></td>
                 <td align="center" nowrap><?php echo Format::datetime($T[$date_col ?: 'lastupdate']) ?: $date_fallback; ?></td>
                 <td>
-                    <span><?php echo $subject; ?></span>
+                    <span><?php echo $T['subject']; ?></span>
 <?php               if ($T['attachment_count'])
                         echo '<i class="small icon-paperclip icon-flip-horizontal" data-toggle="tooltip" title="'
                             .$T['attachment_count'].'"></i>';
@@ -588,8 +574,9 @@ return false;">
                             .$T['collab_count'].'"><i class="icon-group"></i></span>';
                     ?><span class="truncate" style="max-width:<?php
                         echo $T['collab_count'] ? '150px' : '170px'; ?>"><?php
+                    /*TO CHANGE*/
                     $un = new UsersName($T['user__name']);
-                        echo '<a href="./users.php?id='. TicketsInfos::getInstance()->ticket_user_id($T['ticket_id']) .'#tickets">' . Format::htmlchars($un) . '</a>';
+                        echo '<a href="./users.php?id='. TicketsInfos::getInstance()->ticket_user_id($T['ticket_id']) .'#tickets">' . ucwords($T['firsname'] . ' ' . $T['name']) . '</a>';
                     ?></span></div></td>
                 <td nowrap><div><?php
                     if ($T['collab_count'])
@@ -608,12 +595,10 @@ return false;">
                 } else { ?>
                 <td class="nohover" align="center"
                     style="background-color:<?php echo $T['cdata__:priority__priority_color']; ?>;">
-                    <?php echo $T['cdata__:priority__priority_desc']; ?></td>
+                    <?php echo $T['priority_desc']; ?></td>
                 <?php
                 }
                 ?>
-                <td nowrap><span class="truncate" style="max-width: 169px"><?php
-                    echo Format::htmlchars($lc); ?></span></td>
             </tr>
             <?php
             } //end of foreach

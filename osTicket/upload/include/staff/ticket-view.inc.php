@@ -235,7 +235,7 @@ if($ticket->isOverdue())
   </div>
 </div>
 
-<div class="col-md-12">
+<div class="col-md-12" style="min-height: 680px;">
     <hr>
 <div class="ticket_left col-md-9">
 
@@ -256,6 +256,91 @@ if($ticket->isOverdue())
 <div id="ticket_tabs_container">
 
 <div id="ticket_rapport" style="display:none">
+    <div name="rapport" style="display:none" id="rapport" class="col-md-12">
+      <div>
+       <input type="hidden" name="ticket_id" value="<?php echo $ticket->getId(); ?>">
+       <input type="hidden" name="agent_id" value="<?php echo $thisstaff->getId(); ?>">
+       <div>
+            <span></span>
+                <label class="required" for="_b22c0215f6129f93">
+                          Date d'intervention :
+                                        <span class="error">*</span>
+                                      </label>
+
+                <input type="text" name="date_new_inter">
+                <!--<script type="text/javascript">
+
+                        $('input[name="date_new_inter"]').datepicker({
+                            startView: 1,
+                            defaultDate: debut,
+                            format: 'dd/mm/yyyy',
+                            autoclose: true
+                        });
+
+                </script>-->
+            <label class="required" for="b22c0215f6129f93:time">
+                          Heure d'arrivé :
+                                        <span class="error">*</span>
+                                      </label>
+            <select name="arrive_inter" id="b22c0215f6129f93:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
+            <label class="required" for="b22c0215f6129f94:time">
+                          Heure de départ :
+                                        <span class="error">*</span>
+                                      </label>
+            <select name="depart_inter" id="b22c0215f6129f94:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
+       </div>
+       <br>
+                   <!--Gestion des type de rapport-->
+
+            <table class="table table-striped contrat instal">
+                <thead>
+                    <tr>
+                        <th colspan="4"><input type="radio" name="type" value="Contrat" checked>Contrat</th>
+                        <th colspan="1"><input type="radio" name="type" value="Instal">Instal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Hotline</td>
+                        <td>Atelier/Sur site</td>
+                        <td>Régie</td>
+                        <td>Téléphonie</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><input type="checkbox"></td>
+                        <td><input type="checkbox"></td>
+                        <td><input type="checkbox"></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+       <label class="required" for="symptomesObservations">
+                          Symptômes et observations :
+                                        <span class="error">*</span>
+                                      </label>
+       <textarea name="symptomesObservations" id="symptomesObservations" cols="50"
+                        data-signature-field="signature" data-dept-id="<?php echo $dept->getId(); ?>"
+                        data-signature="<?php
+                            echo Format::htmlchars(Format::viewableImages($signature)); ?>"
+                        placeholder="<?php echo __(
+                        'Start writing your response here. Use canned responses from the drop-down above'
+                        ); ?>"
+                        rows="9" wrap="soft"
+                        class="<?php if ($cfg->isRichTextEnabled()) echo 'richtext';
+                            ?> draft draft-delete" <?php
+    list($draft, $attrs) = Draft::getDraftAndDataAttrs('ticket.response', $ticket->getId(), $info['response']);
+    echo $attrs; ?>><?php echo $_POST ? $info['response'] : $draft;
+                    ?></textarea>
+        <br>
+       <input class="horaire add save pending" type="submit" name="addRapport">
+        </div>
+   </div>
+   <div class="addRapport col-md-12">
+        <h4>Nouveau rapport</h4>
+    </div>
    <?php
         //Recuperation des rapports
         date_default_timezone_set('Europe/Paris');
@@ -436,7 +521,7 @@ if($ticket->isOverdue())
              <div class="comment">
              <div class="titleComment">
                 <div class="green"></div>
-                <img class="modifyInter" src="../assets/default/images/edit.png" id="<?php echo $horaire['id'] ?>" data-arrive="<?php echo $horaire['arrive_inter'] ?>" data-depart="<?php echo $horaire['depart_inter'] ?>" data-comment="<?php echo $horaire['comment'] ?>"/>
+                <img class="modifyInter" src="../assets/default/images/edit.png" id="<?php echo $horaire['id'] ?>" data-arrive="<?php echo $horaire['arrive_inter'] ?>" data-depart="<?php echo $horaire['depart_inter'] ?>"/>
                  <div class="commentTitle"><p>Intervention du <?php
                             $time1 = new DateTime($horaire['arrive_inter']);
                             echo ucwords(strftime("%A %d %B %Y",$time1->getTimestamp()));
@@ -487,8 +572,7 @@ if ($errors['err'] && isset($_POST['a'])) {
 <?php
 } ?>
 
-<div class="sticky bar stop actions" id="response_options"
->
+<div class="sticky bar stop actions" id="response_options">
     <ul class="tabs" id="response-tabs">
         <?php
         if ($role->hasPerm(TicketModel::PERM_REPLY)) { ?>
@@ -500,9 +584,6 @@ if ($errors['err'] && isset($_POST['a'])) {
         <li><a href="#note" <?php
             echo isset($errors['postnote']) ?  'class="error"' : ''; ?>
             id="post-note-tab"><?php echo __('Post Internal Note');?></a></li>
-        <li><a href="#rapport" <?php
-            echo isset($errors['postnote']) ?  'class="error"' : ''; ?>
-            id="post-rapport-tab">Rapport d'intervention</a></li>
     </ul>
     <?php
     if ($role->hasPerm(TicketModel::PERM_REPLY)) { ?>
@@ -808,86 +889,6 @@ if ($errors['err'] && isset($_POST['a'])) {
            <input class="" type="reset" value="<?php echo __('Reset');?>">
        </p>
    </form>
-   <div name="rapport" style="display:none" id="rapport">
-       <input type="hidden" name="ticket_id" value="<?php echo $ticket->getId(); ?>">
-       <input type="hidden" name="agent_id" value="<?php echo $thisstaff->getId(); ?>">
-       <div>
-            <span></span>
-                <label class="required" for="_b22c0215f6129f93">
-                          Date d'intervention :
-                                        <span class="error">*</span>
-                                      </label>
-
-                <input type="text" name="date_new_inter">
-                <!--<script type="text/javascript">
-
-                        $('input[name="date_new_inter"]').datepicker({
-                            startView: 1,
-                            defaultDate: debut,
-                            format: 'dd/mm/yyyy',
-                            autoclose: true
-                        });
-
-                </script>-->
-            <label class="required" for="b22c0215f6129f93:time">
-                          Heure d'arrivé :
-                                        <span class="error">*</span>
-                                      </label>
-            <select name="arrive_inter" id="b22c0215f6129f93:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
-            <label class="required" for="b22c0215f6129f94:time">
-                          Heure de départ :
-                                        <span class="error">*</span>
-                                      </label>
-            <select name="depart_inter" id="b22c0215f6129f94:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
-       </div>
-       <br>
-                   <!--Gestion des type de rapport-->
-
-            <table class="table table-striped contrat instal">
-                <thead>
-                    <tr>
-                        <th colspan="4"><input type="radio" name="type" value="Contrat" checked>Contrat</th>
-                        <th colspan="1"><input type="radio" name="type" value="Instal">Instal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Hotline</td>
-                        <td>Atelier/Sur site</td>
-                        <td>Régie</td>
-                        <td>Téléphonie</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-
-       <label class="required" for="symptomesObservations">
-                          Symptômes et observations :
-                                        <span class="error">*</span>
-                                      </label>
-       <textarea name="symptomesObservations" id="symptomesObservations" cols="50"
-                        data-signature-field="signature" data-dept-id="<?php echo $dept->getId(); ?>"
-                        data-signature="<?php
-                            echo Format::htmlchars(Format::viewableImages($signature)); ?>"
-                        placeholder="<?php echo __(
-                        'Start writing your response here. Use canned responses from the drop-down above'
-                        ); ?>"
-                        rows="9" wrap="soft"
-                        class="<?php if ($cfg->isRichTextEnabled()) echo 'richtext';
-                            ?> draft draft-delete" <?php
-    list($draft, $attrs) = Draft::getDraftAndDataAttrs('ticket.response', $ticket->getId(), $info['response']);
-    echo $attrs; ?>><?php echo $_POST ? $info['response'] : $draft;
-                    ?></textarea>
-        <br>
-       <input class="horaire add save pending" type="submit" name="addRapport">
-   </div>
  </div>
  </div>
 </div>
@@ -1339,15 +1340,11 @@ $(function() {
             }
         });
 
-        var isClicked = false;
-        $(document).on('click','.horaire.add.save.pending',function(e){
-            if(!isClicked){
-                isClicked = true;
-                //alert("coucou");
+        $(document).one('click','.horaire.add.save.pending',function(e){
                 var parent = $(this).parent();
                 var id = parent.parent().attr('id');
 
-                if(id == "response_options") id = null;
+                if(id == "rapport") id = null;
 
                 var contrat = "";
                 var instal = 0;
@@ -1368,9 +1365,6 @@ $(function() {
                     instal = 1;
                 }
 
-                /*var hour = moment.utc(moment(date_inter + ' ' + depart,"DD/MM/YYYY HH:mm").diff(moment(date_inter + ' ' + arrive,"DD/MM/YYYY HH:mm"))).format("HH");
-                var minutes = moment.utc(moment(date_inter + ' ' + depart,"DD/MM/YYYY HH:mm").diff(moment(date_inter + ' ' + arrive,"DD/MM/YYYY HH:mm"))).format("mm");*/
-
                 if(/^\d+$/.test(id) || id == null){
                     $.ajax({
                        method:"POST",
@@ -1389,9 +1383,6 @@ $(function() {
                        },
                         success:function(data){
                             location.reload();
-                        },
-                        complete: function() {
-                            isClicked = false;
                         }
                     });
                 } else {
@@ -1411,13 +1402,9 @@ $(function() {
                        },
                         success:function(data){
                             location.reload();
-                        },
-                        complete: function() {
-                            isClicked = false;
                         }
                     });
                 }
-            }
         });
 
         $('.modifyInter').click(function(){
@@ -1495,6 +1482,21 @@ $(function() {
             }
         });
 
+        /*NOUVEAU RAPPORT*/
+        $('.addRapport').click(function(){
+            $(this).addClass('animated fadeOutDown');
+            $(this).css('display','none');
+            $('#rapport').addClass('animated fadeInDown');
+            $('#rapport').css('display','block');
+        });
+
+        $('.addRapport').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+            $(this).removeClass('animated fadeOutDown');
+        });
+
+        $('#rapport').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+            $(this).removeClass('animated fadeInDown');
+        });
 
         /*$('.fa.fa-print.fa-2x').click(function(){
 
