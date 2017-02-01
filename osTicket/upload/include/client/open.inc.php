@@ -33,6 +33,10 @@ if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
 ?>
 <div id="openNewTicket">
 <form id="ticketForm" method="post" action="open.php" enctype="multipart/form-data">
+<p><font class="error">*&nbsp;</font>Les tickets ajoutés sont visible par l'ensemble des utilisateurs d'osticket de votre organisation </p>
+
+<hr>
+
  <img id="iconNewTicket" src="./assets/default/images/ticket.png">
   <?php csrf_token(); ?>
   <input type="hidden" name="a" value="open">

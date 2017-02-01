@@ -425,7 +425,7 @@ implements FormRenderer {
           ?>
           <td class="cell" <?php echo Format::array_implode('=', ' ', array_filter($attrs)); ?>
               data-field-id="<?php echo $f->get('id'); ?>">
-              <fieldset class="field <?php if (!$f->isVisible()) echo 'hidden'; ?>"
+              <fieldset style="<?php if (!$f->isVisible()) echo 'display:none'; ?>" class="field"
                 id="field<?php echo $f->getWidget()->id; ?>"
                 data-field-id="<?php echo $f->get('id'); ?>">
 <?php         if ($label = $f->get('label')) { ?>

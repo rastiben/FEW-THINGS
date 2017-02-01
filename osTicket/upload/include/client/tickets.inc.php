@@ -233,7 +233,7 @@ if ($closedTickets) {?>
                 strpos(strtolower($ticket['name'] . ' ' . $ticket['firsname']),strtolower($keywords)) !== FALSE )
             {
     ?>
-    <tr class="open <?php if($iO < 2) echo " active"; ?>" id="<?php echo $ticket['ticket_id']; ?>">
+    <tr class="open <?php if($iO < 25) echo " active"; ?>" id="<?php echo $ticket['ticket_id']; ?>">
         <td><a class="Icon Ticket" href="./tickets.php?id=<?php echo $ticket['ticket_id'] ?>"><?php echo $ticket['number'] ?></a></td>
         <td><?php echo substr($ticket['created'],0,10) ?></td>
         <td><?php echo $ticket['subject'] ?></td>
@@ -271,14 +271,14 @@ if ($closedTickets) {?>
     $count = $iO;
     echo '<span style="color:#777">Pages : </span>';
     echo '<div class="openPage">';
-    for($i = 0; $i<($count/2);$i++){
-        echo '<span class="page" style="' . ($i == 0 ? 'color:#006699;' : 'color:#777;') . 'cursor:pointer" >'.($i+1).'</span>' . (($i+1)<($count/2) ? ' - ' : '');
+    for($i = 0; $i<($count/25);$i++){
+        echo '<span class="page" style="' . ($i == 0 ? 'color:#006699;' : 'color:#777;') . 'cursor:pointer" >'.($i+1).'</span>' . (($i+1)<($count/25) ? ' - ' : '');
     }
     echo '</div>';
     $count = $iC;
     echo '<div class="closePage" style="display:none;">';
-    for($i = 0; $i<($count/2);$i++){
-        echo '<span class="page" style="' . ($i == 0 ? 'color:#006699;' : 'color:#777;') . 'cursor:pointer" >'.($i+1).'</span>' . (($i+1)<($count/2) ? ' - ' : '');
+    for($i = 0; $i<($count/25);$i++){
+        echo '<span class="page" style="' . ($i == 0 ? 'color:#006699;' : 'color:#777;') . 'cursor:pointer" >'.($i+1).'</span>' . (($i+1)<($count/25) ? ' - ' : '');
     }
     echo '</div>';
 ?>
@@ -298,7 +298,7 @@ if ($closedTickets) {?>
             $(spans).css('color','##777');
             /*SWITCH PAGE AND TR*/
             if($(this).text() == 'Ouverts'){
-                var tr = $('table.tickets tbody tr.open').splice(0,2);
+                var tr = $('table.tickets tbody tr.open').splice(0,25);
                 $('table.tickets tbody tr.closed').removeClass('active');
                 $('.openPage').css('display','inline-block');
                 $('.closePage').css('display','none');
@@ -306,7 +306,7 @@ if ($closedTickets) {?>
                 $('.openPage span').css('color','#777');
                 $('.openPage span:first').css('color','#006699');
             } else {
-                var tr = $('table.tickets tbody tr.closed').splice(0,2);
+                var tr = $('table.tickets tbody tr.closed').splice(0,25);
                 $('table.tickets tbody tr.open').removeClass('active');
                 $('.closePage').css('display','inline-block');
                 $('.openPage').css('display','none');
@@ -326,18 +326,18 @@ if ($closedTickets) {?>
         /*SWITCH LIST*/
         if($(this).parent().hasClass('openPage')){
             if(parseInt($(this).text()) > oPage){
-                var actives = $('.open.active:last').nextAll('.open').splice(0,2);
+                var actives = $('.open.active:last').nextAll('.open').splice(0,25);
             } else {
-                var actives = $('.open.active:first').prevAll('.open').splice(0,2);
+                var actives = $('.open.active:first').prevAll('.open').splice(0,25);
             }
             $('.open.active').removeClass('active');
             $(actives).addClass('active');
             oPage = parseInt($(this).text());
         } else {
             if(parseInt($(this).text()) > cPage){
-                var actives = $('.closed.active:last').nextAll('.closed').splice(0,2);
+                var actives = $('.closed.active:last').nextAll('.closed').splice(0,25);
             } else {
-                var actives = $('.closed.active:first').prevAll('.closed').splice(0,2);
+                var actives = $('.closed.active:first').prevAll('.closed').splice(0,25);
             }
             $('.closed.active').removeClass('active');
             $(actives).addClass('active');

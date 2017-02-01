@@ -958,20 +958,20 @@ a#post-note:hover {
 .thread-entry.message > .avatar {
     position: absolute;
     /*width: 48px;*/
-    left: -87px;
-    top:-18px;
+    left: -77px;
+    top:-8px;
 }
 
 .thread-entry.answer > .avatar {
     position: absolute;
     /* width: 48px; */
-    right: -87px;
-    top: -17px;
+    right: -76px;
+    top: -6px;
 }
 
 .thread-entry > .avatar span{
     position: absolute;
-    top: 18px;
+    top: 11px;
     font-size: 23px;
     display: block;
     width: 100%;
@@ -987,8 +987,8 @@ img.avatar {
     vertical-align: middle;
 }
 .avatar > img.avatar {
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
 }
 
 .thread-entry .header img{

@@ -6,13 +6,31 @@ $name = $user ? $user->getName() : $entry->poster;
 $avatar = '';
 if ($cfg->isAvatarsEnabled() && $user)
     $avatar = $user->getAvatar();
+
+$avatar = $entry->getUser() ? $avatar : Agent::getInstance()->staff_avatar($user);
+//print_r($avatar);
+
 ?>
 
 <div class="thread-entry <?php echo $entryTypes[$entry->type]; ?> <?php if ($avatar) echo 'avatar'; ?>">
-<?php if ($avatar) { ?>
+<?php if($entry->type == 'M'){ ?>
     <span class="<?php echo ($entry->type == 'M') ? 'pull-left' : 'pull-right'; ?> avatar">
-<?php echo $avatar; ?>
+     <?php
+                echo $avatar;
+
+        ?>
     </span>
+       <?php } else { ?>
+        <div class="avatar"
+        style="position: absolute;
+            width: 48px;
+            height: 48px;
+            right: 0px;
+            top: -10px;
+            bottom: 57px;
+            background: url(./assets/avatar/<?php echo $avatar[0]['avatar'] ?>) no-repeat center;
+            background-size: 120%;"
+    ></div>
 <?php } ?>
     <div class="header">
         <div class="pull-right">

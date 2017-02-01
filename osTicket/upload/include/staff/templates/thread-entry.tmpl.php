@@ -140,9 +140,18 @@ else
 <?php
     } ?>
 <?php if($toWrite == 'answer'){ ?>
-<span class="pull-right avatar">
+<div class="<?php echo 'pull-left'; ?> avatar"
+        style="position: absolute;
+            width: 50px;
+            height: 50px;
+            right: -76px;
+            top: -6px;
+            background: url(../assets/avatar/<?php echo $avatar[0]['avatar'] ?>) no-repeat center;
+            background-size: 120%;"
+    ></div>
+<!--<span class="pull-right avatar">
     <img class="avatar" alt="Avatar" src="../assets/avatar/<?php echo $avatar[0]['avatar'] ?>"/>
-</span>
+</span>-->
 <?php } ?>
 </div>
 

@@ -668,6 +668,10 @@ body {
     display: block;
 }
 
+#ticketForm p:first-child{
+    margin-top:15px;
+}
+
 label.required,
 span.required {
     font-weight: bold;
@@ -1211,15 +1215,18 @@ table.custom-data .headline {
 
 .thread-entry {
     margin-bottom: 15px;
+    position: relative;
 }
 
 .thread-entry.avatar {
     margin-left: 60px;
+    margin-right: 120px;
 }
 
 .thread-entry.response.avatar {
     margin-right: 60px;
-    margin-left: 0;
+    margin-left:120px;
+    /*margin-left: 0;*/
 }
 
 .thread-entry > .avatar {
@@ -1227,7 +1234,7 @@ table.custom-data .headline {
     display: inline-block;
     width: 48px;
     height: auto;
-    border-radius: 5px;
+    border-radius: 50%;
 }
 
 .thread-entry.response > .avatar {
@@ -1236,7 +1243,10 @@ table.custom-data .headline {
 }
 
 img.avatar {
-    border-radius: inherit;
+    /*border-radius: inherit;*/
+    width: 100%;
+    margin-top: -6px;
+    border-radius: 50%;
 }
 
 .avatar > img.avatar {
@@ -1381,7 +1391,13 @@ img.avatar {
 
 .thread-event {
     padding: 0px 2px 15px;
-    margin-left: 60px;
+    margin-left: 3px;
+}
+
+.thread-event.S {
+    padding: 0px 2px 15px;
+    margin-right: 3px;
+    text-align: right;
 }
 
 .type-icon {
@@ -1389,6 +1405,7 @@ img.avatar {
     background-color: #f4f4f4;
     padding: 4px 6px;
     margin-right: 5px;
+    margin-left: 5px;
     text-align: center;
     display: inline-block;
     font-size: 1.1em;
@@ -1450,7 +1467,20 @@ img.avatar {
     border-left: 2px dotted #ddd;
     border-bottom-color: rgba(0, 0, 0, 0.1);
     position: absolute;
-    margin-left: 74px;
+    margin-left: 23px;
+    z-index: -1;
+    content: "";
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+#ticketThread::after {
+    border-right: 2px dotted #ddd;
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+    position: absolute;
+    margin-right: 23px;
     z-index: -1;
     content: "";
     top: 0;
@@ -1611,7 +1641,7 @@ img.avatar {
     margin: 0;
 }
 
-#presentationConnexion p:after {
+#presentationConnexion p:first-child:after {
     position: absolute;
     z-index: 1;
     content: "";

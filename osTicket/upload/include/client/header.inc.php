@@ -149,6 +149,7 @@ if ($lang) {
         } ?>
     </div>
     <?php
+
     if(strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"index.php") != false ||
       strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]") == strtolower("http://$_SERVER[HTTP_HOST]/osTicket/upload/")){
     echo "<div class='clear'></div>";
@@ -176,26 +177,29 @@ if ($lang) {
     } else if(strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"open.php") != false ||
              strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"tickets.php") != false){
         if (strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"tickets.php?id=") != false){
-
-        echo "<div class='clear'></div>";
-        echo '<div id="presentationConnexion">';
-        echo '<p>Ticket '. $ticket->getNumber() .'</p>';
-        echo "</div>";
-        echo "<div id='container'>";
-
-        }
-        else if(strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"open.php?newTicket=true") != false || strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"tickets.php") != false){
-        echo "<div class='clear'></div>";
-        echo '<div id="presentationConnexion">
-           <p>Nouveau ticket</p>';
-        echo "</div></div>";
-        echo "<div id='container'>";
-        } else{
-        echo "<div class='clear'></div>";
-         echo '<div id="presentationConnexion">
-           <p>Connexion</p>';
-        echo "</div>";
-        echo "<div id='container'>";
+            echo "<div class='clear'></div>";
+            echo '<div id="presentationConnexion">';
+            echo '<p>Ticket '. $ticket->getNumber() .'</p>';
+            echo "</div>";
+            echo "<div id='container'>";
+        } else if(strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"tickets.php") != false){
+            echo "<div class='clear'></div>";
+            echo '<div id="presentationConnexion">
+               <p>Listes des tickets</p>';
+            echo "</div>";
+            echo "<div id='container'>";
+        } else if(strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"open.php?") != false){
+            echo "<div class='clear'></div>";
+            echo '<div id="presentationConnexion">
+                <p>Nouveau ticket</p>';
+            echo "</div></div>";
+            echo "<div id='container'>";
+        } else {
+            echo "<div class='clear'></div>";
+            echo '<div id="presentationConnexion">
+               <p>Connexion</p>';
+            echo "</div></div>";
+            echo "<div id='container'>";
         }
     }
     else if(strstr(strtolower("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"),"account.php?do=create") != false ||

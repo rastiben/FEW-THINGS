@@ -96,7 +96,7 @@ class TicketsInfos
 
     public function tickets_assigned($staffId)
     {
-        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,status_id,number,lastupdate,closed,subject,source,ost_user.name,ost_user__cdata.firsname,priority_desc
+        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,status_id,ost_ticket_status.name as status_name,number,lastupdate,closed,subject,source,ost_user.name,ost_user__cdata.firsname,priority_desc
         FROM ost_ticket,ost_ticket__cdata,ost_ticket_status,ost_user,ost_user__cdata,ost_ticket_priority
         WHERE ost_ticket.ticket_id = ost_ticket__cdata.ticket_id
         AND ost_ticket.status_id = ost_ticket_status.id
