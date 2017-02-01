@@ -31,6 +31,11 @@ class Agent
     }
 
     public function staff_avatar($staff){
+        $staff = strtr(utf8_decode($staff),
+        utf8_decode(
+        'ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ'),
+        'SOZsozYYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy');
+
         $res = $this->dbh->prepare("SELECT avatar FROM ost_staff_avatar,ost_staff WHERE ost_staff.staff_id = ost_staff_avatar.id_staff AND CONCAT(ost_staff.firstname, ' ',ost_staff.lastname) = :staff");
         $res->execute(array(':staff'=>$staff));
         return $res->fetchAll();

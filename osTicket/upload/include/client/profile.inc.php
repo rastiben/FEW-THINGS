@@ -1,9 +1,5 @@
-<h1><?php echo __('Manage Your Profile Information'); ?></h1>
-<p><?php echo __(
-'Use the forms below to update the information we have on file for your account'
-); ?>
-</p>
-<form action="profile.php" method="post">
+<div class="profile">
+ <form action="profile.php" method="post">
   <?php csrf_token(); ?>
 <table width="800" class="padded">
 <?php
@@ -98,3 +94,4 @@ $selected = ($info['lang'] == $l['code']) ? 'selected="selected"' : ''; ?>
         window.location.href='index.php';"/>
 </p>
 </form>
+</div>

@@ -353,6 +353,12 @@ implements RestrictedAccess, Threadable {
             return false;
 
         // Check access based on department or assignment
+        if($staff->showAssignedOnly()){
+            echo "toto";
+        } else if(!$staff->canAccessDept($this->getDeptId())){
+            echo "titi";
+        }
+
         if (($staff->showAssignedOnly()
             || !$staff->canAccessDept($this->getDeptId()))
             // only open tickets can be considered assigned
@@ -360,9 +366,9 @@ implements RestrictedAccess, Threadable {
             && $staff->getId() != $this->getStaffId()
             && !$staff->isTeamMember($this->getTeamId())
         ) {
+
             return false;
         }
-
         // At this point staff has view access unless a specific permission is
         // requested
         if ($perm === null)

@@ -29,6 +29,8 @@ $ticket = $user = null; //clean start.
 $redirect = false;
 //LOCKDOWN...See if the id provided is actually valid and if the user has access.
 if($_REQUEST['id'] || $_REQUEST['number']) {
+    //echo $_REQUEST['id'];
+    //$ticket=Ticket::lookup($_REQUEST['id']);
     if($_REQUEST['id'] && !($ticket=Ticket::lookup($_REQUEST['id'])))
          $errors['err']=sprintf(__('%s: Unknown or invalid ID.'), __('ticket'));
     elseif($_REQUEST['number'] && !($ticket=Ticket::lookup(['number' => $_REQUEST['number']])))
@@ -38,6 +40,8 @@ if($_REQUEST['id'] || $_REQUEST['number']) {
         $ticket=null; //Clear ticket obj.
     }
 }
+
+//exit();
 
 if ($_REQUEST['uid']) {
     $user = User::lookup($_REQUEST['uid']);

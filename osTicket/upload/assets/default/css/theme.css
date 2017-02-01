@@ -1671,7 +1671,7 @@ img.avatar {
     margin: auto;
 }
 
-#indexTrianglify {
+#indexTrianglify div:first-child {
     background-image: url('../images/fond_presentation.png');
     background-repeat: no-repeat;
     background-size: cover;
@@ -2037,4 +2037,12 @@ table.tickets tbody tr.active{
 .openPage,
 .closePage{
     display:inline-block;
+}
+
+.profile{
+    width: 800px;
+    background: whitesmoke;
+    margin: 0px auto;
+    padding: 10px;
+    margin-top: 30px;
 }

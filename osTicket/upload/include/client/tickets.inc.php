@@ -258,7 +258,7 @@ if ($closedTickets) {?>
         <td><a class="Icon Ticket" href="./tickets.php?id=<?php echo $ticket['ticket_id'] ?>"><?php echo $ticket['number'] ?></a></td>
         <td><?php echo substr($ticket['created'],0,10) ?></td>
         <td><?php echo $ticket['subject'] ?></td>
-        <td><?php echo $ticket['name'] . ' ' . $ticket['firsname'] ?></td>
+        <td><?php echo ucwords($ticket['name'] . ' ' . $ticket['firsname']) ?></td>
     </tr>
     <?php
         $iC++;

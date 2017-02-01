@@ -421,8 +421,9 @@ $tickets->constrain(array('lock' => array(
     </div>
     <script>
 
-        $(document).ready(function(){
-
+        //$(document).ready(function(){
+        var toto = '';
+        function myEvent() {
             var search = false;
             $('.sb-search div').click(function(){
                 if(search === false){
@@ -454,8 +455,13 @@ $tickets->constrain(array('lock' => array(
                     $('.sb-search input').css('width',width - 50);
                 }
             });
-
+        }
+        $(document).ready(function () {
+            myEvent();
         });
+        //window.onpageshow = myEvent();
+
+        //});
 
     </script>
     <!--<form action="tickets.php" method="get" onsubmit="javascript:

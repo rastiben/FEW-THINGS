@@ -54,9 +54,10 @@ class TicketsAjaxAPI extends AjaxController {
         if (strlen($q) < 3)
             return $this->encode(array());
 
-        global $ost;
+        //global $ost;
         $hits = $ost->searcher->find($q, $hits)
             ->order_by(new SqlCode('__relevance__'), QuerySet::DESC);
+        //print_r($hits);
 
         if (preg_match('/\d{2,}[^*]/', $q, $T = array())) {
             $hits = TicketModel::objects()
@@ -188,6 +189,7 @@ class TicketsAjaxAPI extends AjaxController {
     function previewTicket ($tid) {
         global $thisstaff;
 
+        //echo $tid;
         if(!$thisstaff || !($ticket=Ticket::lookup($tid))
                 || !$ticket->checkStaffPerm($thisstaff))
             Http::response(404, __('No such ticket'));

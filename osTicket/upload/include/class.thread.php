@@ -1899,7 +1899,7 @@ class EditEvent extends ThreadEvent {
             $desc = __('<b>{somebody}</b> changed ownership to {<User>data.owner} {timestamp}');
             break;
         case isset($data['status']):
-            $desc = __('<b>{somebody}</b> changed the status to <strong>{<TicketStatus>data.status}</strong> {timestamp}');
+            $desc = __('<b>{somebody}</b> a changé le status vers <strong>{<TicketStatus>data.status}</strong> {timestamp}');
             break;
         case isset($data['fields']):
             $fields = $changes = array();
