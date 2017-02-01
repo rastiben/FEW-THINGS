@@ -25,10 +25,17 @@ else
     $toWrite = 'answer';
 ?>
 
+<?php
+
+    $avatar = $entry->getUser() ? NULL : Agent::getInstance()->staff_avatar($user);
+
+?>
+
 <div class="thread-entry <?php echo $toWrite ?>">
 
 <?php if($toWrite == 'message'){ ?>
 <span class="<?php echo 'pull-left'; ?> avatar">
+
     <img class="avatar" alt="Avatar" src="../assets/default/images/avatar.png"><?php echo '<span>' .  strtoupper(substr(Format::htmlchars($name),0,1)) . '</span>'?></img>
 </span>
 <?php } ?>
@@ -134,7 +141,7 @@ else
     } ?>
 <?php if($toWrite == 'answer'){ ?>
 <span class="pull-right avatar">
-    <img class="avatar" alt="Avatar" src="../assets/default/images/avatar.png"><?php echo '<span>' .  strtoupper(substr(Format::htmlchars($name),0,1)) . '</span>'?></img>
+    <img class="avatar" alt="Avatar" src="../assets/avatar/<?php echo $avatar[0]['avatar'] ?>"/>
 </span>
 <?php } ?>
 </div>

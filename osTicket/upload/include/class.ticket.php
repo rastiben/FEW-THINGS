@@ -1422,7 +1422,7 @@ implements RestrictedAccess, Threadable {
         $phone = Format::htmlchars($this->getPhoneNumber());
         $phone = str_replace(array('(',')',' ','-'), '',$phone);
         $phone = chunk_split($phone,2,' ');
-        echo $phone;
+
 
         $html = '<h3>Nom du contact : ' . $this->getOwner()->getFullName() . '</h3>'.
             '<span>Souci : ' . $_POST['message'] . ' </span></br>'.

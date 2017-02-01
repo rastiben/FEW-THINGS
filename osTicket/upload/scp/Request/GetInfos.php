@@ -96,14 +96,55 @@ class TicketsInfos
 
     public function tickets_assigned($staffId)
     {
-        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,status_id,number,lastupdate,closed,subject,source,ost_user.name,ost_user__cdata.firsname,priority_desc FROM ost_ticket,ost_ticket__cdata,ost_ticket_status,ost_user,ost_user__cdata,ost_ticket_priority WHERE ost_ticket.ticket_id = ost_ticket__cdata.ticket_id AND ost_ticket.status_id = ost_ticket_status.id AND ost_ticket.user_id = ost_user.id AND ost_user.id = ost_user__cdata.user_id AND ost_ticket__cdata.priority = ost_ticket_priority.priority_id AND ost_ticket.staff_id = :staffID AND ost_ticket.status_id = '1' AND (ost_ticket.created IS NOT NULL OR ost_ticket.reopened IS NOT NULL) ORDER BY DATE(lastupdate) DESC");
+        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,status_id,number,lastupdate,closed,subject,source,ost_user.name,ost_user__cdata.firsname,priority_desc
+        FROM ost_ticket,ost_ticket__cdata,ost_ticket_status,ost_user,ost_user__cdata,ost_ticket_priority
+        WHERE ost_ticket.ticket_id = ost_ticket__cdata.ticket_id
+        AND ost_ticket.status_id = ost_ticket_status.id
+        AND ost_ticket.user_id = ost_user.id
+        AND ost_user.id = ost_user__cdata.user_id
+        AND ost_ticket__cdata.priority = ost_ticket_priority.priority_id
+        AND ost_ticket.staff_id = :staffID
+        AND ost_ticket_status.state = 'open'
+        AND (ost_ticket.created IS NOT NULL OR ost_ticket.reopened IS NOT NULL)
+        ORDER BY DATE(lastupdate) DESC");
         $res->execute(array(':staffID'=>$staffId));
         return $res->fetchAll();
     }
 
-    public function tickets($status='open'){
-        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,status_id,number,lastupdate,closed,subject,source,ost_user.name,ost_user__cdata.firsname,priority_desc FROM ost_ticket,ost_ticket__cdata,ost_ticket_status,ost_user,ost_user__cdata,ost_ticket_priority WHERE ost_ticket.ticket_id = ost_ticket__cdata.ticket_id AND ost_ticket.status_id = ost_ticket_status.id AND ost_ticket.user_id = ost_user.id AND ost_user.id = ost_user__cdata.user_id AND ost_ticket__cdata.priority = ost_ticket_priority.priority_id AND ost_ticket_status.state = :status ORDER BY DATE(lastupdate) DESC ,DATE(closed) DESC");
+    public function tickets($status="open"){
+        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,ost_ticket_status.name as status_name,status_id,number,lastupdate,closed,subject,source,ost_user.name,ost_user__cdata.firsname,priority_desc
+        FROM ost_ticket,ost_ticket__cdata,ost_ticket_status,ost_user,ost_user__cdata,ost_ticket_priority
+        WHERE ost_ticket.ticket_id = ost_ticket__cdata.ticket_id
+        AND ost_ticket.status_id = ost_ticket_status.id
+        AND ost_ticket.user_id = ost_user.id
+        AND ost_user.id = ost_user__cdata.user_id
+        AND ost_ticket__cdata.priority = ost_ticket_priority.priority_id
+        AND ost_ticket_status.state = :status
+        ORDER BY DATE(lastupdate) DESC ,DATE(closed) DESC");
         $res->execute(array(':status'=>$status));
+        return $res->fetchAll();
+    }
+
+    public function search_tickets($search){
+        $res = $this->dbh->prepare(
+        "SELECT ost_ticket.ticket_id,ost_ticket_status.name as status_name,status_id,number,lastupdate,closed,subject,ost_ticket.source,ost_user.name,ost_user__cdata.firsname,priority_desc,ost_organization.name as org_name
+        FROM ost_ticket,ost_ticket__cdata,ost_ticket_status,ost_user,ost_user__cdata,ost_ticket_priority,ost_organization,ost_thread,ost_thread_entry
+        WHERE ost_ticket.ticket_id = ost_ticket__cdata.ticket_id
+        AND ost_ticket.status_id = ost_ticket_status.id
+        AND ost_ticket.user_id = ost_user.id
+        AND ost_thread.object_id = ost_ticket.ticket_id
+        AND ost_thread.id = ost_thread_entry.thread_id
+        AND ost_user.id = ost_user__cdata.user_id
+        AND ost_ticket__cdata.priority = ost_ticket_priority.priority_id
+        AND ost_user.org_id = ost_organization.id
+        AND (number LIKE :search
+        OR subject LIKE :search
+        OR CONCAT(ost_user__cdata.firsname, ' ', ost_user.name) LIKE :search
+        OR ost_organization.name LIKE :search
+        OR ost_thread_entry.body LIKE :search
+        OR ost_thread_entry.title LIKE :search)
+        ORDER BY DATE(lastupdate) DESC ,DATE(closed) DESC");
+        $res->execute(array(':search'=>'%' . $search . '%'));
         return $res->fetchAll();
     }
 }

@@ -209,7 +209,7 @@ if (count($bks) > 1) {
 
   <!-- ============== DEPARTMENT ACCESS =================== -->
 
-  <div class="hidden tab_content" id="access">
+  <div class="tab_content" id="access" style="display:none">
     <table class="table two-column" width="940" border="0" cellspacing="0" cellpadding="2">
       <tbody>
         <tr class="header">
@@ -327,7 +327,7 @@ foreach ($staff->dept_access as $dept_access) {
 
   <!-- ================= PERMISSIONS ====================== -->
 
-  <div id="permissions" class="hidden">
+  <div id="permissions" style="display:none">
 <?php
     $permissions = array();
     foreach (RolePermission::allPermissions() as $g => $perms) {
@@ -352,7 +352,7 @@ foreach ($staff->dept_access as $dept_access) {
 <?php
     $first = true;
     foreach ($permissions as $g => $perms) { ?>
-    <div class="tab_content <?php if (!$first) { echo 'hidden'; } else { $first = false; }
+    <div class="tab_content" style=" <?php if (!$first) { echo 'display:none'; } else { $first = false; }
       ?>" id="<?php echo Format::slugify($g); ?>">
       <table class="table">
 <?php foreach ($perms as $k => $v) { ?>
@@ -378,7 +378,7 @@ foreach ($staff->dept_access as $dept_access) {
 
   <!-- ============== TEAM MEMBERSHIP =================== -->
 
-  <div class="hidden tab_content" id="teams">
+  <div class="tab_content" id="teams" style="display:none">
     <table class="table two-column" width="100%">
       <tbody>
         <tr class="header">

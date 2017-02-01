@@ -145,7 +145,7 @@ if (!defined('OSTADMININC') || !$thisstaff || !$thisstaff->isAdmin() || !$config
                 </tbody>
             </table>
         </div>
-        <div id="templates" class="tab_content hidden">
+        <div id="templates" class="tab_content" style="display:none">
             <table class="form_table settings_table" width="940" border="0" cellspacing="0" cellpadding="2">
                 <tbody>
                     <?php

@@ -52,22 +52,22 @@ $queue_columns = array(
             'sort_col' => 'created',
             ),
         'subject' => array(
-            'width' => '29.8%',
+            'width' => '26%',
             'heading' => __('Subject'),
             'sort_col' => 'cdata__subject',
             ),
         'name' => array(
-            'width' => '18.1%',
+            'width' => '14%',
             'heading' => __('From'),
             'sort_col' =>  'user__name',
             ),
         'org' => array(
-            'width' => '18.1%',
+            'width' => '14%',
             'heading' => __('Organisation'),
             'sort_col' =>  'user__name',
             ),
         'status' => array(
-            'width' => '8.4%',
+            'width' => '13%',
             'heading' => __('Status'),
             'sort_col' => 'status_id',
             ),
@@ -406,11 +406,59 @@ $tickets->constrain(array('lock' => array(
 <div id='basic_search'>
   <div class="pull-right" style="height:25px">
     <span class="valign-helper"></span>
-    <?php
+    <!--<?php
     require STAFFINC_DIR.'templates/queue-sort.tmpl.php';
-    ?>
+    ?>-->
   </div>
-    <form action="tickets.php" method="get" onsubmit="javascript:
+
+   <div id="sb-search" class="sb-search">
+        <form>
+            <div>
+                <i class="icon-search" aria-hidden="true"></i>
+            </div>
+            <input class="sb-search-input" placeholder="Entrez votre recherche" type="search" value="" name="search" id="search">
+        </form>
+    </div>
+    <script>
+
+        $(document).ready(function(){
+
+            var search = false;
+            $('.sb-search div').click(function(){
+                if(search === false){
+                    var width = $(this).parent().parent().width();
+                    $(this).siblings().addClass('active');
+                    $(this).siblings().animate({
+                        width: width - 50
+                        ,'padding-top':20
+                        ,'padding-right':65
+                        ,'padding-bottom':20
+                        ,'padding-left':20
+                    }, 300 );
+                    search = true;
+                } else {
+                    var width = $(this).parent().parent().width();
+                    var siblings = $(this).siblings();
+                    siblings.removeClass('active');
+                     $(this).siblings().animate({
+                        width: 0
+                        ,padding:0
+                    }, 300);
+                    search = false;
+                }
+            });
+
+            $(window).resize(function(){
+                if($('.sb-search input').hasClass('active')){
+                    var width = $('.sb-search').width();
+                    $('.sb-search input').css('width',width - 50);
+                }
+            });
+
+        });
+
+    </script>
+    <!--<form action="tickets.php" method="get" onsubmit="javascript:
   $.pjax({
     url:$(this).attr('action') + '?' + $(this).serialize(),
     container:'#pjax-container',
@@ -430,7 +478,7 @@ return false;">
         $.dialog('ajax.php/tickets/search', 201);"
         >[<?php echo __('advanced'); ?>]</a>
         <i class="help-tip icon-question-sign" href="#advanced"></i>
-    </form>
+    </form>-->
 </div>
 <!-- SEARCH FORM END -->
 <div class="clear"></div>
@@ -472,10 +520,10 @@ return false;">
             unset($queue_columns['dept']);
             unset($queue_columns['assignee']);
 
-            if ($search && !$status)
+            /*if ($search && !$status)
                 unset($queue_columns['priority']);
             else
-                unset($queue_columns['status']);
+                unset($queue_columns['status']);*/
 
             // Query string
             unset($args['sort'], $args['dir'], $args['_pjax']);
@@ -506,15 +554,26 @@ return false;">
 
         /*CREATION D'UN RAPPORT*/
         $status = $_GET['status'];
-        if($status == 'assigned'){
-            $tickets = TicketsInfos::getInstance()->tickets_assigned($thisstaff->getId());
+        $search = $_GET['search'];
+
+        if(!empty($search)){
+            $tickets = TicketsInfos::getInstance()->search_tickets($search);
         } else {
-            $tickets = TicketsInfos::getInstance()->tickets($_GET['status']);
+            if($status == 'assigned'){
+                $tickets = TicketsInfos::getInstance()->tickets_assigned($thisstaff->getId());
+            } else {
+                if(!empty($status))
+                    $tickets = TicketsInfos::getInstance()->tickets($status);
+                else
+                    $tickets = TicketsInfos::getInstance()->tickets();
+            }
         }
+
+         //print_r($tickets);
 
         foreach ($tickets as $T) {
             $total += 1;
-                $tag=$T['staff_id']?'assigned':'openticket';
+                /*$tag=$T['staff_id']?'assigned':'openticket';
                 $flag=null;
                 if($T['lock__staff_id'] && $T['lock__staff_id'] != $thisstaff->getId())
                     $flag='locked';
@@ -530,7 +589,7 @@ return false;">
                 }
                 else {
                     $lc = Dept::getLocalById($T['dept_id'], 'name', $T['dept__name']);
-                }
+                }*/
                 $tid=$T['number'];
                 $subject = $subject_field->display($subject_field->to_php($T['cdata__subject']));
                 $threadcount=$T['thread_count'];
@@ -593,6 +652,8 @@ return false;">
                         $displaystatus="<b>$displaystatus</b>";
                     echo "<td>$displaystatus</td>";
                 } else { ?>
+                <td class="nohover" align="center">
+                    <?php echo $T['status_name']; ?></td>
                 <td class="nohover" align="center"
                     style="background-color:<?php echo $T['cdata__:priority__priority_color']; ?>;">
                     <?php echo $T['priority_desc']; ?></td>
@@ -608,7 +669,7 @@ return false;">
     </tbody>
     <tfoot>
      <tr>
-        <td colspan="7">
+        <td colspan="8">
             <?php if($total && $thisstaff->canManageTickets()){ ?>
             <?php echo __('Select');?>:&nbsp;
             <a id="selectAll" href="#ckb"><?php echo __('All');?></a>&nbsp;&nbsp;
@@ -623,7 +684,7 @@ return false;">
      </tr>
     </tfoot>
     </table>
-    <?php
+    <!--<?php
     if ($total>0) { //if we actually had any tickets returned.
 ?>      <div>
             <span class="faded pull-right"><?php echo $pageNav->showing(); ?></span>
@@ -635,7 +696,7 @@ return false;">
                         'status' => $_REQUEST['status'])),
                 __('Export'));
         echo '&nbsp;<i class="help-tip icon-question-sign" href="#export"></i></div>';
-    } ?>
+    } ?>-->
     </form>
 </div>
 

@@ -10,6 +10,7 @@ $info=($_POST && $errors)?Format::input($_POST):array();
 
 require_once(SCP_DIR . 'Request/GetInfos.php');
 require_once(SCP_DIR . 'Request/Rapport.php');
+require_once(SCP_DIR . 'Request/Agent.php');
 
 //Get the goodies.
 $dept  = $ticket->getDept();  //Dept
@@ -57,7 +58,6 @@ if($ticket->isOverdue())
 ?>
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-<script src="./js/moment.js"></script>
 <div>
     <div class="sticky bar col-md-12" data_ticket_id="<?php echo $ticket->getId(); ?>"
       data_agent_id="<?php echo $thisstaff->getId(); ?>">
@@ -335,7 +335,8 @@ if($ticket->isOverdue())
     echo $attrs; ?>><?php echo $_POST ? $info['response'] : $draft;
                     ?></textarea>
         <br>
-       <input class="horaire add save pending" type="submit" name="addRapport">
+        <button class="cancel pending newRapport" type="cancel" style="float:right">Annuler</button>
+        <input class="horaire add save pending pull-right" type="submit" name="addRapport">
         </div>
    </div>
    <div class="addRapport col-md-12">
@@ -560,7 +561,7 @@ if($ticket->isOverdue())
             );
 ?>
 <div class="clear"></div>
-<?php
+<!--<?php
 if ($errors['err'] && isset($_POST['a'])) {
     // Reflect errors back to the tab.
     $errors[$_POST['a']] = $errors['err'];
@@ -570,7 +571,7 @@ if ($errors['err'] && isset($_POST['a'])) {
 } elseif($warn) { ?>
     <div id="msg_warning"><?php echo $warn; ?></div>
 <?php
-} ?>
+} ?>-->
 
 <div class="sticky bar stop actions" id="response_options">
     <ul class="tabs" id="response-tabs">
@@ -1304,6 +1305,8 @@ $(function() {
 });
 </script>
 
+
+<script src="./js/moment.js"></script>
 <script>
 
     $(document).ready(function(){
@@ -1414,7 +1417,7 @@ $(function() {
                 var clone = $('#addTimeDiv');
 
                 $('#addTimeDiv .redactor-editor').removeClass('redactor-placeholder');
-                $('#addTimeDiv .redactor-editor').text($(this).attr('data-comment'));
+                $('#addTimeDiv .redactor-editor').text($(this).parent().siblings('span').text());
 
                 var arrive = moment($(this).attr('data-arrive'),"YYYY/MM/DD HH:mm:ss");
                 var depart = moment($(this).attr('data-depart'),"YYYY/MM/DD HH:mm:ss");
@@ -1428,6 +1431,12 @@ $(function() {
 
             }
 
+        });
+
+        $('.cancel.pending.newRapport').click(function(){
+            $('.addRapport').css('display','block');
+            $('.addRapport').addClass('animated fadeInUp');
+            $(this).parent().parent().css('display','none');
         });
 
         $('.cancel.pending').click(function(){
@@ -1484,18 +1493,10 @@ $(function() {
 
         /*NOUVEAU RAPPORT*/
         $('.addRapport').click(function(){
-            $(this).addClass('animated fadeOutDown');
+            //$(this).addClass('animated fadeOutDown');
             $(this).css('display','none');
             $('#rapport').addClass('animated fadeInDown');
             $('#rapport').css('display','block');
-        });
-
-        $('.addRapport').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-            $(this).removeClass('animated fadeOutDown');
-        });
-
-        $('#rapport').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-            $(this).removeClass('animated fadeInDown');
         });
 
         /*$('.fa.fa-print.fa-2x').click(function(){

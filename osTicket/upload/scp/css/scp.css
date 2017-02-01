@@ -349,6 +349,7 @@ a.assignedTickets { background:url(../images/icons/assigned_tickets.gif) }
 a.overdueTickets { background:url(../images/icons/overdue_tickets.gif) }
 a.answeredTickets { background:url(../images/icons/answered_tickets.gif) }
 a.closedTickets { background:url(../images/icons/closed_tickets.gif) }
+a.waitingTicket { background:url(../images/icons/closed_tickets.gif) }
 a.newTicket { background:url(../images/icons/new_ticket.gif) }
 
 a.premade { background:url(../images/icons/premade_reply.gif) }
@@ -956,21 +957,21 @@ a#post-note:hover {
 
 .thread-entry.message > .avatar {
     position: absolute;
-    width: 48px;
-    left: -76px;
-    top:-8px;
+    /*width: 48px;*/
+    left: -87px;
+    top:-18px;
 }
 
 .thread-entry.answer > .avatar {
     position: absolute;
-    width: 48px;
-    right: -76px;
-    top:-8px;
+    /* width: 48px; */
+    right: -87px;
+    top: -17px;
 }
 
 .thread-entry > .avatar span{
     position: absolute;
-    top: 8px;
+    top: 18px;
     font-size: 23px;
     display: block;
     width: 100%;
@@ -984,11 +985,10 @@ a#post-note:hover {
 img.avatar {
     border-radius: inherit;
     vertical-align: middle;
-    margin-right: 5px;
 }
 .avatar > img.avatar {
-    width: 100%;
-    height: auto;
+    width: 70px;
+    height: 70px;
 }
 
 .thread-entry .header img{
@@ -3629,7 +3629,45 @@ input[type="radio"]{
 #rapport div:first-child{
     border: 1px solid lightgray;
     padding: 15px;
+    padding-bottom: 40px;
     background: white;
     position: relative;
     box-shadow: 2px 2px 2px 1px rgba(189,189,189,1);
+}
+
+/*SEARCH*/
+.sb-search{
+
+}
+
+.sb-search input{
+    border: none;
+    outline: none;
+    background: #fff;
+    width: 0px;
+    height: 50px;
+    margin: 0;
+    z-index: 10;
+    padding:0px;
+    border-radius: 0px;
+    font-family: inherit;
+    font-size: 20px;
+    color: #2c3e50;
+}
+
+.sb-search div{
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+    background-color:#e67e22;
+    text-align: center;
+    float:left;
+}
+
+.sb-search div i{
+    color: white;
+    font-size: 22px;
+    background: #e67e22;
+    font-size: 22px;
+    line-height: 50px;
 }

@@ -24,6 +24,10 @@ if(($subnav=$nav->getSubMenu()) && is_array($subnav)){
             foreach ($item['attr'] as $name => $value)
                 $attr.=  sprintf("%s='%s' ", $name, $value);
 
+        /*if(strstr($class,"newTicket"))
+                echo sprintf('<li><a class="%s" href="%s">%s</a></li>',
+                "waitingTicket", "tickets.php?status=waiting", "En attente");*/
+
         echo sprintf('<li><a class="%s" href="%s" title="%s" id="%s" %s>%s</a></li>',
                 $class, $item['href'], $item['title'], $id, $attr, $item['desc']);
     }
