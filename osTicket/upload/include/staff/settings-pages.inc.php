@@ -23,7 +23,7 @@ $pages = Page::getPages();
 </ul>
 
 <div class="tab_content" id="basic-information">
-<table class="form_table settings_table" width="940" border="0" cellspacing="0" cellpadding="2">
+<table class="form_table settings_table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <tbody>
     <?php
         $form = $ost->company->getForm();
@@ -33,8 +33,8 @@ $pages = Page::getPages();
     </tbody>
 </table>
 </div>
-<div class="tab_content" id="site-pages">
-<table class="form_table settings_table" width="940" border="0" cellspacing="0" cellpadding="2">
+<div class="tab_content" id="site-pages" style="display:none">
+<table class="form_table settings_table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
             <th colspan="2">
@@ -108,8 +108,8 @@ $pages = Page::getPages();
     </tbody>
 </table>
 </div>
-<div class="tab_content" id="logos">
-<table class="form_table settings_table" width="940" border="0" cellspacing="0" cellpadding="2">
+<div class="tab_content" id="logos" style="display:none">
+<table class="form_table settings_table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
             <th colspan="2">
@@ -205,8 +205,8 @@ $pages = Page::getPages();
 </table>
 </div>
 
-<div class="tab_content" id="backdrops">
-<table class="form_table settings_table" width="940" border="0" cellspacing="0" cellpadding="2">
+<div class="tab_content" id="backdrops" style="display:none">
+<table class="form_table settings_table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
             <th colspan="2">

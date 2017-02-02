@@ -1,13 +1,12 @@
 <?php
 if(($tabs=$nav->getTabs()) && is_array($tabs)){
+
+    $active = true;
+
     foreach($tabs as $name =>$tab) {
 
+        if($tab['active']) $active = false;
 
-            /*<li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>*/
         if ($tab['href'][0] != '/')
             $tab['href'] = ROOT_PATH . 'scp/' . $tab['href'];
         echo sprintf('<li class="%s %s"><a href="%s">%s</a>',
@@ -32,4 +31,10 @@ if(($tabs=$nav->getTabs()) && is_array($tabs)){
         }*/
         echo "\n</li>\n";
     }
+
+    echo sprintf('<li class="%s"><a href="%s">%s</a>',
+        $active ? 'active' : 'inactive',
+        './atelier.php',
+        'Atelier');
+
 } ?>

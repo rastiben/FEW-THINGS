@@ -10,7 +10,7 @@ if ($_POST)
     // timezone)
     $info['duedate'] = Format::date(strtotime($info['duedate']), false, false, 'UTC');
 ?>
-<form action="tickets.php?id=<?php echo $ticket->getId(); ?>&a=edit" method="post" class="save"  enctype="multipart/form-data">
+<form action="tickets.php?id=<?php echo $ticket->getId(); ?>&a=edit" method="post" data_org_id="<?php echo $ticket->getUser()->getOrgId() ?>" class="save"  enctype="multipart/form-data">
     <?php csrf_token(); ?>
     <input type="hidden" name="do" value="update">
     <input type="hidden" name="a" value="edit">
@@ -20,7 +20,7 @@ if ($_POST)
             <h2><?php echo sprintf(__('Update Ticket #%s'),$ticket->getNumber());?></h2>
         </div>
     </div>
-    <table class="form_table" width="940" border="0" cellspacing="0" cellpadding="2">
+    <table class="form_table" width="100%" border="0" cellspacing="0" cellpadding="2">
         <tbody>
             <tr>
                 <th colspan="2">
@@ -144,13 +144,13 @@ if ($_POST)
         </tr>
     </tbody>
 </table>
-<table class="form_table dynamic-forms" width="940" border="0" cellspacing="0" cellpadding="2">
+<table class="form_table dynamic-forms" width="100%" border="0" cellspacing="0" cellpadding="2">
         <?php if ($forms)
             foreach ($forms as $form) {
                 $form->render(true, false, array('mode'=>'edit','width'=>160,'entry'=>$form));
         } ?>
 </table>
-<table class="form_table" width="940" border="0" cellspacing="0" cellpadding="2">
+<table class="form_table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <tbody>
         <tr>
             <th colspan="2">
@@ -177,6 +177,50 @@ if ($_POST)
 </div>
 <script type="text/javascript">
 +(function() {
+
+    /*GET PLACES*/
+    /*data_org_id*/
+    var textarea = $("tr td:contains('Adresse concerné')").siblings().find('textarea');
+
+    var places;
+    var id_org = $("form").attr('data_org_id');
+    $.ajax({
+          method: "POST",
+          url: "./Request/Orgs.php",
+          data: {
+              get_places: ''
+              , id_org: id_org
+          }
+        })
+        .success(function( data ) {
+            places = JSON.parse(data);
+            $('body').prepend('<div class="places"></div>');
+            $(places).each(function(index,place){
+                $('.places').append('<div>'+place['Adresse']+'</div>')
+            });
+        });
+
+    /*click adresse concerné*/
+    textarea.click(function(){
+        var offset = $(this).offset();
+        $('.places').css('top',offset.top+$(this).height()+8);
+        $('.places').css('left',offset.left);
+        $('.places').css('width',$(this).width()+13);
+        $('.places').css('display','block');
+    });
+
+    textarea.focusout(function(){
+        if($('.places:hover').length)
+            return
+        $('.places').css('display','none');
+    });
+
+    $(document).on('click','.places p',function(){
+        textarea.val($(this).text());
+        $(this).parent().css('display','none');
+    });
+
+
   var I = setInterval(function() {
     if (!$.fn.sortable)
       return;

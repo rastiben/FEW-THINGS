@@ -421,19 +421,16 @@ $tickets->constrain(array('lock' => array(
     </div>
     <script>
 
-        //$(document).ready(function(){
+        $(document).ready(function(){
+
         var toto = '';
-        function myEvent() {
             var search = false;
             $('.sb-search div').click(function(){
                 if(search === false){
                     var width = $(this).parent().parent().width();
                     $(this).siblings().addClass('active');
                     $(this).siblings().animate({
-                        width: width - 50
-                        ,'padding-top':20
-                        ,'padding-right':65
-                        ,'padding-bottom':20
+                        width: width - 51
                         ,'padding-left':20
                     }, 300 );
                     search = true;
@@ -451,17 +448,11 @@ $tickets->constrain(array('lock' => array(
 
             $(window).resize(function(){
                 if($('.sb-search input').hasClass('active')){
-                    var width = $('.sb-search').width();
-                    $('.sb-search input').css('width',width - 50);
+                    var width = $('.sb-search').width() - 51;
+                    $('.sb-search input').css('width',width);
                 }
             });
-        }
-        $(document).ready(function () {
-            myEvent();
         });
-        //window.onpageshow = myEvent();
-
-        //});
 
     </script>
     <!--<form action="tickets.php" method="get" onsubmit="javascript:

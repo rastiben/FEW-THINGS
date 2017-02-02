@@ -36,9 +36,30 @@ if ($ticket && $ticket->getOwnerId() == $user->getId())
             $form->render();
     ?>
     </table>
+    <table class="otherAdresses" data_id_org="<?php echo $org->getId() ?>" width="100%">
+       <thead>
+           <th>Autres adresses :</th>
+           <th>Supprimer</th>
+       </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input placeholder="Saisissez une adresse" type="text"/>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger removeAdresse">-</button>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <td colspan="2">
+                <button type="button" class="btn btn-primary addAdresse">Ajouter</button>
+            </td>
+        </tfoot>
+    </table>
 </div>
 
-<div class="hidden tab_content" id="contact-settings" style="margin:5px;">
+<div class="tab_content" id="contact-settings" style="margin:5px;display:none">
     <table style="width:100%">
         <tbody>
             <tr>
@@ -174,6 +195,25 @@ echo $account ? 'cancel' : 'close'; ?>"  value="<?php echo __('Cancel'); ?>">
 
 <script type="text/javascript">
 $(function() {
+
+    var id_org = $('.otherAdresses').attr('data_id_org');
+
+    $.ajax({
+          method: "POST",
+          url: "./Request/Orgs.php",
+          data: {
+              get_places: ''
+              , id_org: id_org
+          }
+        })
+        .success(function( data ) {
+        var places = JSON.parse(data);
+        $(places).each(function(index,place){
+                //console.log(place);
+            $('.otherAdresses tbody').prepend('<tr><td><input placeholder="Saisissez une adresse" value="'+place['Adresse']+'" type="text"/></td><td><button type="button" class="btn btn-danger removeAdresse">-</button></td></tr>');
+            });
+        });
+
     $('a#editorg').click( function(e) {
         e.preventDefault();
         $('div#org-profile').hide();
@@ -188,5 +228,38 @@ $(function() {
         return false;
     });
     $("#primary_contacts").select2({width: '300px'});
+
+    /*MULTIPLE ADRESSES*/
+    $('.addAdresse').click(function(){
+        var tbody =  $('.otherAdresses tbody');
+        tbody.append('<tr><td><input placeholder="Saisissez une adresse" type="text"/></td><td><button type="button" class="btn btn-danger removeAdresse">-</button></td></tr>');
+    });
+
+    $(document).on('click','.removeAdresse',function(){
+        $(this).closest('tr').remove();
+    });
+
+    $('input[type="submit"]').click(function(){
+        var adresse = [];
+        $('.otherAdresses tbody tr').each(function(index,element){
+            if($(this).find('input').val())
+                adresse.push($(this).find('input').val())
+        });
+
+        $.ajax({
+          method: "POST",
+          url: "./Request/Orgs.php",
+          data: {
+              add_place: ''
+              , id_org: id_org
+              , adresse: adresse
+          }
+        })
+          .success(function( data ) {
+
+          });
+
+    });
+
 });
 </script>

@@ -120,7 +120,7 @@ a time {
 
 #notice_bar { margin: 0; padding: 5px 10px 5px 36px; height: 16px; line-height: 16px; border: 1px solid #0a0; background: url('../images/icons/ok.png') 10px 50% no-repeat #e0ffe0; }
 
-#warning_bar { margin: 0; padding: 5px 10px 5px 36px; height: 16px; line-height: 16px; border: 1px solid #f26522; background: url('../images/icons/alert.png') 10px 50% no-repeat #ffffdd; }
+#warning_bar { margin: 0; padding: 5px 10px 5px 36px; height: 30px; border: 1px solid #f26522; background: url('../images/icons/alert.png') 10px 50% no-repeat #ffffdd; }
 
 #error_bar { margin: 0; padding: 5px 10px 5px 36px; height: 16px; line-height: 16px; border: 1px solid #a00; background: url('../images/icons/error.png') 10px 50% no-repeat #fff0f0; }
 
@@ -3670,4 +3670,43 @@ input[type="radio"]{
     background: #e67e22;
     font-size: 22px;
     line-height: 50px;
+}
+
+/*MULTIPLE ADDRESSES*/
+.addAdresse{
+    float:right;
+}
+
+.otherAdresses tbody td{
+    text-align:center;
+    border-bottom: 2px solid transparent;
+}
+
+.removeAdresse{
+    width: 40px;
+}
+
+.otherAdresses tbody input{
+    width:100%;
+}
+
+.places{
+    background: white;
+    display: none;
+    position: absolute;
+    z-index: 30000;
+    border: 1px solid lightgray;
+}
+
+.places div{
+    line-height: 40px;
+    height: 40px;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+}
+
+.places p:hover{
+    background: #5897fb;
+    color: white;
 }

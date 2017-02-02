@@ -1,0 +1,23 @@
+/*Atelier*/
+.atelier{
+    background: url(../../assets/atelier/atelier.png) center no-repeat;
+    background-size: contain;
+    width: 500px;
+    height: 491px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.atelier .bureau{
+    position: absolute;
+
+    p{
+        left: 175px;
+        top: 35px;
+    }
+}
+
+/*.atelier .bureau p{
+    left: 175px;
+    top: 35px;
+}*/

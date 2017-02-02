@@ -17,7 +17,7 @@ if(!($maxfileuploads=ini_get('max_file_uploads')))
         <?php echo __('Alerts and Notices'); ?></a></li>
 </ul>
 <div class="tab_content" id="settings">
-<table class="form_table settings_table" width="940" border="0" cellspacing="0" cellpadding="2">
+<table class="form_table settings_table" width="100%" border="0" cellspacing="0" cellpadding="2">
     <thead>
         <tr>
             <th colspan="2">
@@ -231,10 +231,12 @@ if(!($maxfileuploads=ini_get('max_file_uploads')))
 </table>
 </div>
 <div class="tab_content" id="autoresp"
+   style="display:none"
     data-tip-namespace="settings.autoresponder">
     <?php include STAFFINC_DIR . 'settings-autoresp.inc.php'; ?>
 </div>
 <div class="tab_content" id="alerts"
+   style="display:none"
     data-tip-namespace="settings.alerts">
     <?php include STAFFINC_DIR . 'settings-alerts.inc.php'; ?>
 </div>
