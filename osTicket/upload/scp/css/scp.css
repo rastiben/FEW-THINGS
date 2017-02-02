@@ -3710,3 +3710,82 @@ input[type="radio"]{
     background: #5897fb;
     color: white;
 }
+
+/*Atelier*/
+.atelier{
+    background: url(../../assets/atelier/atelier.png) center no-repeat;
+    background-size: contain;
+    width: 500px;
+    height: 491px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.atelier .bureau,
+.atelier .portable,
+.atelier .mur,
+.atelier .serveur{
+    position: absolute;
+    background: url(../../assets/atelier/poste.png) center no-repeat;
+    background-size: contain;
+    top: 20px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.atelier .portable{
+    transform: rotate(-90deg);
+    left: 93px;
+}
+
+.atelier .mur{
+    transform: rotate(180deg);
+    top: 220px;
+}
+
+/*BUREAU*/
+
+.atelier .bureau#un{
+    left: 155px;
+}
+
+.atelier .bureau#deux{
+    left: 225px;
+}
+
+.atelier .bureau#trois{
+    left: 295px;
+}
+
+/*PORTABLE*/
+
+.atelier .portable#un{
+    top: 155px;
+}
+
+.atelier .portable#deux{
+    top: 95px;
+}
+
+.atelier .portable#trois{
+    top: 40px;
+}
+
+/*MUR*/
+
+.atelier .mur#un{
+    left: 164px;
+}
+
+.atelier .mur#deux{
+    left: 113px;
+}
+
+.atelier .mur#trois{
+    left: 62px;
+}
+
+.atelier .mur#quatre{
+    left: 11px;
+}
