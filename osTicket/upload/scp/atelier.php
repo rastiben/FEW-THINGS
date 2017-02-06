@@ -9,6 +9,8 @@ require('staff.inc.php');
 //require_once(INCLUDE_DIR.'class.dynamic_forms.php');
 //require_once(INCLUDE_DIR.'class.export.php');       // For paper sizes
 
+$nav->setActiveTab('atelier');
+
 $nav->addSubMenu(array('desc'=>'Tickets',
                             'title'=>'Tickets Atelier',
                             'href'=>'atelier.php?tabs=tickets',

@@ -60,7 +60,7 @@ class StaffNav {
     }
 
     function setTabActive($tab, $menu=''){
-
+        //echo $tab;
         if($this->tabs[$tab]){
             $this->tabs[$tab]['active']=true;
             if($this->activetab && $this->activetab!=$tab && $this->tabs[$this->activetab])
@@ -129,6 +129,9 @@ class StaffNav {
             $this->tabs['kbase'] = array('desc'=>__('Knowledgebase'),'href'=>'kb.php','title'=>__('Knowledgebase'));
             if (count($this->getRegisteredApps()))
                 $this->tabs['apps']=array('desc'=>__('Applications'),'href'=>'apps.php','title'=>__('Applications'));
+
+            /**/
+            $this->tabs['atelier'] = array('desc'=>'Atelier','href'=>'atelier.php','title'=>__('Atelier'));
         }
         return $this->tabs;
     }

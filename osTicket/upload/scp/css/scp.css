@@ -3886,3 +3886,16 @@ input[type="radio"]{
 table.atelierT{
     margin-top:0px;
 }
+
+/*PLAN*/
+
+.plan{
+    text-align: center;
+}
+
+.plan h1{
+    text-decoration: underline;
+    margin-bottom: 50px;
+    color:#1A5276;
+
+}
