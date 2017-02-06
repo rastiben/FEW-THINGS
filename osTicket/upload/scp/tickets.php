@@ -371,6 +371,8 @@ $nav->setTabActive('tickets');
 $open_name = _P('queue-name',
     /* This is the name of the open ticket queue */
     'Open');
+
+/*ATELIER*/
 if($cfg->showAnsweredTickets()) {
     $nav->addSubMenu(array('desc'=>$open_name.' ('.number_format($stats['open']+$stats['answered']).')',
                             'title'=>__('Open Tickets'),
@@ -399,7 +401,7 @@ if($cfg->showAnsweredTickets()) {
 
 if($stats['assigned']) {
 
-    $nav->addSubMenu(array('desc'=>__('My Tickets').' ('.number_format($stats['assigned']).')',
+    $nav->addSubMenu(array('desc'=>__('My Tickets').' ('.TicketsInfos::getInstance()->numberOfAssignedTickets().')',
                            'title'=>__('Assigned Tickets'),
                            'href'=>'tickets.php?status=assigned',
                            'iconclass'=>'assignedTickets'),

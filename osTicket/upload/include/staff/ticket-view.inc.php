@@ -317,6 +317,11 @@ if($ticket->isOverdue())
                 </tbody>
             </table>
 
+        <label>N°Affaire : <span class="error">*</span></label>
+        <input class="num_affaire" maxlength="13" type="text">
+
+      <br><br>
+
        <label class="required" for="symptomesObservations">
                           Symptômes et observations :
                                         <span class="error">*</span>
@@ -361,6 +366,7 @@ if($ticket->isOverdue())
                <th>Numero du rapport</th>
                <th>Date création rapport</th>
                <th>Intervenant</th>
+               <th>Numéro d'affaire</th>
                <th>Contrat</th>
                <th>Instal</th>
                <th>Impression</th>
@@ -375,6 +381,7 @@ if($ticket->isOverdue())
                 <td><?php $dateRapport = new DateTime($rapport['date_rapport']);
                     echo $dateRapport->format('d/m/Y'); ?></td>
                 <td><?php echo $rapport['firstname'] . ' ' . $rapport['lastname'] ?></td>
+                <td><?php echo $rapport['num_affaire'] ?></td>
                 <td><?php if(empty($rapport['instal'])) echo '<i class="fa fa-check" aria-hidden="true"></i>'?></td>
                 <td><?php if(empty($rapport['contrat'])) echo '<i class="fa fa-check" aria-hidden="true"></i>'?></td>
                 <td><a class="no-pjax" target="_blank" href="./tickets.php?id=<?php echo $ticket->getId() ?>&a=printR&idR=<?php echo $rapport['id'] ?>"><i class="fa fa-print fa-2x" id="<?php echo $rapport['id'] ?>" aria-hidden="true" style="color:black"></i></a></td>
@@ -1342,73 +1349,82 @@ $(function() {
 
             }
         });
+        var clickOneAddRapport = function(){
+            $(document).one('click','.horaire.add.save.pending',function(e){
+                    var parent = $(this).parent();
+                    var id = parent.parent().attr('id');
 
-        $(document).one('click','.horaire.add.save.pending',function(e){
-                var parent = $(this).parent();
-                var id = parent.parent().attr('id');
+                    if(id == "rapport") id = null;
 
-                if(id == "rapport") id = null;
+                    var contrat = "";
+                    var instal = 0;
+                    var date_inter = $('input[name="date_new_inter"]',parent).val();
+                    var arrive = $('select[name="arrive_inter"]',parent).val();
+                    var depart = $('select[name="depart_inter"]',parent).val();
+                    var comment = $('#symptomesObservations',parent).val();
+                    var num_affaire = $('.num_affaire',parent).val();
 
-                var contrat = "";
-                var instal = 0;
-                var date_inter = $('input[name="date_new_inter"]',parent).val();
-                var arrive = $('select[name="arrive_inter"]',parent).val();
-                var depart = $('select[name="depart_inter"]',parent).val();
-                var comment = $('#symptomesObservations',parent).val();
+                    if($('input[value="Contrat"]').is(':checked')){
+                        var i = 1;
+                        $.each($('.contrat.table.table-striped tbody tr:last-child td'),function(){
+                            if($('input',this).is(':checked')){
+                                contrat = contrat + i + ";";
+                            }
+                            i += 1;
+                        });
+                    } else {
+                        instal = 1;
+                    }
 
-                if($('input[value="Contrat"]').is(':checked')){
-                    var i = 1;
-                    $.each($('.contrat.table.table-striped tbody tr:last-child td'),function(){
-                        if($('input',this).is(':checked')){
-                            contrat = contrat + i + ";";
+                    if((num_affaire != '' && instal == 1) || instal == 0)
+                        {
+                            if(/^\d+$/.test(id) || id == null){
+                                $.ajax({
+                                   method:"POST",
+                                   url:"./Request/Rapport.php",
+                                   data:{
+                                       addHoraires:'',
+                                       ticket_id: $('.sticky.bar.col-md-12').attr('data_ticket_id'),
+                                       rapport_id:id,
+                                       agent_id:$('.sticky.bar.col-md-12').attr('data_agent_id'),
+                                       date_inter: date_inter,
+                                       arrive_inter: arrive,
+                                       depart_inter: depart,
+                                       symptomesObservations: comment,
+                                       contrat:contrat,
+                                       instal:instal,
+                                       num_affaire:num_affaire
+                                   },
+                                    success:function(data){
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                id = id.substr(7);
+                                $.ajax({
+                                   method:"POST",
+                                   url:"./Request/Rapport.php",
+                                   data:{
+                                       updateHoraire:'',
+                                       horaire_id:id,
+                                       date_inter: date_inter,
+                                       arrive_inter: arrive,
+                                       depart_inter: depart,
+                                       symptomesObservations: comment,
+                                       contrat:contrat,
+                                       instal:instal
+                                   },
+                                    success:function(data){
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        } else {
+                            clickOneAddRapport();
                         }
-                        i += 1;
-                    });
-                } else {
-                    instal = 1;
-                }
-
-                if(/^\d+$/.test(id) || id == null){
-                    $.ajax({
-                       method:"POST",
-                       url:"./Request/Rapport.php",
-                       data:{
-                           addHoraires:'',
-                           ticket_id: $('.sticky.bar.col-md-12').attr('data_ticket_id'),
-                           rapport_id:id,
-                           agent_id:$('.sticky.bar.col-md-12').attr('data_agent_id'),
-                           date_inter: date_inter,
-                           arrive_inter: arrive,
-                           depart_inter: depart,
-                           symptomesObservations: comment,
-                           contrat:contrat,
-                           instal:instal
-                       },
-                        success:function(data){
-                            location.reload();
-                        }
-                    });
-                } else {
-                    id = id.substr(7);
-                    $.ajax({
-                       method:"POST",
-                       url:"./Request/Rapport.php",
-                       data:{
-                           updateHoraire:'',
-                           horaire_id:id,
-                           date_inter: date_inter,
-                           arrive_inter: arrive,
-                           depart_inter: depart,
-                           symptomesObservations: comment,
-                           contrat:contrat,
-                           instal:instal
-                       },
-                        success:function(data){
-                            location.reload();
-                        }
-                    });
-                }
-        });
+            });
+        }
+        clickOneAddRapport();
 
         $('.modifyInter').click(function(){
             if($('#addTimeDiv').parent().css('display') === 'none'){

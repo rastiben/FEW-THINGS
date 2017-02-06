@@ -352,6 +352,8 @@ a.closedTickets { background:url(../images/icons/closed_tickets.gif) }
 a.waitingTicket { background:url(../images/icons/closed_tickets.gif) }
 a.newTicket { background:url(../images/icons/new_ticket.gif) }
 
+a.Plan { background:url(../images/icons/plan.gif) }
+
 a.premade { background:url(../images/icons/premade_reply.gif) }
 a.newPremade { background:url(../images/icons/new_premade_reply.gif) }
 
@@ -3715,8 +3717,8 @@ input[type="radio"]{
 .atelier{
     background: url(../../assets/atelier/atelier.png) center no-repeat;
     background-size: contain;
-    width: 500px;
-    height: 491px;
+    width: 700px;
+    height: 560px;
     position: relative;
     margin: 0 auto;
 }
@@ -3726,9 +3728,9 @@ input[type="radio"]{
 .atelier .mur,
 .atelier .serveur{
     position: absolute;
-    background: url(../../assets/atelier/poste.png) center no-repeat;
+    /*background: url(../../assets/atelier/poste.png) center no-repeat;*/
     background-size: contain;
-    top: 20px;
+    top: 7px;
     width: 50px;
     height: 50px;
     cursor: pointer;
@@ -3736,32 +3738,35 @@ input[type="radio"]{
 
 .atelier .portable{
     transform: rotate(-90deg);
-    left: 93px;
+    left: 357px;
+    width: 30px;
+    height: 30px;
 }
 
 .atelier .mur{
     transform: rotate(180deg);
-    top: 220px;
+    top: 295px;
 }
 
 /*BUREAU*/
 
 .atelier .bureau#un{
-    left: 155px;
+    /*left: 155px;*/
+    left: 430px;
 }
 
 .atelier .bureau#deux{
-    left: 225px;
+    left: 497px;
 }
 
 .atelier .bureau#trois{
-    left: 295px;
+    left: 560px;
 }
 
 /*PORTABLE*/
 
 .atelier .portable#un{
-    top: 155px;
+    top: 142px;
 }
 
 .atelier .portable#deux{
@@ -3769,23 +3774,115 @@ input[type="radio"]{
 }
 
 .atelier .portable#trois{
-    top: 40px;
+    top: 53px;
 }
 
 /*MUR*/
 
 .atelier .mur#un{
-    left: 164px;
+    left: 443px;
 }
 
 .atelier .mur#deux{
-    left: 113px;
+    left: 390px;
 }
 
 .atelier .mur#trois{
-    left: 62px;
+    left: 340px;
 }
 
 .atelier .mur#quatre{
-    left: 11px;
+    left: 290px;
+}
+
+/*SERVEUR*/
+
+.atelier .serveur#un{
+    left: 576px;
+    top: 352px;
+}
+
+.atelier .serveur#deux{
+    left: 645px;
+    top: 395px;
+}
+
+.atelier .serveur#trois{
+    left: 645px;
+    top: 448px;
+}
+
+.atelier .serveur#quatre{
+    left: 596px;
+    top: 503px;
+}
+
+.atelier .serveur#cinq{
+    left: 523px;
+    top: 503px;
+}
+
+.atelier .serveur#six{
+    left: 451px;
+    top: 503px;
+}
+
+
+/*FILTER*/
+.filter{
+    height: 50px;
+    background: #1A5276;
+}
+
+.filter ul{
+    padding: 0px;
+}
+
+.filter ul li{
+    width: 19.789%;
+    display: inline-block;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    position: relative;
+    border-right: 2px solid lightgray;
+}
+
+.filter ul li p{
+    display: inline-block;
+    position: relative;
+    color: white;
+    margin: 0px;
+}
+
+.filter ul li:last-child{
+    border-right: 0px;
+}
+
+.filter ul li p:before{
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    width:0px;
+    transition: width 0.3s;
+}
+
+.filter ul li p:after{
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    right: 50%;
+    width:0px;
+    transition: width 0.3s;
+}
+
+.filter ul li:hover p:before,
+.filter ul li:hover p:after{
+    border:1px solid #E65524;
+    width: 100%;
+}
+
+table.atelierT{
+    margin-top:0px;
 }

@@ -49,7 +49,7 @@ class Rapport
     }
 
     public function getRapports($ticketID){
-        $res = $this->dbh->prepare("SELECT id,date_rapport,date_inter,firstname,lastname,contrat,instal FROM ost_rapport,ost_staff WHERE ost_rapport.id_agent = ost_staff.staff_id AND id_ticket = :ticketID");
+        $res = $this->dbh->prepare("SELECT id,date_rapport,date_inter,num_affaire,firstname,lastname,contrat,instal FROM ost_rapport,ost_staff WHERE ost_rapport.id_agent = ost_staff.staff_id AND id_ticket = :ticketID");
         $res->execute(array(':ticketID'=>$ticketID));
 
         return $res->fetchAll();
@@ -61,7 +61,7 @@ class Rapport
         return $res->fetchAll();
     }
 
-    public function addHoraires($ticketId,$agentId,$rapportID,$dateInter,$arriveInter,$departInter,$symptomesObservations,$contrat,$instal)
+    public function addHoraires($ticketId,$agentId,$rapportID,$dateInter,$arriveInter,$departInter,$symptomesObservations,$contrat,$instal,$num_affaire)
     {
         $date = DateTime::createFromFormat('d/m/Y', $dateInter);
 
@@ -71,8 +71,8 @@ class Rapport
         if(empty($rapportID)){
             $date_rapport = date('Y-m-d');
 
-            $res = $this->dbh->prepare("INSERT INTO ost_rapport (id_ticket,id_agent,date_rapport,date_inter,contrat,instal) VALUES (:ticket_id,:id_agent,:date_rapport,:date_inter,:contrat,:instal)");
-            $res->execute(array(':ticket_id'=>$ticketId,':id_agent'=>$agentId,':date_rapport'=>$date_rapport,':date_inter'=>$date->format('Y-m-d'),':contrat'=>$contrat,':instal'=>$instal));
+            $res = $this->dbh->prepare("INSERT INTO ost_rapport (id_ticket,id_agent,date_rapport,date_inter,num_affaire,contrat,instal) VALUES (:ticket_id,:id_agent,:date_rapport,:date_inter,:num_affaire,:contrat,:instal)");
+            $res->execute(array(':ticket_id'=>$ticketId,':id_agent'=>$agentId,':date_rapport'=>$date_rapport,':date_inter'=>$date->format('Y-m-d'),':num_affaire'=>$num_affaire,':contrat'=>$contrat,':instal'=>$instal));
 
             $rapportID = $this->dbh->lastInsertId();
         }
@@ -104,7 +104,7 @@ class Rapport
 }
 else{*/
 if(isset($_POST['addHoraires'])){
-    Rapport::getInstance()->addHoraires($_POST['ticket_id'],$_POST['agent_id'],$_POST['rapport_id'],$_POST['date_inter'],$_POST['arrive_inter'],$_POST['depart_inter'],$_POST['symptomesObservations'],$_POST['contrat'],$_POST['instal']);
+    Rapport::getInstance()->addHoraires($_POST['ticket_id'],$_POST['agent_id'],$_POST['rapport_id'],$_POST['date_inter'],$_POST['arrive_inter'],$_POST['depart_inter'],$_POST['symptomesObservations'],$_POST['contrat'],$_POST['instal'],$_POST['num_affaire']);
     //header('Location: ../tickets.php?id=' . $_POST['ticket_id']);
 }
 else if(isset($_POST['updateHoraire'])){
