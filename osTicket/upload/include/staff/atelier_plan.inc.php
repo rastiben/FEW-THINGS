@@ -2,7 +2,7 @@
 
 ?>
     <div class="plan">
-       <h1>Plan de l'atelier : </h1>
+        <h1>Plan de l'atelier : </h1>
         <div class="atelier">
             <div class="bureau" id="un"></div>
             <div class="bureau" id="deux"></div>
@@ -22,46 +22,44 @@
             <div class="serveur" id="six"></div>
         </div>
 
-        <div ng-style="{display:displayFiche}" ng-controller="ficheCrtl">
+            <div class="modal fade" id="fichesModal">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p></p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary"></button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
         </div>
-    </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
 
-    <script>
-        var myApp = angular.module('myApp',[]);
+        <script type="text/javascript">
 
-        myApp.service('ficheSrvc', function($http) {
-            delete $http.defaults.headers.common['X-Requested-With'];
-            this.getData = function(callbackFunc) {
-                $http({
-                    method: 'GET',
-                    url: 'https://www.example.com/api/v1/page',
-                    params: 'limit=10, sort_by=created:desc',
-                    headers: {'Authorization': 'Token token=xxxxYYYYZzzz'}
-                }).success(function(data){
-                    // With the data succesfully returned, call our callback
-                    callbackFunc(data);
-                }).error(function(){
-                    alert("error");
-                });
-             }
+        $(function() {
+
+            //Initiate
+            $(document).off('click', '.atelier div');
+
+            //Gestion de l'atelier
+            $(document).on('click', '.atelier div', function(e) {
+                var planche = $(this);
+                $('.modal-title').text((planche.attr('class') + ' ' + planche.attr('id')).replace(/\b[a-z]/g,function(f){return f.toUpperCase();}));
+                $('#fichesModal').modal('toggle');
+            });
+
         });
 
-        myApp.controller('ficheCrtl', function($scope, ficheSrvc) {
-            $scope.data = null;
-            $scope.displayFiche = 'none';
-            /*ficheSrvc.getData(function(dataResponse) {
-                $scope.data = dataResponse;
-            });*/
-            $scope.posteClicked = function(){
-
-            }
-        });
-
-    </script>
-
-
-
-
+        </script>

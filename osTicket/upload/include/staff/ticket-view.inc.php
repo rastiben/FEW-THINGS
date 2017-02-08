@@ -11,6 +11,7 @@ $info=($_POST && $errors)?Format::input($_POST):array();
 require_once(SCP_DIR . 'Request/GetInfos.php');
 require_once(SCP_DIR . 'Request/Rapport.php');
 require_once(SCP_DIR . 'Request/Agent.php');
+require_once(SCP_DIR . 'Request/Atelier.php');
 
 //Get the goodies.
 $dept  = $ticket->getDept();  //Dept
@@ -251,9 +252,34 @@ if($ticket->isOverdue())
             echo sprintf('&nbsp;(<span id="ticket-tasks-count">%d</span>)', $ticket->getNumTasks());
         ?></a></li>
     <li><a id="ticket-rapport-tab" href="#ticket_rapport">Rapports</a></li>
+    <li><a id="atelier-tab" href="#atelier">Atelier</a></li>
 </ul>
 
 <div id="ticket_tabs_container">
+
+
+<?php
+
+    $prepas = Atelier::getInstance()->get_prepa($ticket->getId());
+    //print_r($prepas);
+
+?>
+
+<div id="atelier" style="display:none">
+    <?php
+        $i = 0;
+        for($i = 0;$i < 12/*intval($prepas[0]['value'])*/;$i++){
+        ?>
+            <div class="col-md-3">
+               <div class="prepa">
+                <img src="../assets/default/images/computer.png">
+                <h3>VD _ _ _ _</h3>
+                </div>
+            </div>
+    <?php
+        }
+    ?>
+</div>
 
 <div id="ticket_rapport" style="display:none">
     <div name="rapport" style="display:none" id="rapport" class="col-md-12">

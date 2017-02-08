@@ -3899,3 +3899,47 @@ table.atelierT{
     color:#1A5276;
 
 }
+
+.modal{
+    text-align:left;
+}
+
+.modal-title{
+    font-size: 25px;
+}
+
+.close{
+    float:none;
+    position: absolute;
+    right: 25px;
+    top: 25px;
+}
+
+/*PREPA*/
+.prepa{
+    background: white;
+    border: 1px solid #0E4962;
+    text-align: center;
+    margin-bottom: 25px;
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+    height: 200px;
+}
+
+.prepa:hover {
+    transform: scale(1.1);
+}
+
+.prepa hr{
+    border-color: #0E4962;
+}
+
+.prepa h1{
+    color: #0E4962;
+}
+
+.prepa img{
+    width: 100px;
+    margin-top: 20px;
+}
+

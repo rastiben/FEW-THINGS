@@ -253,6 +253,9 @@ $dispatcher = patterns('',
         url('^/reset-permissions', 'resetPermissions'),
         url('^/change-department', 'changeDepartment'),
         url('^/(?P<id>\d+)/avatar/change', 'setAvatar')
+    )),
+    url('^/atelier', patterns('ajax.atelier.php:AtelierAjaxAPI',
+        url_get('^/(?P<id>\d+)/planche', 'planche')
     ))
 );
 

@@ -60,7 +60,7 @@ if ($lang) {
     }
     ?>
 </head>
-<body ng-app="myApp">
+<body>
 <div id="container">
     <?php
     if($ost->getError())
