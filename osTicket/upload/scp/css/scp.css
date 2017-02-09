@@ -4002,6 +4002,127 @@ table.atelierT{
     top: 25px;
 }
 
+.modal-body{
+    overflow: hidden;
+}
+
+.modal-body .container.fiche{
+    position: absolute;
+    margin-top: 15px;
+    right: -100%;
+    top: 0px;
+    display: none;
+    border: 1px solid #28B463;
+}
+
+.modal-body .container.fiche .retour{
+    cursor:pointer;
+}
+
+/*FICHES*/
+.retour{
+    background: #28B463;
+    height: 40px;
+}
+
+.retour h4{
+    float: left;
+    width: 80px;
+    margin: 0px;
+    line-height: 40px;
+    color: white;
+    margin-left: 15px;
+}
+
+.retour h3{
+    text-align: center;
+    margin: 0px;
+    margin-right: 95px;
+    padding: 0px;
+    line-height: 40px;
+    color: white;
+}
+
+.prepaTmpl{
+    /*display: none;*/
+    padding: 10px;
+}
+
+.prepaTmpl hr{
+    border-color: #28B463;
+    border-width: 3px;
+}
+
+.inputField{
+    /*width: 200px;*/
+    position: relative;
+    /*height: 80px;*/
+    padding-top: 15px;
+}
+
+.inputField input,
+.inputField textarea{
+    border: none;
+    width: 100%;
+    border-radius: 0px;
+    border-bottom: 3px solid gray;
+}
+
+.inputField input{
+    height: 40px;
+}
+
+.inputField input:hover{
+    border-color:#28B463;
+}
+
+.inputField textarea{
+    resize:none;
+    transition: padding 0.3s;
+}
+
+.inputField label{
+    position: absolute;
+    top: 25px;
+    cursor: text;
+    transition: top 0.3s,font-size 0.3s;
+}
+
+.inputField input:focus,
+.inputField input:valid,
+.inputField textarea:focus,
+.inputField textarea:valid{
+    outline: none;
+    border-color:#28B463;
+}
+
+.inputField textarea:focus,
+.inputField textarea:valid{
+    padding-top: 15px;
+}
+
+.inputField input:focus + label,
+.inputField input:valid + label,
+.inputField textarea:focus + label,
+.inputField textarea:valid + label{
+    font-size: 12px;
+    top: 5px;
+    color: #28B463;
+}
+
+.checkboxField{
+    padding-top:15px;
+}
+
+.checkboxField input{
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.checkboxField input:checked + label{
+    color: #28B463;
+}
+
 /*PREPA*/
 .prepa{
     background: white;

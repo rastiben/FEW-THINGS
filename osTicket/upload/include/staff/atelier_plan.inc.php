@@ -49,7 +49,6 @@
 
 ?>
 
-
     <div class="plan col-md-12">
         <h1 class="col-md-12">Plan de l'atelier : </h1>
         <div class="atelier col-md-9">
@@ -112,7 +111,7 @@
                     </button>-->
                   </div>
                   <div class="modal-body">
-                    <div class="container">
+                    <div class="container home">
                        <div class="col-md-12">
                         <?php
                             //Recuperer les tickets de type atelier. Afficher numero affaire + nom client + num ticket
@@ -252,6 +251,127 @@
                         </table>
                       </div>
                     </div>
+                    <div class="container fiche">
+                        <div class="retour title">
+                            <h4 style="float:left;width:80px">< planche</h4>
+                            <h3 style="text-align:center;margin-right:80px">Fiche de préparation</h3>
+                        </div>
+
+                        <div class="prepaTmpl">
+                            <div class="col-md-12">
+                                <div class="inputField col-md-6">
+                                    <input id="nomDuPoste" required>
+                                    <label for="nomDuPoste">Nom du poste</label>
+                                </div>
+
+                                <div class="inputField col-md-6">
+                                    <textarea id="Model" required></textarea>
+                                    <label for="Model">Modèle</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                               <div class="checkboxField col-md-6">
+                                    <input type="checkbox" id="etiquetage" required>
+                                    <label for="etiquetage">Etiquetage du poste</label>
+                                </div>
+                                <div class="checkboxField col-md-6">
+                                    <input type="checkbox" id="dossierSAV" required>
+                                    <label for="dossierSAV">Création dossier savvdoc</label>
+                                </div>
+                            </div>
+
+                            <!--<div class="col-md-12"><hr><h4>Installation pack de base</h4></div>-->
+
+                            <div class="col-md-12">
+                               <div class="checkboxField col-md-4">
+                                    <input type="checkbox" id="septZip" required>
+                                    <label for="septZip">7-zip</label>
+                                </div>
+                                <div class="checkboxField col-md-4">
+                                    <input type="checkbox" id="acrobat" required>
+                                    <label for="acrobat">Acrobat Reader</label>
+                                </div>
+                                <div class="checkboxField col-md-4">
+                                    <input type="checkbox" id="flash" required>
+                                    <label for="flash">Flash Player</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                               <div class="checkboxField col-md-4">
+                                    <input type="checkbox" id="java" required>
+                                    <label for="java">Java</label>
+                                </div>
+                                <div class="checkboxField col-md-4">
+                                    <input type="checkbox" id="pdf" required>
+                                    <label for="pdf">PDF Creator</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="inputField col-md-12">
+                                    <textarea id="autre" required></textarea>
+                                    <label for="autre">Autre</label>
+                                </div>
+                            </div>
+
+                            <!--<div class="col-md-12"><hr><h4>Installation Office</h4></div>-->
+
+
+                            <div class="col-md-12">
+                                <div class="inputField col-md-4">
+                                    <input id="type" required>
+                                    <label for="type">Type</label>
+                                </div>
+                                <div class="inputField col-md-4">
+                                    <input id="userAccount" required>
+                                    <label for="userAccount">Compte utilisateur créé</label>
+                                </div>
+                                <div class="inputField col-md-4">
+                                    <input id="mdp" required>
+                                    <label for="mdp">Mot de passe</label>
+                                </div>
+                                <div class="checkboxField col-md-12">
+                                    <input type="checkbox" id="activation" required>
+                                    <label for="activation">Activation</label>
+                                </div>
+                            </div>
+
+
+                            <!--<div class="col-md-12"><hr></div>-->
+
+
+                            <div class="col-md-12">
+                                <div class="checkboxField col-md-4">
+                                    <input type="checkbox" id="uninstall" required>
+                                    <label for="uninstall">Désinstallation antivirus préinstallé</label>
+                                </div>
+
+                                <div class="checkboxField col-md-4">
+                                    <input type="checkbox" id="maj" required>
+                                    <label for="maj">M à J Windows et autres produits</label>
+                                </div>
+                                <div class="checkboxField col-md-4">
+                                    <input type="checkbox" id="register" required>
+                                    <label for="register">Enregistrement du produit</label>
+                                </div>
+                                <div class="checkboxField col-md-4">
+                                    <input type="checkbox" id="verifActivation" required>
+                                    <label for="verifActivation">Vérification activation windows</label>
+                                </div>
+                            </div>
+
+                            <!--<div class="col-md-12"><hr></div>-->
+
+                            <div class="col-md-12">
+                                <div class="inputField col-md-12">
+                                    <textarea id="divers" required></textarea>
+                                    <label for="divers">Divers</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                   <div class="modal-footer">
                     <!--<button type="button" class="btn btn-primary"></button>-->
@@ -264,6 +384,7 @@
         </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+        <script src="../js/autosize.js"></script>
 
         <script type="text/javascript">
 
@@ -272,9 +393,18 @@
             //Initiate
             $(document).off('click', '.atelier div');
             $(document).off('click', '.addContenu');
+            $(document).off('click', '.contenu');
+            $(document).off('click', '.retour h4');
+            $(document).off('hidden.bs.modal', '.modal');
+
+            autosize($('textarea'));
 
             //Gestion de l'atelier
             $(document).on('click', '.atelier div', function(e) {
+                /*INIT*/
+                $('.modal-body .container.home').show();
+                $('.modal-body .container.fiche').hide();
+
                 var planche = $(this);
                 $('.modal-title').text((planche.attr('class') + ' ' + planche.attr('id')).replace(/\b[a-z]/g,function(f){return f.toUpperCase();}));
                 $('#fichesModal').attr('data_planche',planche.attr('data_planche'));
@@ -323,6 +453,59 @@
                     '</div>');
                 });
             });
+
+            //Affichage de la fiche
+            $(document).on('click','.contenu',function(){
+                //CHANGEMENT DU TITRE
+                $('.retour.title h3').html($('input',this).val() == "REPA" ? "Fiche de réparation" : "Fiche de préparation");
+
+                //fade left out.
+                $('.modal-body .container.home').hide("slide", { direction: "left" }, 600);
+                //fade right in
+                $('.modal-body .container.fiche').css('display','block');
+                $('.modal-body .container.fiche').animate({
+                   right : 0,
+                    left : 0
+                },{duration:600,queue:false},function(){
+                    $(this).css('position','relative');
+                    $(this).css('margin-top','0px');
+                });
+
+
+                $('.modal-body').animate({
+                    height: $('.container.fiche').height()+30
+                },{duration:600,queue:false});
+
+            });
+
+            //Retour sur la planche.
+            $(document).on('click','.retour h4',function(){
+                //fade right out
+                $('.modal-body .container.fiche').css('position','absolute');
+                $('.modal-body .container.fiche').css('margin-top','15px');
+                $('.modal-body .container.fiche').animate({
+                   right : '-100%',
+                    left : '100%'
+                },{duration:600,queue:false},function(){
+                    $('.modal-body .container.fiche').css('display','none');
+                });
+
+                $('.modal-body').animate({
+                    height: $('.container.home').height()+30
+                },{duration:600,queue:false});
+
+                //fade right in
+                $('.modal-body .container.home').show("slide", { direction: "left" }, 600);
+            });
+
+            $(document).on('hidden.bs.modal','.modal', function () {
+                //INIT
+                $('.modal-body .container.fiche').css('right','-100%');
+                $('.modal-body .container.fiche').css('left','100%');
+                $('.modal-body .container.fiche').css('display','none');
+                $('.modal-body').css('height', '100%');
+            });
+
 
         });
 
