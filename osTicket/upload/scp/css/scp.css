@@ -3717,7 +3717,7 @@ input[type="radio"]{
 .atelier{
     background: url(../../assets/atelier/atelier.png) center no-repeat;
     background-size: contain;
-    width: 700px;
+    /*width: 700px;*/
     height: 560px;
     position: relative;
     margin: 0 auto;
@@ -3738,7 +3738,7 @@ input[type="radio"]{
 
 .atelier .portable{
     transform: rotate(-90deg);
-    left: 357px;
+    left: 583px;
     width: 30px;
     height: 30px;
 }
@@ -3752,15 +3752,15 @@ input[type="radio"]{
 
 .atelier .bureau#un{
     /*left: 155px;*/
-    left: 430px;
+    left: 656px;
 }
 
 .atelier .bureau#deux{
-    left: 497px;
+    left: 723px;
 }
 
 .atelier .bureau#trois{
-    left: 560px;
+    left: 786px;
 }
 
 /*PORTABLE*/
@@ -3780,53 +3780,140 @@ input[type="radio"]{
 /*MUR*/
 
 .atelier .mur#un{
-    left: 443px;
+    left: 669px;
 }
 
 .atelier .mur#deux{
-    left: 390px;
+    left: 616px;
 }
 
 .atelier .mur#trois{
-    left: 340px;
+    left: 566px;
 }
 
 .atelier .mur#quatre{
-    left: 290px;
+    left: 516px;
 }
 
 /*SERVEUR*/
 
 .atelier .serveur#un{
-    left: 576px;
+    left: 802px;
     top: 352px;
 }
 
 .atelier .serveur#deux{
-    left: 645px;
+    left: 871px;
     top: 395px;
 }
 
 .atelier .serveur#trois{
-    left: 645px;
+    left: 871px;
     top: 448px;
 }
 
 .atelier .serveur#quatre{
-    left: 596px;
+    left: 822px;
     top: 503px;
 }
 
 .atelier .serveur#cinq{
-    left: 523px;
+    left: 749px;
     top: 503px;
 }
 
 .atelier .serveur#six{
-    left: 451px;
+    left: 677px;
     top: 503px;
 }
 
+
+/*EN COURS*/
+.enCours{
+    text-align: left;
+    /*height: 500px;*/
+}
+
+.enCours .color{
+    margin-bottom: 5px;
+    float: left;
+    height: 25px;
+    width: 25px;
+}
+
+.enCours h4{
+    line-height: 25px;
+    margin-left: 30px;
+}
+
+.bureau1 .color{
+    background: #EC7063;
+}
+
+.bureau2 .color{
+    background: #A569BD;
+}
+
+.bureau3 .color{
+    background: #5DADE2;
+}
+
+.portable1 .color{
+    background: #F5B041;
+}
+
+.portable2 .color{
+    background: #F4D03F;
+}
+
+.portable3 .color{
+    background: #48C9B0;
+}
+
+.mur1 .color{
+    background: #7D3200;
+}
+
+.mur2 .color{
+    background: #D0D3D4;
+}
+
+.mur3 .color{
+    background: #4D6B8A;
+}
+
+.mur4 .color{
+    background: #38373C;
+}
+
+.serveur1 .color{
+    background: white;
+}
+
+.serveur2 .color{
+    background: #EC407A;
+}
+
+.serveur3 .color{
+    background: #AFB42B;
+}
+
+.serveur4 .color{
+    background: #4527D1;
+}
+
+.serveur5 .color{
+    background: #66FFFF;
+}
+
+.serveur6 .color{
+    background: #FF00FF;
+}
+
+.modal-body .container{
+    background-color: white;
+    padding: 0px;
+}
 
 /*FILTER*/
 .filter{
@@ -3938,8 +4025,14 @@ table.atelierT{
     color: #0E4962;
 }
 
+.prepa input{
+    text-align: center;
+    border: none;
+    font-size: 20px;
+    color: #0E4962;
+}
+
 .prepa img{
     width: 100px;
     margin-top: 20px;
 }
-

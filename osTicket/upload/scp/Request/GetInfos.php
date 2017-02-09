@@ -64,7 +64,8 @@ class TicketsInfos
         FROM ost_ticket,ost_form_entry,ost_form_entry_values
         WHERE ost_form_entry.object_id = ost_ticket.ticket_id
         AND ost_form_entry_values.entry_id = ost_form_entry.id
-        AND ost_form_entry_values.field_id = '45')");
+        AND ost_form_entry_values.field_id = '45'
+        AND ost_form_entry_values.value LIKE '%Atelier%')");
         $res->execute();
         return $res->fetchAll()[0]['COUNT(*)'];
     }
@@ -84,7 +85,8 @@ class TicketsInfos
         FROM ost_ticket,ost_form_entry,ost_form_entry_values
         WHERE ost_form_entry.object_id = ost_ticket.ticket_id
         AND ost_form_entry_values.entry_id = ost_form_entry.id
-        AND ost_form_entry_values.field_id = '45')
+        AND ost_form_entry_values.field_id = '45'
+        AND ost_form_entry_values.value LIKE '%Atelier%')
         ORDER BY DATE(lastupdate) DESC");
         $res->execute();
         return $res->fetchAll()[0]['COUNT(*)'];
@@ -135,7 +137,8 @@ class TicketsInfos
         FROM ost_ticket,ost_form_entry,ost_form_entry_values
         WHERE ost_form_entry.object_id = ost_ticket.ticket_id
         AND ost_form_entry_values.entry_id = ost_form_entry.id
-        AND ost_form_entry_values.field_id = '45')
+        AND ost_form_entry_values.field_id = '45'
+        AND ost_form_entry_values.value LIKE '%Atelier%')
         ORDER BY DATE(lastupdate) DESC");
         $res->execute(array(':staffID'=>$staffId));
         return $res->fetchAll();
@@ -152,7 +155,8 @@ class TicketsInfos
         AND ost_ticket_status.state = 'open'
         AND ost_form_entry.object_id = ost_ticket.ticket_id
         AND ost_form_entry_values.entry_id = ost_form_entry.id
-        AND ost_form_entry_values.field_id = '45'");
+        AND ost_form_entry_values.field_id = '45'
+        AND ost_form_entry_values.value LIKE '%Atelier%'");
         $res->execute(array(':status'=>$status));
         return $res->fetchAll();
     }
@@ -165,12 +169,13 @@ class TicketsInfos
         AND ost_ticket.user_id = ost_user.id
         AND ost_user.id = ost_user__cdata.user_id
         AND ost_ticket__cdata.priority = ost_ticket_priority.priority_id
-        AND ost_ticket_status.state = :status
+        AND ost_ticket_status.state = 'open'
         AND ost_ticket.ticket_id NOT IN(SELECT ost_ticket.ticket_id
         FROM ost_ticket,ost_form_entry,ost_form_entry_values
         WHERE ost_form_entry.object_id = ost_ticket.ticket_id
         AND ost_form_entry_values.entry_id = ost_form_entry.id
-        AND ost_form_entry_values.field_id = '45')");
+        AND ost_form_entry_values.field_id = '45'
+        AND ost_form_entry_values.value LIKE '%Atelier%')");
         $res->execute(array(':status'=>$status));
         return $res->fetchAll();
     }
