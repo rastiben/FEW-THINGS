@@ -3917,27 +3917,23 @@ input[type="radio"]{
 
 /*FILTER*/
 .filter{
-    height: 50px;
     background: #1A5276;
 }
 
 .filter ul{
     padding: 0px;
+    margin: 0px;
+    background: #1A5276;
 }
 
 .filter ul li{
-    width: 19.789%;
-    display: inline-block;
+    list-style-type: none;
     text-align: center;
-    line-height: 50px;
-    cursor: pointer;
-    position: relative;
     border-right: 2px solid lightgray;
+    line-height: 50px;
 }
 
 .filter ul li p{
-    display: inline-block;
-    position: relative;
     color: white;
     margin: 0px;
 }
@@ -3946,7 +3942,14 @@ input[type="radio"]{
     border-right: 0px;
 }
 
-.filter ul li p:before{
+@media (max-width: 991px) {
+    .filter ul li{
+        border-right: 0px;
+        border-bottom: 2px solid lightgray;
+    }
+}
+
+/*.filter ul li p:before{
     content: '';
     position: absolute;
     bottom: 10px;
@@ -3967,8 +3970,8 @@ input[type="radio"]{
 .filter ul li:hover p:before,
 .filter ul li:hover p:after{
     border:1px solid #E65524;
-    width: 100%;
-}
+    width: 100px;
+}*/
 
 table.atelierT{
     margin-top:0px;

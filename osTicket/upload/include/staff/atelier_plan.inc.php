@@ -254,10 +254,104 @@
                     <div class="container fiche">
                         <div class="retour title">
                             <h4 style="float:left;width:80px">< planche</h4>
-                            <h3 style="text-align:center;margin-right:80px">Fiche de préparation</h3>
+                            <h3 style="text-align:center;margin-right:80px"></h3>
+                        </div>
+                        <div class="repaTmpl" style="display:none">
+
+                           <div class="col-md-12">
+                                <div class="inputField col-md-6">
+                                    <input id="typeAppareil" required>
+                                    <label for="typeAppareil">Type d'appareil</label>
+                                </div>
+
+                                <div class="inputField col-md-6">
+                                    <input id="mdp" required>
+                                    <label for="mdp">MDP</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="inputField col-md-12">
+                                    <textarea id="description" required></textarea>
+                                    <label for="description">Description du problème</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="inputField col-md-12">
+                                    <textarea id="comTech" required></textarea>
+                                    <label for="comTech">Commentaire Technicien</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="inputField col-md-6">
+                                    <input id="tempsInter" required>
+                                    <label for="tempsInter">Temps d'intervention estimé</label>
+                                </div>
+
+                                <div class="inputField col-md-6">
+                                    <input id="dateMiseADisposition" required>
+                                    <label for="dateMiseADisposition">Date de mise à disposition souhaitée</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-md-offset-6">
+                                <div class="inputField col-md-12">
+                                    <input id="visaClient" required>
+                                    <label for="visaClient">Visa client</label>
+                                </div>
+                                <div class="inputField col-md-12">
+                                    <input id="visaTech" required>
+                                    <label for="visaTech">Visa tech</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12"><hr></div>
+
+                            <div class="col-md-12">
+                                <div class="inputField col-md-12">
+                                    <textarea id="intervention" required></textarea>
+                                    <label for="intervention">Intervention</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="inputField col-md-6">
+                                    <input id="tempsPasse" required>
+                                    <label for="tempsPasse">Temps passé</label>
+                                </div>
+
+                                <div class="inputField col-md-6">
+                                    <input id="svisaTech" required>
+                                    <label for="sVisaTech">Visa tech</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="inputField col-md-12">
+                                    <textarea id="comIntervention" required></textarea>
+                                    <label for="comIntervention">Commentaires</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                               <div class="checkboxField col-md-12">
+                                    <input type="checkbox" id="verifClient" required>
+                                    <label for="verifClient">Vérification avec le client</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="inputField col-md-4">
+                                    <input id="dateReprise" required>
+                                    <label for="dateReprise">Date de reprise</label>
+                                </div>
+                            </div>
+
                         </div>
 
-                        <div class="prepaTmpl">
+                   <div class="prepaTmpl" style="display:none">
                             <div class="col-md-12">
                                 <div class="inputField col-md-6">
                                     <input id="nomDuPoste" required>
@@ -281,7 +375,7 @@
                                 </div>
                             </div>
 
-                            <!--<div class="col-md-12"><hr><h4>Installation pack de base</h4></div>-->
+
 
                             <div class="col-md-12">
                                <div class="checkboxField col-md-4">
@@ -316,7 +410,7 @@
                                 </div>
                             </div>
 
-                            <!--<div class="col-md-12"><hr><h4>Installation Office</h4></div>-->
+
 
 
                             <div class="col-md-12">
@@ -339,7 +433,6 @@
                             </div>
 
 
-                            <!--<div class="col-md-12"><hr></div>-->
 
 
                             <div class="col-md-12">
@@ -362,7 +455,7 @@
                                 </div>
                             </div>
 
-                            <!--<div class="col-md-12"><hr></div>-->
+
 
                             <div class="col-md-12">
                                 <div class="inputField col-md-12">
@@ -382,6 +475,10 @@
             </div>
 
         </div>
+
+
+
+
 
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
         <script src="../js/autosize.js"></script>
@@ -456,8 +553,16 @@
 
             //Affichage de la fiche
             $(document).on('click','.contenu',function(){
+                var type = $('input',this).val() == "REPA" ? "Fiche de réparation" : "Fiche de préparation";
                 //CHANGEMENT DU TITRE
-                $('.retour.title h3').html($('input',this).val() == "REPA" ? "Fiche de réparation" : "Fiche de préparation");
+                $('.retour.title h3').html(type);
+
+                /*GESTION DU CONTENU*/
+                //$('.container.fiche .repaTmpl').remove();
+                //$('.container.fiche .prepaTmpl').remove();
+                $('.container.fiche .repaTmpl').css('display',type=="Fiche de réparation"?"block":"none");
+                $('.container.fiche .prepaTmpl').css('display',type=="Fiche de préparation"?"block":"none");
+                //$('.container.fiche').append(type == "Fiche de réparation" ? $('.repaTmpl').clone() : //$('.prepaTmpl').clone());
 
                 //fade left out.
                 $('.modal-body .container.home').hide("slide", { direction: "left" }, 600);

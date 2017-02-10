@@ -45,12 +45,12 @@ $queue_columns = array(
 
 <div class="">
    <div class="filter">
-       <ul>
-            <li><p>Liste completes</p></li>
-            <li><p>Entrées</p></li>
-            <li><p>Planche</p></li>
-            <li><p>Sorties</p></li>
-            <li><p>RMA</p></li>
+       <ul class="col-md-12">
+            <li class="col-md-5"><p>Liste completes</p></li>
+            <li class="col-md-5"><p>Entrées</p></li>
+            <li class="col-md-5"><p>Planche</p></li>
+            <li class="col-md-5"><p>Sorties</p></li>
+            <li class="col-md-5"><p>RMA</p></li>
        </ul>
    </div>
     <table class="list atelierT" border="0" cellspacing="1" cellpadding="2" width="100%">
