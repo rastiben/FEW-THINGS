@@ -3715,12 +3715,12 @@ input[type="radio"]{
 
 /*Atelier*/
 .atelier{
-    background: url(../../assets/atelier/atelier.png) center no-repeat;
+    /*background: url(../../assets/atelier/atelier.png) center no-repeat;
     background-size: contain;
-    /*width: 700px;*/
+    /*width: 1150px;
     height: 560px;
     position: relative;
-    margin: 0 auto;
+    margin: 0 auto;*/
 }
 
 .atelier .bureau,
@@ -3738,93 +3738,99 @@ input[type="radio"]{
 
 .atelier .portable{
     transform: rotate(-90deg);
-    left: 583px;
+    left: 391px;
     width: 30px;
     height: 30px;
 }
 
 .atelier .mur{
     transform: rotate(180deg);
-    top: 295px;
+    top: 320px;
 }
 
-/*BUREAU*/
+.atelier .img{
+    width: 752px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/*BUREAU -169*/
 
 .atelier .bureau#un{
-    /*left: 155px;*/
-    left: 656px;
+    /*left: 656px;*/
+    left: 464px;
 }
 
 .atelier .bureau#deux{
-    left: 723px;
+    left: 539px;
 }
 
 .atelier .bureau#trois{
-    left: 786px;
+    left: 605px;
 }
 
 /*PORTABLE*/
 
 .atelier .portable#un{
-    top: 142px;
+    top: 155px;
 }
 
 .atelier .portable#deux{
-    top: 95px;
+    top: 108px;
 }
 
 .atelier .portable#trois{
-    top: 53px;
+    top: 68px;
 }
 
 /*MUR*/
 
 .atelier .mur#un{
-    left: 669px;
+    left: 480px;
 }
 
 .atelier .mur#deux{
-    left: 616px;
+    left: 424px;
 }
 
 .atelier .mur#trois{
-    left: 566px;
+    left: 371px;
 }
 
 .atelier .mur#quatre{
-    left: 516px;
+    left: 313px;
 }
 
 /*SERVEUR*/
 
 .atelier .serveur#un{
-    left: 802px;
-    top: 352px;
+    left: 625px;
+    top: 374px;
 }
 
 .atelier .serveur#deux{
-    left: 871px;
-    top: 395px;
+    left: 705px;
+    top: 426px;
 }
 
 .atelier .serveur#trois{
-    left: 871px;
-    top: 448px;
+    left: 705px;
+    top: 483px;
 }
 
 .atelier .serveur#quatre{
-    left: 822px;
-    top: 503px;
+    left: 646px;
+    top: 544px;
 }
 
 .atelier .serveur#cinq{
-    left: 749px;
-    top: 503px;
+    left: 568px;
+    top: 544px;
 }
 
 .atelier .serveur#six{
-    left: 677px;
-    top: 503px;
+    left: 490px;
+    top: 544px;
 }
 
 
@@ -4018,29 +4024,14 @@ table.atelierT{
     border: 1px solid #28B463;
 }
 
-.modal-body .container.fiche .retour{
-    cursor:pointer;
-}
-
 /*FICHES*/
 .retour{
     background: #28B463;
     height: 40px;
 }
-
-.retour h4{
-    float: left;
-    width: 80px;
-    margin: 0px;
-    line-height: 40px;
-    color: white;
-    margin-left: 15px;
-}
-
 .retour h3{
     text-align: center;
     margin: 0px;
-    margin-right: 95px;
     padding: 0px;
     line-height: 40px;
     color: white;
@@ -4073,10 +4064,6 @@ table.atelierT{
 
 .inputField input{
     height: 40px;
-}
-
-.inputField input:hover{
-    border-color:#28B463;
 }
 
 .inputField textarea{

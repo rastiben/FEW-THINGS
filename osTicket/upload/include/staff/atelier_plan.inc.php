@@ -52,22 +52,25 @@
     <div class="plan col-md-12">
         <h1 class="col-md-12">Plan de l'atelier : </h1>
         <div class="atelier col-md-9">
-            <div class="bureau" id="un" data_planche="b1"></div>
-            <div class="bureau" id="deux" data_planche="b2"></div>
-            <div class="bureau" id="trois" data_planche="b3"></div>
-            <div class="portable" id="un" data_planche="p1"></div>
-            <div class="portable" id="deux" data_planche="p2"></div>
-            <div class="portable" id="trois" data_planche="p3"></div>
-            <div class="mur" id="un" data_planche="m1"></div>
-            <div class="mur" id="deux" data_planche="m2"></div>
-            <div class="mur" id="trois" data_planche="m3"></div>
-            <div class="mur" id="quatre" data_planche="m4"></div>
-            <div class="serveur" id="un" data_planche="s1"></div>
-            <div class="serveur" id="deux" data_planche="s2"></div>
-            <div class="serveur" id="trois" data_planche="s3"></div>
-            <div class="serveur" id="quatre" data_planche="s4"></div>
-            <div class="serveur" id="cinq" data_planche="s5"></div>
-            <div class="serveur" id="six" data_planche="s6"></div>
+            <div class="img">
+                <div class="bureau" id="un" data_planche="b1"></div>
+                <div class="bureau" id="deux" data_planche="b2"></div>
+                <div class="bureau" id="trois" data_planche="b3"></div>
+                <div class="portable" id="un" data_planche="p1"></div>
+                <div class="portable" id="deux" data_planche="p2"></div>
+                <div class="portable" id="trois" data_planche="p3"></div>
+                <div class="mur" id="un" data_planche="m1"></div>
+                <div class="mur" id="deux" data_planche="m2"></div>
+                <div class="mur" id="trois" data_planche="m3"></div>
+                <div class="mur" id="quatre" data_planche="m4"></div>
+                <div class="serveur" id="un" data_planche="s1"></div>
+                <div class="serveur" id="deux" data_planche="s2"></div>
+                <div class="serveur" id="trois" data_planche="s3"></div>
+                <div class="serveur" id="quatre" data_planche="s4"></div>
+                <div class="serveur" id="cinq" data_planche="s5"></div>
+                <div class="serveur" id="six" data_planche="s6"></div>
+                <img src="../assets/atelier/atelier.png"/>
+            </div>
         </div>
         <div class="enCours col-md-3">
             <h2>En cours</h2>
@@ -101,7 +104,7 @@
             <div class="serveur6"><div class="color"></div><h4>S6 : <?php echo $orgList['16'] ?></h4></div>
         </div>
 
-            <div class="modal fade" id="fichesModal" data_planche="">
+            <div class="modal fade" id="fichesModal" data_planche="" data_id_contenu="" data_staff="<?php echo $thisstaff->getId() ?>">
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -253,8 +256,7 @@
                     </div>
                     <div class="container fiche">
                         <div class="retour title">
-                            <h4 style="float:left;width:80px">< planche</h4>
-                            <h3 style="text-align:center;margin-right:80px"></h3>
+                            <h3></h3>
                         </div>
                         <div class="repaTmpl" style="display:none">
 
@@ -265,8 +267,8 @@
                                 </div>
 
                                 <div class="inputField col-md-6">
-                                    <input id="mdp" required>
-                                    <label for="mdp">MDP</label>
+                                    <input id="motDePasse" required>
+                                    <label for="motDePasse">MDP</label>
                                 </div>
                             </div>
 
@@ -359,8 +361,8 @@
                                 </div>
 
                                 <div class="inputField col-md-6">
-                                    <textarea id="Model" required></textarea>
-                                    <label for="Model">Modèle</label>
+                                    <textarea id="modele" required></textarea>
+                                    <label for="modele">Modèle</label>
                                 </div>
                             </div>
 
@@ -468,7 +470,8 @@
                 </div>
                   <div class="modal-footer">
                     <!--<button type="button" class="btn btn-primary"></button>-->
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Valider</button>
+                    <button type="button" class="btn btn-secondary validerOuEnregistrer">Valider</button>
+                    <button type="button" class="btn btn-secondary validerOuEnregistrer" style="display:none">Retour</button>
                   </div>
                 </div>
               </div>
@@ -482,22 +485,25 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
         <script src="../js/autosize.js"></script>
+        <script src="./js/atelier.js"></script>
 
         <script type="text/javascript">
 
         $(function() {
 
+            var planches = new Planche();
+
             //Initiate
             $(document).off('click', '.atelier div');
             $(document).off('click', '.addContenu');
             $(document).off('click', '.contenu');
-            $(document).off('click', '.retour h4');
+            $(document).off('click', '.validerOuEnregistrer');
             $(document).off('hidden.bs.modal', '.modal');
 
-            autosize($('textarea'));
+            //autosize($('textarea'));
 
             //Gestion de l'atelier
-            $(document).on('click', '.atelier div', function(e) {
+            $(document).on('click', '.atelier div div', function(e) {
                 /*INIT*/
                 $('.modal-body .container.home').show();
                 $('.modal-body .container.fiche').hide();
@@ -505,26 +511,21 @@
                 var planche = $(this);
                 $('.modal-title').text((planche.attr('class') + ' ' + planche.attr('id')).replace(/\b[a-z]/g,function(f){return f.toUpperCase();}));
                 $('#fichesModal').attr('data_planche',planche.attr('data_planche'));
-                $.ajax({
-                    url:'./Request/Atelier.php',
-                    method:'POST',
-                    data : {
-                        request:'getContenuPlanche',
-                        planche:planche.attr('data_planche')
-                    }
-                }).success(function(data){
-                    var contenu = $.parseJSON(data);
-                    $('.modal-body .contenu').remove();
-                    $(contenu).each(function($number,$obj){
-                        $('.modal-body div:first').prepend('<div class="col-md-3 contenu" id="">'+
+
+
+                var contenu = planches.getPlanche(planche.attr('data_planche'));
+                $('.modal-body .contenu').remove();
+
+                $(contenu).each(function($number,$obj){
+                        $('.modal-body div:first').prepend('<div class="col-md-3 contenu" id="'+ $obj.getId() +'">'+
                            '<div class="prepa">'+
                             '<img src="../assets/default/images/computer.png">'+
-                            '<input value="'+ ($obj['type'] == "prepa"  ? "VD _ _ _ _" : "REPA") +'"/>'+
+                            '<input value="'+ ($obj.getType() == "prepa"  ? "VD _ _ _ _" : "REPA") +'"/>'+
                             '</div>'+
                         '</div>');
-                    });
-                   $('#fichesModal').modal('toggle');
                 });
+
+                $('#fichesModal').modal({backdrop: 'static', keyboard: false});
             });
 
             //Ajouter une prepa/repa
@@ -532,75 +533,257 @@
                 var type = $(this).hasClass('preparation') ? "prepa" : "repa";
                 var id = $(this).closest('tr').attr('id');
                 var planche = $('#fichesModal').attr('data_planche');
-                $.ajax({
-                    url:'./Request/Atelier.php',
-                    method:'POST',
-                    data : {
-                        request:'addContenu',
-                        ticket_id:id,
-                        planche:planche,
-                        type:type
-                    }
-                }).success(function(data){
+
+                function callback(data){
                     $('.modal-body div:first').prepend('<div class="col-md-3 contenu" id="">'+
                        '<div class="prepa">'+
                         '<img src="../assets/default/images/computer.png">'+
                         '<input value="'+ (type == "prepa"  ? "VD _ _ _ _" : "REPA") +'"/>'+
                         '</div>'+
                     '</div>');
-                });
+                };
+
+                AtelierAjax.addContenu(id,planche,type,callback);
+
             });
 
             //Affichage de la fiche
             $(document).on('click','.contenu',function(){
-                var type = $('input',this).val() == "REPA" ? "Fiche de réparation" : "Fiche de préparation";
+
+                var id = $(this).attr('id');
+                var data = planches.getContenu(id,$('.modal').attr('data_planche'));
+                data = data[0];
+
+                //Récupération de la valeur d'une checkbox
+                function getValue(value){
+                    return !!+value.substr(1,value.indexOf(':')-1);
+                }
+
+                //Récupération du staff ayant coché
+                function getStaffId(value){
+                    return value.substring(value.indexOf(':')+1,value.indexOf('}'));
+                    //return value.substr(value.length-2,1);
+                }
+
+                var type = "";
+                if(data.getType() == 'prepa'){
+                    type = "Fiche de préparation";
+                    if(data['contenu'].PEC != "PEC"){
+                        $('#nomDuPoste').val(data['contenu'].VD);
+                        $('#modele').val(data['contenu'].modele);
+                        $('#etiquetage').attr('checked',data['contenu'].etiquetage == "1" ? true:false);
+                        $('#dossierSAV').attr('checked',data['contenu'].dossierSAV == "1" ? true:false);
+                        $('#septZip').prop('checked', getValue(data['contenu'].septZip))
+                            .attr('data_staff', getStaffId(data['contenu'].septZip) == "null" ? null:getStaffId(data['contenu'].septZip));
+                        $('#acrobat').prop('checked', getValue(data['contenu'].acrobat))
+                            .attr('data_staff', getStaffId(data['contenu'].acrobat) == "null" ? null:getStaffId(data['contenu'].acrobat));
+                        $('#flash').prop('checked', getValue(data['contenu'].flash))
+                            .attr('data_staff', getStaffId(data['contenu'].flash) == "null" ? null:getStaffId(data['contenu'].flash));
+                        $('#java').prop('checked', getValue(data['contenu'].java))
+                            .attr('data_staff', getStaffId(data['contenu'].java) == "null" ? null:getStaffId(data['contenu'].java));
+                        $('#pdf').prop('checked', getValue(data['contenu'].pdf))
+                            .attr('data_staff', getStaffId(data['contenu'].pdf) == "null" ? null:getStaffId(data['contenu'].pdf));
+                        $('#autre').val(data['contenu'].autre);
+                        $('#type').val(data['contenu'].type);
+                        $('#userAccount').val(data['contenu'].userAccount);
+                        $('#mdp').val(data['contenu'].mdp);
+                        $('#activation').prop('checked', getValue(data['contenu'].activation))
+                            .attr('data_staff', getStaffId(data['contenu'].activation) == "null" ? null:getStaffId(data['contenu'].activation));
+                        $('#uninstall').attr('checked', data['contenu'].uninstall == "1" ? true:false);
+                        $('#maj').attr('checked', data['contenu'].maj == "1" ? true:false);
+                        $('#register').attr('checked', data['contenu'].register == "1" ? true:false);
+                        $('#verifActivation').attr('checked', data['contenu'].verifActivation == "1" ? true:false);
+                        $('#divers').val(data['contenu'].divers)
+                    }
+                } else {
+                    if(data['contenu'].PEC != "PEC"){
+                        type = "Fiche de réparation";
+                        $('#typeAppareil').val(data['contenu'].typeAppareil);
+                        $('#motDePasse').val(data['contenu'].motDePasse);
+                        $('#description').val(data['contenu'].description);
+                        $('#comTech').val(data['contenu'].comTech);
+                        $('#tempsInter').val(data['contenu'].tempsInter);
+                        $('#dateMiseADisposition').val(data['contenu'].dateMiseADisposition);
+                        $('#visaClient').val(data['contenu'].visaClient);
+                        $('#visaTech').val(data['contenu'].visaTech);
+                        $('#intervention').val(data['contenu'].intervention);
+                        $('#tempsPasse').val(data['contenu'].tempsPasse);
+                        $('#svisaTech').val(data['contenu'].svisaTech);
+                        $('#comIntervention').val(data['contenu'].comIntervention);
+                        $('#verifClient').prop('checked',data['contenu'].verifClient == "1" ? true:false);
+                        $('#dateReprise').val(data['contenu'].dateReprise);
+                    }
+                }
+
+                autosize($('#modele'));
                 //CHANGEMENT DU TITRE
                 $('.retour.title h3').html(type);
 
+                //CHANGEMENT DES INFOS
+                $('#fichesModal').attr('data_id_contenu',id);
+
                 /*GESTION DU CONTENU*/
-                //$('.container.fiche .repaTmpl').remove();
-                //$('.container.fiche .prepaTmpl').remove();
                 $('.container.fiche .repaTmpl').css('display',type=="Fiche de réparation"?"block":"none");
                 $('.container.fiche .prepaTmpl').css('display',type=="Fiche de préparation"?"block":"none");
-                //$('.container.fiche').append(type == "Fiche de réparation" ? $('.repaTmpl').clone() : //$('.prepaTmpl').clone());
 
                 //fade left out.
                 $('.modal-body .container.home').hide("slide", { direction: "left" }, 600);
                 //fade right in
                 $('.modal-body .container.fiche').css('display','block');
                 $('.modal-body .container.fiche').animate({
-                   right : 0,
+                    right : 0,
                     left : 0
-                },{duration:600,queue:false},function(){
-                    $(this).css('position','relative');
-                    $(this).css('margin-top','0px');
+                },{
+                    duration:600,
+                    queue:false,
+                    complete: function(){
+                    $('.modal-body .container.fiche').css('position','relative');
+                    $('.modal-body .container.fiche').css('margin-top','0px');
+                }
                 });
 
 
                 $('.modal-body').animate({
                     height: $('.container.fiche').height()+30
-                },{duration:600,queue:false});
-
-            });
-
-            //Retour sur la planche.
-            $(document).on('click','.retour h4',function(){
-                //fade right out
-                $('.modal-body .container.fiche').css('position','absolute');
-                $('.modal-body .container.fiche').css('margin-top','15px');
-                $('.modal-body .container.fiche').animate({
-                   right : '-100%',
-                    left : '100%'
-                },{duration:600,queue:false},function(){
-                    $('.modal-body .container.fiche').css('display','none');
+                },{
+                    duration:600,
+                    queue:false,
+                    complete: function(){
+                        $('.modal-body').css('height','auto');
+                    }
                 });
 
-                $('.modal-body').animate({
-                    height: $('.container.home').height()+30
-                },{duration:600,queue:false});
+                //CHANGER LE BOUTON POUR ENREGISTRER
+                $('.validerOuEnregistrer').first().text('Enregistrer');
+                $('.validerOuEnregistrer').last().css('display','inline-block');
+            });
 
-                //fade right in
-                $('.modal-body .container.home').show("slide", { direction: "left" }, 600);
+            function switchModal() {
+                    $('.modal-body').css('height',$('.modal-body .container.fiche').height()+30);
+                    $('.modal-body .container.fiche').css('position','absolute');
+                    $('.modal-body .container.fiche').css('margin-top','15px');
+                    $('.modal-body .container.fiche').animate({
+                        right : '-100%',
+                        left : '100%'
+                    },{
+                        duration:600,
+                        queue:false,
+                        complete :function(){
+                            $('.modal-body .container.fiche').css('display','none');
+                        }
+                    });
+
+                    $('.modal-body').animate({
+                        height: $('.container.home').height()+30
+                    },{
+                        duration:600,
+                        queue:false,
+                        complete:function(){
+                            $('.modal-body').css('height','auto');
+                        }
+                    });
+
+                    //fade right in
+                    $('.modal-body .container.home').show("slide", { direction: "left" }, 600);
+
+                    //CHANGER LE BOUTON POUR ENREGISTRER
+                    $('.validerOuEnregistrer').first().text('Valider');
+                    $('.validerOuEnregistrer').last().css('display','none');
+                }
+
+            //Retour sur la planche.
+            $(document).on('click','.validerOuEnregistrer',function(){
+
+                if($(this).text() == 'Enregistrer'){
+                    //fade right out
+                    if($('.retour h3').text() == 'Fiche de préparation'){
+                        //Recuperation des champs
+                        var id_contenu = $('#fichesModal').attr('data_id_contenu');
+                        var vd = $('#nomDuPoste').val();
+                        var modele = $('#modele').val();
+                        var etiquetage = $('#etiquetage').is(':checked') ? '1' : '0';
+                        var dossierSAV = $('#dossierSAV').is(':checked') ? '1' : '0';
+                        var septZip = $('#septZip').is(':checked') ? '{1:'+ $('#septZip').attr('data_staff') +'}' : '{0:null}';
+                        var acrobat = $('#acrobat').is(':checked') ? '{1:'+ $('#acrobat').attr('data_staff') +'}' : '{0:null}';
+                        var flash = $('#flash').is(':checked') ? '{1:'+ $('#flash').attr('data_staff') +'}' : '{0:null}';
+                        var java = $('#java').is(':checked') ? '{1:'+ $('#java').attr('data_staff') +'}' : '{0:null}';
+                        var pdf = $('#pdf').is(':checked') ? '{1:'+ $('#pdf').attr('data_staff') +'}' : '{0:null}';
+                        var autre = $('#autre').val();
+                        var type = $('#type').val();
+                        var userAccount = $('#userAccount').val();
+                        var mdp = $('#mdp').val();
+                        var activation = $('#activation').is(':checked') ? '{1:'+ $('#activation').attr('data_staff') +'}' : '{0:null}';
+                        var uninstall = $('#uninstall').is(':checked') ? '1' : '0';
+                        var maj = $('#maj').is(':checked') ? '1' : '0';
+                        var register = $('#register').is(':checked') ? '1' : '0';
+                        var verifActivation = $('#verifActivation').is(':checked') ? '1' : '0';
+                        var divers = $('#divers').val();
+
+                        //Insertion ou mise a jour
+                        planches.insertOfUpdatePrepa(id_contenu
+                                                    ,$('.modal').attr('data_planche')
+                                                    ,vd
+                                                    ,modele
+                                                    ,etiquetage
+                                                    ,dossierSAV
+                                                    ,septZip
+                                                    ,acrobat
+                                                    ,flash
+                                                    ,java
+                                                    ,pdf
+                                                    ,autre
+                                                    ,type
+                                                    ,userAccount
+                                                    ,mdp
+                                                    ,activation
+                                                    ,uninstall
+                                                    ,maj
+                                                    ,register
+                                                    ,verifActivation
+                                                    ,divers);
+
+                    } else {
+                        var id_contenu = $('#fichesModal').attr('data_id_contenu');
+                        var typeAppareil = $('#typeAppareil').val();
+                        var motDePasse = $('#motDePasse').val();
+                        var description = $('#description').val();
+                        var comTech = $('#comTech').val();
+                        var tempsInter = $('#tempsInter').val();
+                        var dateMiseADisposition = $('#dateMiseADisposition').val();
+                        var visaClient = $('#visaClient').val();
+                        var visaTech = $('#visaTech').val();
+                        var intervention = $('#intervention').val();
+                        var tempsPasse = $('#tempsPasse').val();
+                        var svisaTech = $('#svisaTech').val();
+                        var comIntervention = $('#comIntervention').val();
+                        var verifClient = $('#verifClient').is(':checked') ? '1' : '0';
+                        var dateReprise = $('#dateReprise').val();
+
+                        planches.insertOfUpdateRepa(id_contenu
+                                                    ,$('.modal').attr('data_planche')
+                                                    ,typeAppareil
+                                                    ,motDePasse
+                                                    ,description
+                                                    ,comTech
+                                                    ,tempsInter
+                                                    ,dateMiseADisposition
+                                                    ,visaClient
+                                                    ,visaTech
+                                                    ,intervention
+                                                    ,tempsPasse
+                                                    ,svisaTech
+                                                    ,comIntervention
+                                                    ,verifClient
+                                                    ,dateReprise);
+
+                    }
+                    switchModal();
+
+                } else if($(this).text() == 'Retour') {
+                    switchModal();
+                } else {
+                    $('#fichesModal').modal('toggle');
+                }
             });
 
             $(document).on('hidden.bs.modal','.modal', function () {
@@ -611,6 +794,11 @@
                 $('.modal-body').css('height', '100%');
             });
 
+
+            /*ASSIGNATION DU VISA*/
+            $(document).on('click','.prepaTmpl input[type="checkbox"]',function(){
+                $(this).attr('data_staff',$('.modal').attr('data_staff'));
+            });
 
         });
 

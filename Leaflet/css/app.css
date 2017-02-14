@@ -1,0 +1,13 @@
+#map{
+    height: 480px;
+    /*width: 50%;
+    margin: 0 auto;*/
+}
+
+.form{
+    display: none;
+}
+
+.submit{
+    margin-right:15px;
+}

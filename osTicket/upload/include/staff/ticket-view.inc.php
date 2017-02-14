@@ -260,7 +260,7 @@ if($ticket->isOverdue())
 
 <?php
 
-    $prepas = Atelier::getInstance()->get_prepa($ticket->getId());
+    //$prepas = Atelier::getInstance()->get_prepa($ticket->getId());
     //print_r($prepas);
 
 ?>
