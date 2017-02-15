@@ -2,51 +2,6 @@
     require_once('./Request/GetInfos.php');
     require_once('./Request/Atelier.php');
 
-    $queue_columns = array(
-        'number' => array(
-            'width' => '7.4%',
-            'heading' => __('Number'),
-            ),
-        'date' => array(
-            'width' => '14.6%',
-            'heading' => __('Date de création'),
-            'sort_col' => 'created',
-            ),
-        'subject' => array(
-            'width' => '26%',
-            'heading' => __('Subject'),
-            'sort_col' => 'cdata__subject',
-            ),
-        'name' => array(
-            'width' => '14%',
-            'heading' => __('From'),
-            'sort_col' =>  'user__name',
-            ),
-        'org' => array(
-            'width' => '14%',
-            'heading' => __('Organisation'),
-            'sort_col' =>  'user__name',
-            ),
-        'status' => array(
-            'width' => '13%',
-            'heading' => __('Status'),
-            'sort_col' => 'status_id',
-            ),
-        'priority' => array(
-            'width' => '8.4%',
-            'heading' => __('Priority'),
-            'sort_col' => 'cdata__:priority__priority_urgency',
-            ),
-        'plusPrepa' => array(
-            'width' => '8.4%',
-            'heading' => __('Preparation')
-            ),
-        'plusRepa' => array(
-            'width' => '8.4%',
-            'heading' => __('Reparation')
-            )
-        );
-
 ?>
 
     <div class="plan col-md-12">
@@ -116,141 +71,17 @@
                   <div class="modal-body">
                     <div class="container home">
                        <div class="col-md-12">
-                        <?php
-                            //Recuperer les tickets de type atelier. Afficher numero affaire + nom client + num ticket
-                            $atelier = TicketsInfos::getInstance()->atelier_tickets();
-                        ?>
                         <table class="list atelierT" border="0" cellspacing="1" cellpadding="2" width="100%">
-                        <thead>
-                            <tr>
-                                <?php
-                                if ($thisstaff->canManageTickets()) { ?>
-                                <th width="2%">&nbsp;</th>
-                                <?php } ?>
+                            <thead>
+                                <th>ID du Ticket</th>
+                                <th>Type</th>
+                                <th>Affecter</th>
+                             </thead>
+                             <tbody>
 
-                                <?php
-                                // Swap some columns based on the queue.
-
-                                unset($queue_columns['dept']);
-                                unset($queue_columns['assignee']);
-
-                                /*if ($search && !$status)
-                                    unset($queue_columns['priority']);
-                                else
-                                    unset($queue_columns['status']);*/
-
-                                // Query string
-                                unset($args['sort'], $args['dir'], $args['_pjax']);
-                                $qstr = Http::build_query($args);
-                                // Show headers
-                                foreach ($queue_columns as $k => $column) {
-                                    echo sprintf( '<th width="%s"><a href="?sort=%s&dir=%s&%s"
-                                            class="%s">%s</a></th>',
-                                            $column['width'],
-                                            $column['sort'] ?: $k,
-                                            $column['sort_dir'] ? 0 : 1,
-                                            $qstr,
-                                            isset($column['sort_dir'])
-                                            ? ($column['sort_dir'] ? 'asc': 'desc') : '',
-                                            $column['heading']);
-                                }
-                                ?>
-                            </tr>
-                         </thead>
-                         <tbody>
-                            <?php
-                                foreach ($atelier as $T) {
-                                    $total += 1;
-                                    $tid=$T['number'];
-                                    ?>
-                                <tr id="<?php echo $T['ticket_id']; ?>">
-                                    <?php if($thisstaff->canManageTickets()) {
-
-                                        $sel=false;
-                                        if($ids && in_array($T['ticket_id'], $ids))
-                                            $sel=true;
-                                        ?>
-                                    <td align="center" class="nohover">
-                                        <input class="ckb" type="checkbox" name="tids[]"
-                                            value="<?php echo $T['ticket_id']; ?>" <?php echo $sel?'checked="checked"':''; ?>>
-                                    </td>
-                                    <?php } ?>
-                                    <td title="<?php echo $T['user__default_email__address']; ?>" nowrap>
-                                      <a class="Icon <?php echo strtolower($T['source']); ?>Ticket preview"
-                                        title="Preview Ticket"
-                                        href="tickets.php?id=<?php echo $T['ticket_id']; ?>"
-                                        data-preview="#tickets/<?php echo $T['ticket_id']; ?>/preview"
-                                        ><?php echo $tid; ?></a></td>
-                                    <td align="center" nowrap><?php echo Format::datetime($T[$date_col ?: 'lastupdate']) ?: $date_fallback; ?></td>
-                                    <td>
-                                        <span><?php echo $T['subject']; ?></span>
-                    <?php               if ($T['attachment_count'])
-                                            echo '<i class="small icon-paperclip icon-flip-horizontal" data-toggle="tooltip" title="'
-                                                .$T['attachment_count'].'"></i>';
-                                        if ($threadcount > 1) { ?>
-                                            <span class="pull-right faded-more"><i class="icon-comments-alt"></i>
-                                                <small><?php echo $threadcount; ?></small>
-                                            </span>
-                                        <?php } ?>
-                                    </td>
-                                    <td nowrap><div><?php
-                                        if ($T['collab_count'])
-                                            echo '<span class="pull-right faded-more" data-toggle="tooltip" title="'
-                                                .$T['collab_count'].'"><i class="icon-group"></i></span>';
-                                        ?><span class="truncate" style="max-width:<?php
-                                            echo $T['collab_count'] ? '150px' : '170px'; ?>"><?php
-                                        /*TO CHANGE*/
-                                        $un = new UsersName($T['user__name']);
-                                            echo '<a href="./users.php?id='. TicketsInfos::getInstance()->ticket_user_id($T['ticket_id']) .'#tickets">' . ucwords($T['firsname'] . ' ' . $T['name']) . '</a>';
-                                        ?></span></div></td>
-                                    <td nowrap><div><?php
-                                        if ($T['collab_count'])
-                                            echo '<span class="pull-right faded-more" data-toggle="tooltip" title="'
-                                                .$T['collab_count'].'"><i class="icon-group"></i></span>';
-                                        ?><span class="truncate" style="max-width:<?php
-                                            echo $T['collab_count'] ? '150px' : '170px'; ?>"><?php
-                                            echo '<a href="./orgs.php?id='. TicketsInfos::getInstance()->ticket_org_id($T['ticket_id']) .'#users">'. TicketsInfos::getInstance()->ticket_org_name($T['ticket_id']) .'</a>';
-                                        ?></span></div></td>
-                                    <?php
-                                    if($search && !$status){
-                                        $displaystatus=TicketStatus::getLocalById($T['status_id'], 'value', $T['status__name']);
-                                        if(!strcasecmp($T['status__state'],'open'))
-                                            $displaystatus="<b>$displaystatus</b>";
-                                        echo "<td>$displaystatus</td>";
-                                    } else { ?>
-                                    <td class="nohover" align="center">
-                                        <?php echo $T['status_name']; ?></td>
-                                    <td class="nohover" align="center"
-                                        style="background-color:<?php echo $T['cdata__:priority__priority_color']; ?>;">
-                                        <?php echo $T['priority_desc']; ?></td>
-                                    <td style="text-align:center"><a href="#" class="addContenu preparation btn btn-success">+</a></td>
-                                    <td style="text-align:center"><a href="#" class="addContenu reparation btn btn-success">+</a></td>
-                                    <?php
-                                    }
-                                    ?>
-                                </tr>
-                                <?php
-                                } //end of foreach
-                            if (!$total)
-                                $ferror=__('There are no tickets matching your criteria.');
-                            ?>
-                        </tbody>
-                        <tfoot>
-                         <tr>
-                            <td colspan="10">
-                                <?php if($total && $thisstaff->canManageTickets()){ ?>
-                                <?php echo __('Select');?>:&nbsp;
-                                <a id="selectAll" href="#ckb"><?php echo __('All');?></a>&nbsp;&nbsp;
-                                <a id="selectNone" href="#ckb"><?php echo __('None');?></a>&nbsp;&nbsp;
-                                <a id="selectToggle" href="#ckb"><?php echo __('Toggle');?></a>&nbsp;&nbsp;
-                                <?php }else{
-                                    echo '<i>';
-                                    echo $ferror?Format::htmlchars($ferror):__('Query returned 0 results.');
-                                    echo '</i>';
-                                } ?>
-                            </td>
-                         </tr>
-                        </tfoot>
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
                         </table>
                       </div>
                     </div>
@@ -476,16 +307,9 @@
                 </div>
               </div>
             </div>
-
         </div>
 
 
-
-
-
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
-        <script src="../js/autosize.js"></script>
-        <script src="./js/atelier.js"></script>
 
         <script type="text/javascript">
 
@@ -500,50 +324,53 @@
             $(document).off('click', '.validerOuEnregistrer');
             $(document).off('hidden.bs.modal', '.modal');
 
-            //autosize($('textarea'));
-
             //Gestion de l'atelier
             $(document).on('click', '.atelier div div', function(e) {
-                /*INIT*/
-                $('.modal-body .container.home').show();
-                $('.modal-body .container.fiche').hide();
-
                 var planche = $(this);
-                $('.modal-title').text((planche.attr('class') + ' ' + planche.attr('id')).replace(/\b[a-z]/g,function(f){return f.toUpperCase();}));
-                $('#fichesModal').attr('data_planche',planche.attr('data_planche'));
+
+                planches.getContenues(function(contenues){
+                    /*INIT*/
+                    $('.modal-body .container.home').show();
+                    $('.modal-body .container.fiche').hide();
+
+                    $('.modal-title').text((planche.attr('class') + ' ' + planche.attr('id')).replace(/\b[a-z]/g,function(f){return f.toUpperCase();}));
+                    $('#fichesModal').attr('data_planche',planche.attr('data_planche'));
 
 
-                var contenu = planches.getPlanche(planche.attr('data_planche'));
-                $('.modal-body .contenu').remove();
+                    var contenu = planches.getPlanche(planche.attr('data_planche'));
+                    $('.modal-body .contenu').remove();
 
-                $(contenu).each(function($number,$obj){
-                        $('.modal-body div:first').prepend('<div class="col-md-3 contenu" id="'+ $obj.getId() +'">'+
-                           '<div class="prepa">'+
-                            '<img src="../assets/default/images/computer.png">'+
-                            '<input value="'+ ($obj.getType() == "prepa"  ? "VD _ _ _ _" : "REPA") +'"/>'+
-                            '</div>'+
-                        '</div>');
+                    $(contenu).each(function($number,$obj){
+                            $('.modal-body div:first').prepend('<div class="col-md-3 contenu" id="'+ $obj.getId() +'">'+
+                               '<div class="prepa">'+
+                                '<img src="../assets/default/images/computer.png">'+
+                                '<input value="'+ ($obj.getType() == "prepa"  ? "VD _ _ _ _" : "REPA") +'"/>'+
+                                '</div>'+
+                            '</div>');
+                    });
+
+                    $('#fichesModal').modal({backdrop: 'static', keyboard: false});
+
+                    $('.list.atelierT tbody').empty();
+                    $(contenues).each(function(number,obj){
+                        $('.list.atelierT tbody').append('<tr><td>'+obj.getId()+'</td><td>'+obj.getType()+'</td><td><button class="btn btn-success addContenu" id="'+ obj.getId() +'" >Affecter</button></td></tr>');
+                    });
                 });
-
-                $('#fichesModal').modal({backdrop: 'static', keyboard: false});
             });
 
             //Ajouter une prepa/repa
             $(document).on('click','.addContenu',function(){
-                var type = $(this).hasClass('preparation') ? "prepa" : "repa";
-                var id = $(this).closest('tr').attr('id');
+                var id = $(this).attr('id');
                 var planche = $('#fichesModal').attr('data_planche');
 
-                function callback(data){
-                    $('.modal-body div:first').prepend('<div class="col-md-3 contenu" id="">'+
-                       '<div class="prepa">'+
-                        '<img src="../assets/default/images/computer.png">'+
-                        '<input value="'+ (type == "prepa"  ? "VD _ _ _ _" : "REPA") +'"/>'+
-                        '</div>'+
+                planches.affectContenu(id,planche,function(type){
+                    $('.modal-body div:first').prepend('<div class="col-md-3 contenu" id="'+id+'">'+
+                    '<div class="prepa">'+
+                    '<img src="../assets/default/images/computer.png">'+
+                    '<input value="'+ (type == "prepa"  ? "VD _ _ _ _" : "REPA") +'"/>'+
+                    '</div>'+
                     '</div>');
-                };
-
-                AtelierAjax.addContenu(id,planche,type,callback);
+                });
 
             });
 
@@ -551,7 +378,7 @@
             $(document).on('click','.contenu',function(){
 
                 var id = $(this).attr('id');
-                var data = planches.getContenu(id,$('.modal').attr('data_planche'));
+                var data = planches.getContenu(id);
                 data = data[0];
 
                 //Récupération de la valeur d'une checkbox
@@ -596,8 +423,8 @@
                         $('#divers').val(data['contenu'].divers)
                     }
                 } else {
+                    type = "Fiche de réparation";
                     if(data['contenu'].PEC != "PEC"){
-                        type = "Fiche de réparation";
                         $('#typeAppareil').val(data['contenu'].typeAppareil);
                         $('#motDePasse').val(data['contenu'].motDePasse);
                         $('#description').val(data['contenu'].description);
@@ -782,6 +609,7 @@
                 } else if($(this).text() == 'Retour') {
                     switchModal();
                 } else {
+
                     $('#fichesModal').modal('toggle');
                 }
             });
@@ -791,7 +619,8 @@
                 $('.modal-body .container.fiche').css('right','-100%');
                 $('.modal-body .container.fiche').css('left','100%');
                 $('.modal-body .container.fiche').css('display','none');
-                $('.modal-body').css('height', '100%');
+                //$('.modal-body').css('height', '100%');
+                //$('.modal-body').css('height', $('.modal-body .container.home').height()+30);
             });
 
 

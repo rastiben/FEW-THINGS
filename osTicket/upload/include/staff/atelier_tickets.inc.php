@@ -44,6 +44,73 @@ $queue_columns = array(
 
 
 <div class="">
+
+  <!--http://localhost:8080/osTicket/upload/scp/tickets.php?a=open-->
+   <div class="newContent col-md-12">
+        <div class="content col-md-4">
+            <a href="http://localhost:8080/osTicket/upload/scp/tickets.php?a=open" ><img src="../assets/atelier/newTicket.png"></a>
+        </div>
+        <div class="content col-md-4">
+            <img id="repair" src="../assets/atelier/computerRepair.png">
+        </div>
+        <div class="content col-md-4">
+            <img id="prepair" src="../assets/atelier/computerPrepair.png">
+        </div>
+   </div>
+
+   <!--MODAL-->
+<div class="modal fade" id="fichesModal" data_planche="" data_id_contenu="" data_staff="<?php echo $thisstaff->getId() ?>">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success sendContenu">Ajouter</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+   <script>
+       $(function(){
+
+           $(document).off('click','.content img');
+           $(document).off('click','.sendContenu');
+
+           var planche = new Planche();
+           var id = "";
+           var type = "";
+
+           $(document).on('click','.content img',function(e){
+               if($(this).attr('id') == "prepair"){
+                    $('.modal-title').text('Ajout d\'une préparation');
+                    type = "préparation";
+               } else {
+                    $('.modal-title').text('Ajout d\'une réparation');
+                   type = "réparation";
+               }
+               //Récupération de l'id du ticket
+               id = $('input[type="radio"]:checked').closest('tr').attr('id');
+
+               //Affichage de la question
+               $('.modal-body').html('<p>Voulez vous vraiment ajouter cette nouvelle '+ type +' sur le ticket : '+ id +' ?</p>');
+
+               if(id != undefined)
+                    $('.modal').modal('toggle');
+           });
+
+           $(document).on('click','.sendContenu',function(){
+               $('.modal').modal('toggle');
+               planche.addContenu(id,type == "préparation" ? "prepa" : "repa");
+           });
+
+       });
+   </script>
+
    <div class="filter">
        <ul class="col-md-12">
             <li class="col-md-5"><p>Liste completes</p></li>
@@ -104,8 +171,7 @@ $queue_columns = array(
                         $sel=true;
                     ?>
                 <td align="center" class="nohover">
-                    <input class="ckb" type="checkbox" name="tids[]"
-                        value="<?php echo $T['ticket_id']; ?>" <?php echo $sel?'checked="checked"':''; ?>>
+                    <input class="ckb" type="radio" name="selection">
                 </td>
                 <?php } ?>
                 <td title="<?php echo $T['user__default_email__address']; ?>" nowrap>

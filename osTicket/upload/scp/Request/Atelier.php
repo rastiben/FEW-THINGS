@@ -30,12 +30,11 @@ class Atelier
         return self::$instance;
     }
 
-    public function add_contenu($ticket_id,$planche,$type){
-        $res = $this->dbh->prepare("INSERT INTO ost_atelier_planche_contenu (ticket_id,planche_id,type_id)
+    public function add_contenu($ticket_id,$type){
+        $res = $this->dbh->prepare("INSERT INTO ost_atelier_planche_contenu (ticket_id,type_id)
         VALUES (:ticket_id,
-        (SELECT id FROM ost_atelier_planche WHERE planche = :planche),
         (SELECT id FROM ost_atelier_contenu_type WHERE type = :type))");
-        $res->execute(array(':ticket_id'=>$ticket_id,':planche'=>$planche,':type'=>$type));
+        $res->execute(array(':ticket_id'=>$ticket_id,':type'=>$type));
         //return $res->fetchAll();
         return $this->dbh->lastInsertId();
     }
@@ -143,7 +142,7 @@ class Atelier
         FROM ost_atelier_planche_contenu
         INNER JOIN ost_atelier_contenu_type
         ON ost_atelier_contenu_type.id = ost_atelier_planche_contenu.type_id
-        INNER JOIN ost_atelier_planche
+        LEFT JOIN ost_atelier_planche
         ON ost_atelier_planche.id = ost_atelier_planche_contenu.planche_id
         LEFT JOIN ost_atelier_preparation
         ON ost_atelier_planche_contenu.id = ost_atelier_preparation.id_contenu
@@ -153,12 +152,19 @@ class Atelier
         return $res->fetchAll();
     }
 
+    public function affectContenu($id,$planche){
+        $res = $this->dbh->prepare("UPDATE ost_atelier_planche_contenu
+        SET planche_id = (SELECT id FROM ost_atelier_planche WHERE planche = :planche)
+        WHERE id = :id");
+        $res->execute(array(':id'=>$id,':planche'=>$planche));
+    }
+
     //43364101
 }
 
 if(isset($_REQUEST['request'])){
     if($_REQUEST['request'] == 'addContenu'){
-        return Atelier::getInstance()->add_contenu($_REQUEST['ticket_id'],$_REQUEST['planche'],$_REQUEST['type']);
+        echo Atelier::getInstance()->add_contenu($_REQUEST['ticket_id'],$_REQUEST['type']);
     } else if($_REQUEST['request'] == 'addPrepaInfo'){
         Atelier::getInstance()->addPrepaInfo($_REQUEST['id_contenu'],
                                             $_REQUEST['vd'],
@@ -198,6 +204,8 @@ if(isset($_REQUEST['request'])){
                                              $_REQUEST['dateReprise']);
     } else if($_REQUEST['request'] == 'getPlanches'){
         echo json_encode(Atelier::getInstance()->getPlanches());
+    } else if($_REQUEST['request'] == 'affectContenu'){
+        Atelier::getInstance()->affectContenu($_REQUEST['id'],$_REQUEST['planche']);
     }
 }
 

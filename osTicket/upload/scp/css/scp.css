@@ -3955,32 +3955,9 @@ input[type="radio"]{
     }
 }
 
-/*.filter ul li p:before{
-    content: '';
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    width:0px;
-    transition: width 0.3s;
-}
-
-.filter ul li p:after{
-    content: '';
-    position: absolute;
-    bottom: 10px;
-    right: 50%;
-    width:0px;
-    transition: width 0.3s;
-}
-
-.filter ul li:hover p:before,
-.filter ul li:hover p:after{
-    border:1px solid #E65524;
-    width: 100px;
-}*/
-
 table.atelierT{
     margin-top:0px;
+    font-size: 14px;
 }
 
 /*PLAN*/
@@ -4146,4 +4123,17 @@ table.atelierT{
 .prepa img{
     width: 100px;
     margin-top: 20px;
+}
+
+.newContent{
+    margin-bottom: 30px;
+}
+
+.newContent .content{
+    text-align: center;
+}
+
+.newContent img{
+    height: 120px;
+    cursor: pointer;
 }

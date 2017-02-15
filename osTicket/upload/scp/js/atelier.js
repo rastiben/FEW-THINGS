@@ -6,36 +6,76 @@ function Planche() {
     var self = this;
     AtelierAjax.getPlanches(function (data) {
         var data = $.parseJSON(data);
-        self.planches = {
-            b1: []
-            , b2: []
-        };
+        //console.log(data);
+        self.contenu = [];
         $(data).each(function ($number, $obj) {
-            self.planches[$obj['planche']].push(new Contenu($obj['0'],
-                                                            $obj['id'],
-                                                            $obj['planche'],
-                                                            ($obj['0'] == "prepa" ?
+            self.contenu.push(new Contenu($obj['0'],
+                                          $obj['id'],
+                                          $obj['planche'],
+                                          ($obj['0'] == "prepa" ?
             new Preparation($obj['prepaPEC'],$obj['VD'], $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],
             $obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
             new Reparation($obj['repaPEC'],$obj['typeAppareil'],$obj['motDePasse'],$obj['description'],$obj['comTech'],$obj['tempsInter'],
             $obj['dateMiseADisposition'],$obj['visaClient'],$obj['visaTech'],$obj['intervention'],$obj['tempsPasse'],$obj['svisaTech'],$obj['comIntervention'],$obj['verifClient'],
             $obj['dateReprise']))));
         });
+
+
     });
+
+    /*
+    *Recupération des contenu non affectés à une planche
+    */
+    self.getContenues = function(callback) {
+        var contenues = $.grep(self.contenu,function(obj){
+            return obj.getPlanche() == null
+        });
+        callback(contenues);
+    };
 
     /*
     *Recupération des contenu d'une planche
     */
     self.getPlanche = function(planche) {
-        return self.planches[planche];
+        return $.grep(self.contenu,function(obj){
+            return obj.getPlanche() == planche
+        });
     };
 
     /*
     *Recupération du contenu d'un contenu d'une planche
     */
-    self.getContenu = function(id,planche){
-        return $.grep(self.planches[planche],function(obj){
+    self.getContenu = function(id){
+        return $.grep(self.contenu,function(obj){
             return obj.getId() == id
+        });
+    };
+
+    /*
+    *Affectation d'un nouveau contenu sur une planche
+    */
+    self.affectContenu = function(id,planche,callback){
+        AtelierAjax.affectContenu(id,planche,function(){
+            var contenu =  $.grep(self.contenu,function(obj){
+                return obj.getId() == id
+            });
+
+            contenu[0].planche = planche;
+            callback();
+        });
+    };
+
+    /*
+    *Ajout d'un nouveau contenu sur une planche
+    */
+    self.addContenu = function(id,type){
+        AtelierAjax.addContenu(id,type,function(data){
+            self.contenu.push(new Contenu(type,
+                                        data,
+                                        (type == "prepa" ?
+            new Preparation("PEC") :
+            new Reparation("PEC"))));
+            //callback(data);
         });
     };
 
@@ -43,7 +83,7 @@ function Planche() {
     *Mise a jour ou ajout du contenu d'une prepa
     */
     self.insertOfUpdatePrepa = function(id_contenu, planche, VD, modele, etiquetage, dossierSAV, septZip, acrobat, flash, java, pdf, autre, type, userAccount, mdp, activation, uninstall, maj, register, verifActivation, divers) {
-        var contenu = self.getContenu(id_contenu,planche);
+        var contenu = self.getContenu(id_contenu);
         contenu = contenu[0];
         contenu = contenu['contenu'];
         contenu.VD = VD;
@@ -69,11 +109,11 @@ function Planche() {
     }
 
      /*
-    *Mise a jour ou ajout du contenu d'une prepa
+    *Mise a jour ou ajout du contenu d'une repa
     */
     self.insertOfUpdateRepa = function(id_contenu,planche,typeAppareil,motDePasse,description,comTech,tempsInter,dateMiseADisposition,visaClient,visaTech,intervention,tempsPasse,svisaTech,
     comIntervention,verifClient,dateReprise) {
-        var contenu = self.getContenu(id_contenu,planche);
+        var contenu = self.getContenu(id_contenu);
         contenu = contenu[0];
         contenu = contenu['contenu'];
         contenu.typeAppareil = typeAppareil;
@@ -111,9 +151,12 @@ function Contenu(type, id, planche, contenu) {
     self.getId = function () {
         return self.id;
     }
+    self.getPlanche = function () {
+        return self.planche;
+    }
 }
 
-function Preparation(PEC,VD,acrobat,activation,autre,dossierSAV,type,etiquetage,flash,id_contenu,java,maj,mdp,modele,pdf,register,septZip,uninstall,userAccount,verifActivation,divers){
+function Preparation(PEC,VD=null,acrobat=null,activation=null,autre=null,dossierSAV=null,type=null,etiquetage=null,flash=null,id_contenu=null,java=null,maj=null,mdp=null,modele=null,pdf=null,register=null,septZip=null,uninstall=null,userAccount=null,verifActivation=null,divers=null){
 
     var self = this;
     self.PEC = PEC;
@@ -139,7 +182,7 @@ function Preparation(PEC,VD,acrobat,activation,autre,dossierSAV,type,etiquetage,
     self.divers = divers;
 }
 
-function Reparation(PEC,typeAppareil,motDePasse,description,comTech,tempsInter,dateMiseADisposition,visaClient,visaTech,intervention,tempsPasse,svisaTech,comIntervention,verifClient,dateReprise){
+function Reparation(PEC,typeAppareil=null,motDePasse=null,description=null,comTech=null,tempsInter=null,dateMiseADisposition=null,visaClient=null,visaTech=null,intervention=null,tempsPasse=null,svisaTech=null,comIntervention=null,verifClient=null,dateReprise=null){
 
     var self = this;
     self.PEC = PEC;
@@ -169,14 +212,6 @@ class AtelierAjax{
         }).success(callback);
     }
 
-    /*static getContenuInfo(id_contenu,callback){
-        var data = {
-                request:'getContenuInfo'
-                ,id_contenu:id_contenu
-            };
-        this.doAjax(data,callback);
-    }*/
-
     static getPlanches(callback){
          var data = {
                 request:'getPlanches'
@@ -184,23 +219,23 @@ class AtelierAjax{
          this.doAjax(data,callback);
     }
 
-    static addContenu(id,planche,type,callback){
+    static affectContenu(id,planche,callback){
+         var data = {
+                request:'affectContenu'
+                ,id:id
+                ,planche:planche
+            };
+         this.doAjax(data,callback);
+    }
+
+    static addContenu(id,type,callback){
         var data = {
                 request:'addContenu',
                 ticket_id:id,
-                planche:planche,
                 type:type
             };
         this.doAjax(data,callback);
     }
-
-    /*static getContenuPlanche(planche,callback){
-        var data = {
-                request:'getContenuPlanche',
-                planche:planche
-            };
-        this.doAjax(data,callback);
-    }*/
 
     static insertOrUpdatePrepa(id_contenu,vd,modele,etiquetage,dossierSAV, septZip, acrobat, flash, java, pdf, autre, type, userAccount, mdp, activation, uninstall, maj, register, verifActivation, divers){
         $.ajax({
