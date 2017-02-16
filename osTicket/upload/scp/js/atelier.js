@@ -6,12 +6,13 @@ function Planche() {
     var self = this;
     AtelierAjax.getPlanches(function (data) {
         var data = $.parseJSON(data);
-        //console.log(data);
+        console.log(data);
         self.contenu = [];
         $(data).each(function ($number, $obj) {
             self.contenu.push(new Contenu($obj['0'],
                                           $obj['id'],
                                           $obj['planche'],
+                                          $obj['etat'],
                                           ($obj['0'] == "prepa" ?
             new Preparation($obj['prepaPEC'],$obj['VD'], $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],
             $obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
@@ -28,7 +29,7 @@ function Planche() {
     */
     self.getContenues = function(callback) {
         var contenues = $.grep(self.contenu,function(obj){
-            return obj.getPlanche() == null
+            return (obj.getPlanche() == null && obj.getEtat() != "Terminé")
         });
         callback(contenues);
     };
@@ -56,22 +57,31 @@ function Planche() {
     */
     self.affectContenu = function(id,planche,callback){
         AtelierAjax.affectContenu(id,planche,function(){
-            var contenu =  $.grep(self.contenu,function(obj){
-                return obj.getId() == id
-            });
+            var contenu =  self.getContenu(id);
 
             contenu[0].planche = planche;
-            callback();
+            callback(contenu[0].getType());
         });
     };
+
+    self.changeState = function(id,state){
+        var contenu =  self.getContenu(id);
+        contenu[0].etat = state;
+
+        AtelierAjax.changeState(id,state,function(){
+        });
+    }
 
     /*
     *Ajout d'un nouveau contenu sur une planche
     */
-    self.addContenu = function(id,type){
-        AtelierAjax.addContenu(id,type,function(data){
+    self.addContenu = function(id,type,planche=null){
+        var etat = (type == "prepa" ? "Planche" : "Entrées");
+        AtelierAjax.addContenu(id,type,planche,etat,function(data){
             self.contenu.push(new Contenu(type,
                                         data,
+                                        planche,
+                                        etat,
                                         (type == "prepa" ?
             new Preparation("PEC") :
             new Reparation("PEC"))));
@@ -137,13 +147,14 @@ function Planche() {
 
 
 
-function Contenu(type, id, planche, contenu) {
+function Contenu(type, id, planche, etat, contenu) {
 
     var self = this;
     self.type = type;
     self.id = id;
     self.planche = planche;
     self.contenu = contenu;
+    self.etat = etat;
 
     self.getType = function () {
         return self.type;
@@ -153,6 +164,9 @@ function Contenu(type, id, planche, contenu) {
     }
     self.getPlanche = function () {
         return self.planche;
+    }
+    self.getEtat = function () {
+        return self.etat;
     }
 }
 
@@ -228,11 +242,22 @@ class AtelierAjax{
          this.doAjax(data,callback);
     }
 
-    static addContenu(id,type,callback){
+    static changeState(id,state,callback){
+         var data = {
+                request:'changeState'
+                ,id:id
+                ,etat:state
+            };
+         this.doAjax(data,callback);
+    }
+
+    static addContenu(id,type,planche,etat,callback){
         var data = {
                 request:'addContenu',
                 ticket_id:id,
-                type:type
+                type:type,
+                planche:planche,
+                etat:etat
             };
         this.doAjax(data,callback);
     }

@@ -466,7 +466,7 @@ if($ticket->isOverdue())
     $i = 0;
     foreach($rapports as $rapport) { ?>
     <div class="col-md-12 col-lg-12 rapport <?php if($i == 0) echo 'active' ?>" id="<?php echo $i ?>">
-       <div class="col-lg-5 col-md-12 col-xs-12" id="borderIdentity">
+       <div class="col-lg-4 col-md-12 col-xs-12" id="borderIdentity">
         <div class="identity" id="<?php echo $rapport['id'] ?>">
             <div class="title">
                 <div class="titling"></div>
@@ -542,7 +542,7 @@ if($ticket->isOverdue())
             </div>
         </div>
         </div>
-        <div class="col-lg-7 col-md-12 col-xs-12" id="borderProperty">
+        <div class="col-lg-8 col-md-12 col-xs-12" id="borderProperty">
         <div class="property" id="<?php echo $rapport['id'] ?>">
           <div class="title">
              <div class="titling"></div>
@@ -1340,9 +1340,13 @@ $(function() {
 
 
 <script src="./js/moment.js"></script>
+<script src="./js/rapport.js"></script>
+
 <script>
 
     $(document).ready(function(){
+
+        var rapports = new Rapport();
 
         $('input[name="date_new_inter"]').datepicker({
                             startView: 1,
@@ -1405,44 +1409,30 @@ $(function() {
                     if((num_affaire != '' && instal == 1) || instal == 0)
                         {
                             if(/^\d+$/.test(id) || id == null){
-                                $.ajax({
-                                   method:"POST",
-                                   url:"./Request/Rapport.php",
-                                   data:{
-                                       addHoraires:'',
-                                       ticket_id: $('.sticky.bar.col-md-12').attr('data_ticket_id'),
-                                       rapport_id:id,
-                                       agent_id:$('.sticky.bar.col-md-12').attr('data_agent_id'),
-                                       date_inter: date_inter,
-                                       arrive_inter: arrive,
-                                       depart_inter: depart,
-                                       symptomesObservations: comment,
-                                       contrat:contrat,
-                                       instal:instal,
-                                       num_affaire:num_affaire
-                                   },
-                                    success:function(data){
+                                rapports.addHoraires(
+                                       $('.sticky.bar.col-md-12').attr('data_ticket_id'),
+                                       id,
+                                       $('.sticky.bar.col-md-12').attr('data_agent_id'),
+                                       date_inter,
+                                       arrive,
+                                       depart,
+                                       comment,
+                                       contrat,
+                                       instal,
+                                       num_affaire
+                                   ,function(data){
                                         location.reload();
-                                    }
-                                });
+                                    });
                             } else {
                                 id = id.substr(7);
-                                $.ajax({
-                                   method:"POST",
-                                   url:"./Request/Rapport.php",
-                                   data:{
-                                       updateHoraire:'',
-                                       horaire_id:id,
-                                       date_inter: date_inter,
-                                       arrive_inter: arrive,
-                                       depart_inter: depart,
-                                       symptomesObservations: comment,
-                                       contrat:contrat,
-                                       instal:instal
-                                   },
-                                    success:function(data){
-                                        location.reload();
-                                    }
+                                rapports.updateHoraire(
+                                       id,
+                                       date_inter,
+                                       arrive,
+                                       depart,
+                                       comment
+                                , function(data){
+                                    location.reload();
                                 });
                             }
                         } else {
@@ -1498,7 +1488,7 @@ $(function() {
             method:"POST",
             url:"./Request/Contrat.php",
             data:{
-                getContrat:'',
+                request:'getContrat',
                 id_org: $('.mail.icon.org').attr('id')
             },
             success:function(data){

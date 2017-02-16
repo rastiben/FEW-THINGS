@@ -96,25 +96,14 @@ class Rapport
 
 }
 
-/*
-*Si un membre du staff est connecté, une redirection est effectué vers la bonne fonction.
-*/
-/*if (!$thisstaff || !$thisstaff->getId() || !$thisstaff->isValid()) {
-    return "error";
-}
-else{*/
-if(isset($_POST['addHoraires'])){
-    Rapport::getInstance()->addHoraires($_POST['ticket_id'],$_POST['agent_id'],$_POST['rapport_id'],$_POST['date_inter'],$_POST['arrive_inter'],$_POST['depart_inter'],$_POST['symptomesObservations'],$_POST['contrat'],$_POST['instal'],$_POST['num_affaire']);
-    //header('Location: ../tickets.php?id=' . $_POST['ticket_id']);
-}
-else if(isset($_POST['updateHoraire'])){
-    Rapport::getInstance()->updateHoraire($_POST['horaire_id'],$_POST['date_inter'],$_POST['arrive_inter'],$_POST['depart_inter'],$_POST['symptomesObservations'],$_POST['contrat'],$_POST['instal']);
-    //header('Location: ../tickets.php?id=' . $_POST['ticket_id']);
+
+if(isset($_POST['request'])){
+    if($_POST['request'] == 'addHoraires'){
+        Rapport::getInstance()->addHoraires($_POST['ticket_id'],$_POST['agent_id'],$_POST['rapport_id'],$_POST['date_inter'],$_POST['arrive_inter'],$_POST['depart_inter'],$_POST['symptomesObservations'],$_POST['contrat'],$_POST['instal'],$_POST['num_affaire']);
+    } else if($_POST['request'] == 'updateHoraire'){
+        Rapport::getInstance()->updateHoraire($_POST['horaire_id'],$_POST['date_inter'],$_POST['arrive_inter'],$_POST['depart_inter'],$_POST['symptomesObservations']);
+    }
 }
 
-//}
-
-//GetTicketForAgent
-//echo "toto";
 
 ?>

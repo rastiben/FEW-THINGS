@@ -14,14 +14,14 @@ require('staff.inc.php');
 $nav->setActiveTab('atelier');
 
 $nav->addSubMenu(array('desc'=>'Tickets',
-                            'title'=>'Tickets Atelier',
-                            'href'=>'atelier.php?tabs=tickets',
-                            'iconclass'=>'Ticket'));
+                        'title'=>'Tickets Atelier',
+                        'href'=>'atelier.php?tabs=tickets',
+                        'iconclass'=>'Ticket no-pjax'));
 
 $nav->addSubMenu(array('desc'=>'Plan',
-                            'title'=>'Plan de l\'atelier',
-                            'href'=>'atelier.php?tabs=plan',
-                            'iconclass'=>'Plan'));
+                        'title'=>'Plan de l\'atelier',
+                        'href'=>'atelier.php?tabs=plan',
+                        'iconclass'=>'Plan no-pjax'));
 
 if(isset($_REQUEST['tabs'])){
      if($_REQUEST['tabs'] == 'tickets'){

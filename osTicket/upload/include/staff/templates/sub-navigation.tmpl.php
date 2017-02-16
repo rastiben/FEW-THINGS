@@ -28,7 +28,7 @@ if(($subnav=$nav->getSubMenu()) && is_array($subnav)){
                 echo sprintf('<li><a class="%s" href="%s">%s</a></li>',
                 "waitingTicket", "tickets.php?status=waiting", "En attente");*/
 
-        echo sprintf('<li><a class="%s" href="%s" title="%s" id="%s" %s>%s</a></li>',
+        echo sprintf('<li><a class="%s no-pjax" href="%s" title="%s" id="%s" %s>%s</a></li>',
                 $class, $item['href'], $item['title'], $id, $attr, $item['desc']);
     }
 }

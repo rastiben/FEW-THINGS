@@ -97,7 +97,27 @@ $queue_columns = array(
                id = $('input[type="radio"]:checked').closest('tr').attr('id');
 
                //Affichage de la question
-               $('.modal-body').html('<p>Voulez vous vraiment ajouter cette nouvelle '+ type +' sur le ticket : '+ id +' ?</p>');
+               $('.modal-body').html('<p>Voulez vous vraiment ajouter cette nouvelle '+ type +' sur le ticket : '+ id +' ?</p> \
+                                    <label>Affectation à une planche : (Optionnel)</label> \
+                                    <select class="custom-select"> \
+                                    <option id="null" selected>Open this select menu</option> \
+                                    <option id="b1" value="1">Bureau 1</option> \
+                                    <option id="b2" value="1">Bureau 2</option> \
+                                    <option id="b3" value="1">Bureau 3</option> \
+                                    <option id="p1" value="1">Portable 1</option> \
+                                    <option id="p2" value="1">Portable 2</option> \
+                                    <option id="p3" value="1">Portable 3</option> \
+                                    <option id="m1" value="1">Mur 1</option> \
+                                    <option id="m2" value="1">Mur 2</option> \
+                                    <option id="m3" value="1">Mur 3</option> \
+                                    <option id="m4" value="1">Mur 4</option> \
+                                    <option id="s1" value="1">Serveur 1</option> \
+                                    <option id="s2" value="1">Serveur 2</option> \
+                                    <option id="s3" value="1">Serveur 3</option> \
+                                    <option id="s4" value="1">Serveur 4</option> \
+                                    <option id="s5" value="1">Serveur 5</option> \
+                                    <option id="s6" value="1">Serveur 6</option> \
+                                    </select>');
 
                if(id != undefined)
                     $('.modal').modal('toggle');
@@ -105,7 +125,8 @@ $queue_columns = array(
 
            $(document).on('click','.sendContenu',function(){
                $('.modal').modal('toggle');
-               planche.addContenu(id,type == "préparation" ? "prepa" : "repa");
+               var pl = $('.custom-select option:selected').attr('id');
+               planche.addContenu(id,type == "préparation" ? "prepa" : "repa",pl);
            });
 
        });
@@ -249,6 +270,7 @@ $queue_columns = array(
      </tr>
     </tfoot>
     </table>
+
 
 </div>
 

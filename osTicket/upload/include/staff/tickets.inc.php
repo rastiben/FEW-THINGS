@@ -607,7 +607,7 @@ return false;">
                 </td>
                 <?php } ?>
                 <td title="<?php echo $T['user__default_email__address']; ?>" nowrap>
-                  <a class="Icon <?php echo strtolower($T['source']); ?>Ticket preview"
+                  <a class="Icon <?php echo strtolower($T['source']); ?>Ticket preview no-pjax"
                     title="Preview Ticket"
                     href="tickets.php?id=<?php echo $T['ticket_id']; ?>"
                     data-preview="#tickets/<?php echo $T['ticket_id']; ?>/preview"

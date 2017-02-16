@@ -3960,6 +3960,10 @@ table.atelierT{
     font-size: 14px;
 }
 
+table.atelierT td{
+    line-height: 34px;
+}
+
 /*PLAN*/
 
 .plan{
@@ -4012,6 +4016,12 @@ table.atelierT{
     padding: 0px;
     line-height: 40px;
     color: white;
+}
+
+.retour select{
+    position: absolute;
+    top: 8px;
+    right: 30px;
 }
 
 .prepaTmpl{
@@ -4099,6 +4109,59 @@ table.atelierT{
     transition: all .2s ease-in-out;
     cursor: pointer;
     height: 200px;
+    position: relative;
+}
+
+.prepa .finish{
+    position: absolute;
+    top: 15px;
+    right: 0px;
+    height: 32px;
+    width: 45px;
+    margin-top: 0px;
+    overflow: hidden;
+}
+
+.prepa .finish img{
+    margin-top: 0px;
+    height: 30px;
+    width: 30px;
+    position: absolute;
+    right: 15px;
+}
+
+/*
+margin-top: 0px;
+    height: 30px;
+    width: 30px;
+    position: absolute;
+    left: 0px;
+*/
+
+.prepa .finish h3{
+    position: absolute;
+    top: 2px;
+    right: -74px;
+    padding: 0px;
+    margin: 0px;
+    color: #28B463;
+    /*display: none;*/
+}
+/*
+position: absolute;
+    top: 3px;
+    right: 12px;
+    padding: 0px;
+    margin: 0px;
+*/
+
+.prepa img.remove{
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    height: 30px;
+    width: 30px;
+    margin-top: 0px;
 }
 
 .prepa:hover {
@@ -4118,11 +4181,18 @@ table.atelierT{
     border: none;
     font-size: 20px;
     color: #0E4962;
+    position: absolute;
+    right: 0px;
+    bottom: 25px;
+    width: 100%;
 }
 
-.prepa img{
+.prepa img.computer{
     width: 100px;
-    margin-top: 20px;
+    position: absolute;
+    left: 50%;
+    margin-left: -50px;
+    top: 40px;
 }
 
 .newContent{

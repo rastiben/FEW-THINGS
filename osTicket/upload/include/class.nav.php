@@ -131,7 +131,7 @@ class StaffNav {
                 $this->tabs['apps']=array('desc'=>__('Applications'),'href'=>'apps.php','title'=>__('Applications'));
 
             /**/
-            $this->tabs['atelier'] = array('desc'=>'Atelier','href'=>'atelier.php','title'=>__('Atelier'));
+            $this->tabs['atelier'] = array('desc'=>'Atelier','href'=>'atelier.php?tabs=tickets','title'=>__('Atelier'), "class"=>"no-pjax");
         }
         return $this->tabs;
     }

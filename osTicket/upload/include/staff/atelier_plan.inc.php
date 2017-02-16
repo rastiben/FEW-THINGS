@@ -75,6 +75,7 @@
                             <thead>
                                 <th>ID du Ticket</th>
                                 <th>Type</th>
+                                <th>Etat</th>
                                 <th>Affecter</th>
                              </thead>
                              <tbody>
@@ -88,6 +89,12 @@
                     <div class="container fiche">
                         <div class="retour title">
                             <h3></h3>
+                            <select class="custom-select changeState">
+                               <option>Entrées</option>
+                               <option>Planche</option>
+                               <option>Sorties</option>
+                               <option>RMA</option>
+                           </select>
                         </div>
                         <div class="repaTmpl" style="display:none">
 
@@ -310,19 +317,18 @@
         </div>
 
 
+      <script type="text/javascript">
 
-        <script type="text/javascript">
-
-        $(function() {
+        //$(function() {
 
             var planches = new Planche();
 
             //Initiate
-            $(document).off('click', '.atelier div');
+            /*$(document).off('click', '.atelier div');
             $(document).off('click', '.addContenu');
-            $(document).off('click', '.contenu');
+            $(document).off('click', '.contenu img');
             $(document).off('click', '.validerOuEnregistrer');
-            $(document).off('hidden.bs.modal', '.modal');
+            $(document).off('hidden.bs.modal', '.modal');*/
 
             //Gestion de l'atelier
             $(document).on('click', '.atelier div div', function(e) {
@@ -340,20 +346,15 @@
                     var contenu = planches.getPlanche(planche.attr('data_planche'));
                     $('.modal-body .contenu').remove();
 
-                    $(contenu).each(function($number,$obj){
-                            $('.modal-body div:first').prepend('<div class="col-md-3 contenu" id="'+ $obj.getId() +'">'+
-                               '<div class="prepa">'+
-                                '<img src="../assets/default/images/computer.png">'+
-                                '<input value="'+ ($obj.getType() == "prepa"  ? "VD _ _ _ _" : "REPA") +'"/>'+
-                                '</div>'+
-                            '</div>');
+                    $(contenu).each(function(number,obj){
+                            addContenuInPlanche(obj.getId(),obj.getType());
                     });
 
                     $('#fichesModal').modal({backdrop: 'static', keyboard: false});
 
                     $('.list.atelierT tbody').empty();
                     $(contenues).each(function(number,obj){
-                        $('.list.atelierT tbody').append('<tr><td>'+obj.getId()+'</td><td>'+obj.getType()+'</td><td><button class="btn btn-success addContenu" id="'+ obj.getId() +'" >Affecter</button></td></tr>');
+                        addContenuInListe(obj);
                     });
                 });
             });
@@ -362,22 +363,70 @@
             $(document).on('click','.addContenu',function(){
                 var id = $(this).attr('id');
                 var planche = $('#fichesModal').attr('data_planche');
+                var tr = $(this).closest('tr');
 
+                planches.changeState(id, "Planche");
                 planches.affectContenu(id,planche,function(type){
-                    $('.modal-body div:first').prepend('<div class="col-md-3 contenu" id="'+id+'">'+
-                    '<div class="prepa">'+
-                    '<img src="../assets/default/images/computer.png">'+
-                    '<input value="'+ (type == "prepa"  ? "VD _ _ _ _" : "REPA") +'"/>'+
-                    '</div>'+
-                    '</div>');
+                    addContenuInPlanche(id,type);
+                    tr.remove();
                 });
 
             });
 
-            //Affichage de la fiche
-            $(document).on('click','.contenu',function(){
+            $(document).on('click','.contenu img.remove',function(){
+                var contenu = $(this).closest('.contenu');
+                var obj = planches.getContenu(contenu.attr('id'));
+                obj = obj[0];
 
-                var id = $(this).attr('id');
+                planches.changeState(obj.getId(), "Entrée");
+                planches.affectContenu(obj.getId(),null,function(){
+                    addContenuInListe(obj);
+                    contenu.remove();
+                });
+            });
+
+            $(document).on('click','.contenu .finish img',function(){
+
+                $('.contenu .finish').css({
+                        'border': '1px solid #28B463',
+                        'border-right': '0px',
+                        'border-radius': '20px 0px 0px 20px'
+                });
+                $('.contenu .finish').animate({
+                    width: '130px'
+                },{
+                    duration:300,
+                    queue:false
+                });
+
+                $(this).animate({
+                    left:'0px'
+                },{
+                    duration:300,
+                    queue:false
+                });
+                $('.prepa .finish h3').animate({
+                    right:'12px'
+                },{
+                    duration:350,
+                    queue:false
+                });
+            });
+
+            $(document).on('click','.contenu .finish h3',function(){
+                var contenu = $(this).closest('.contenu');
+                var obj = planches.getContenu(contenu.attr('id'));
+                obj = obj[0];
+                planches.changeState(obj.getId(),'Terminé');
+                planches.affectContenu(obj.getId(),null,function(){
+                    contenu.remove();
+                });
+            });
+
+            //Affichage de la fiche
+            $(document).on('click','.contenu img.computer',function(){
+
+                var id = $(this).closest('.contenu').attr('id');
                 var data = planches.getContenu(id);
                 data = data[0];
 
@@ -392,6 +441,7 @@
                     //return value.substr(value.length-2,1);
                 }
 
+                //AFFECTATION DES VALEURS
                 var type = "";
                 if(data.getType() == 'prepa'){
                     type = "Fiche de préparation";
@@ -440,6 +490,15 @@
                         $('#verifClient').prop('checked',data['contenu'].verifClient == "1" ? true:false);
                         $('#dateReprise').val(data['contenu'].dateReprise);
                     }
+                }
+
+                //CHANGEMENT DES CHOIX DE LA SELECT
+                if(type=="Fiche de réparation"){
+                    $('.changeState').val(data.getEtat());
+                    $('.changeState').css('display','block');
+                }
+                else{
+                    $('.changeState').css('display','none');
                 }
 
                 autosize($('#modele'));
@@ -619,8 +678,6 @@
                 $('.modal-body .container.fiche').css('right','-100%');
                 $('.modal-body .container.fiche').css('left','100%');
                 $('.modal-body .container.fiche').css('display','none');
-                //$('.modal-body').css('height', '100%');
-                //$('.modal-body').css('height', $('.modal-body .container.home').height()+30);
             });
 
 
@@ -629,6 +686,39 @@
                 $(this).attr('data_staff',$('.modal').attr('data_staff'));
             });
 
-        });
+              //CHANGER L'ETAT
+            $(document).on('change','.changeState',function(){
+                var id = $('.modal').attr('data_id_contenu');
+                var state = $(':selected',this).val();
+                planches.changeState(id,state);
+
+                //SWITCH CONTENT
+                if(state != "Planche"){
+                    var contenu = planches.getContenu(id)[0];
+                    planches.affectContenu(id,null,function(){
+                        $('#'+id+'.contenu').remove();
+                        addContenuInListe(contenu);
+                        switchModal();
+                    });
+                }
+            });
+
+            var addContenuInPlanche = function(id,type){
+                $('.modal-body div:first').prepend('<div class="col-md-3 contenu" id="'+id+'">'+
+                    '<div class="prepa">'+
+                    '<div class="finish"><img src="../assets/default/images/finish.png"><h3>Valider</h3></div>'+
+                    '<img class="remove" src="../assets/default/images/remove.png">'+
+                    '<img class="computer" src="../assets/default/images/computer.png">'+
+                    '<input value="'+ (type == "prepa"  ? "VD _ _ _ _" : "REPA") +'"/>'+
+                    '</div>'+
+                    '</div>');
+            }
+
+            var addContenuInListe = function(obj){
+                $('.list.atelierT tbody').append('<tr><td>'+obj.getId()+'</td><td>'+obj.getType()+'</td><td>'+obj.getEtat()+'</td><td><button class="btn btn-success addContenu" id="'+ obj.getId() +'" >Affecter</button></td></tr>');
+            }
+
+
+        //});
 
         </script>

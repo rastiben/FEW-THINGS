@@ -15,7 +15,7 @@ class Atelier
         $this->username = 'root';
         $this->password = '';
         try{
-            $this->dbh = new PDO('mysql:host=localhost;dbname=osticket', $this->username, $this->password);
+            $this->dbh = new PDO('mysql:host=localhost;dbname=osticket', $this->username, $this->password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
         }catch(PDOException $e){
             die($e);
         }
@@ -30,11 +30,18 @@ class Atelier
         return self::$instance;
     }
 
-    public function add_contenu($ticket_id,$type){
-        $res = $this->dbh->prepare("INSERT INTO ost_atelier_planche_contenu (ticket_id,type_id)
+    public function add_contenu($ticket_id,$type,$planche,$etat){
+        $etat = strtr(utf8_decode($etat),
+        utf8_decode(
+        'ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ'),
+        'SOZsozYYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy');
+
+        $res = $this->dbh->prepare("INSERT INTO ost_atelier_planche_contenu (ticket_id,type_id,planche_id,etat_id)
         VALUES (:ticket_id,
-        (SELECT id FROM ost_atelier_contenu_type WHERE type = :type))");
-        $res->execute(array(':ticket_id'=>$ticket_id,':type'=>$type));
+        (SELECT id FROM ost_atelier_contenu_type WHERE type = :type),
+        (SELECT id FROM ost_atelier_planche WHERE planche = :planche),
+        (SELECT id FROM ost_atelier_contenu_etat WHERE etat = :etat))");
+        $res->execute(array(':ticket_id'=>$ticket_id,':type'=>$type,':planche'=>$planche,':etat'=>$etat));
         //return $res->fetchAll();
         return $this->dbh->lastInsertId();
     }
@@ -138,10 +145,12 @@ class Atelier
     }
 
     public function getPlanches(){
-        $res = $this->dbh->prepare("SELECT ost_atelier_contenu_type.type,ost_atelier_planche.planche,ost_atelier_planche_contenu.id,ifnull(ost_atelier_preparation.id_contenu,'PEC') as prepaPEC, ost_atelier_preparation.*,ifnull(ost_atelier_reparation.id_contenu,'PEC') as repaPEC,ost_atelier_reparation.*
+        $res = $this->dbh->prepare("SELECT ost_atelier_contenu_type.type,ost_atelier_planche.planche,ost_atelier_contenu_etat.etat,ost_atelier_planche_contenu.id,ifnull(ost_atelier_preparation.id_contenu,'PEC') as prepaPEC, ost_atelier_preparation.*,ifnull(ost_atelier_reparation.id_contenu,'PEC') as repaPEC,ost_atelier_reparation.*
         FROM ost_atelier_planche_contenu
         INNER JOIN ost_atelier_contenu_type
         ON ost_atelier_contenu_type.id = ost_atelier_planche_contenu.type_id
+        INNER JOIN ost_atelier_contenu_etat
+        ON ost_atelier_contenu_etat.id = ost_atelier_planche_contenu.etat_id
         LEFT JOIN ost_atelier_planche
         ON ost_atelier_planche.id = ost_atelier_planche_contenu.planche_id
         LEFT JOIN ost_atelier_preparation
@@ -149,6 +158,7 @@ class Atelier
         LEFT JOIN ost_atelier_reparation
         ON ost_atelier_planche_contenu.id = ost_atelier_reparation.id_contenu");
         $res->execute(array());
+        /*print_r($res->fetchAll());*/
         return $res->fetchAll();
     }
 
@@ -159,12 +169,19 @@ class Atelier
         $res->execute(array(':id'=>$id,':planche'=>$planche));
     }
 
+    public function changeState($id,$etat){
+        $res = $this->dbh->prepare("UPDATE ost_atelier_planche_contenu
+        SET etat_id = (SELECT id FROM ost_atelier_contenu_etat WHERE etat = :etat)
+        WHERE id = :id");
+        $res->execute(array(':id'=>$id,':etat'=>$etat));
+    }
+
     //43364101
 }
 
 if(isset($_REQUEST['request'])){
     if($_REQUEST['request'] == 'addContenu'){
-        echo Atelier::getInstance()->add_contenu($_REQUEST['ticket_id'],$_REQUEST['type']);
+        echo Atelier::getInstance()->add_contenu($_REQUEST['ticket_id'],$_REQUEST['type'],$_REQUEST['planche'],$_REQUEST['etat']);
     } else if($_REQUEST['request'] == 'addPrepaInfo'){
         Atelier::getInstance()->addPrepaInfo($_REQUEST['id_contenu'],
                                             $_REQUEST['vd'],
@@ -206,6 +223,8 @@ if(isset($_REQUEST['request'])){
         echo json_encode(Atelier::getInstance()->getPlanches());
     } else if($_REQUEST['request'] == 'affectContenu'){
         Atelier::getInstance()->affectContenu($_REQUEST['id'],$_REQUEST['planche']);
+    } else if($_REQUEST['request'] == 'changeState'){
+        Atelier::getInstance()->changeState($_REQUEST['id'],$_REQUEST['etat']);
     }
 }
 
