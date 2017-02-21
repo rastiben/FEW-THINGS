@@ -94,7 +94,7 @@ if ($lang) {
                  echo Format::htmlchars($thisclient->getName()).'&nbsp;|';
                  ?>
                 <a href="<?php echo ROOT_PATH; ?>profile.php"><?php echo __('Profile'); ?></a> |
-                <a href="<?php echo ROOT_PATH; ?>tickets.php"><?php echo sprintf(__('Tickets <b>(%d)</b>'), TicketsInfos::getInstance()->numberOfOpenTicketsForOrg($thisclient->getOrgId())); ?></a> -
+                <a href="<?php echo ROOT_PATH; ?>tickets.php"><?php echo sprintf(__('Tickets <b>(%d)</b>'), TicketsInfos::getInstance()->numberOfOpenTicketsForOrg($thisclient->getOrgId(),$thisclient->getId())); ?></a> -
                 <a href="<?php echo $signout_url; ?>"><?php echo __('Sign Out'); ?></a>
             <?php
             } elseif($nav) {

@@ -411,7 +411,7 @@ print $response_form->getField('attachments')->render();
         $('.richtext').each(function() {
             var redactor = $(this).data('redactor');
             if (redactor && redactor.opts.draftDelete)
-                redactor.deleteDraft();
+                redactor.draft.deleteDraft();
         });
         window.location.href='tickets.php';
     ">

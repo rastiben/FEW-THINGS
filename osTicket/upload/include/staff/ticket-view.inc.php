@@ -281,11 +281,9 @@ if($ticket->isOverdue())
     ?>
 </div>
 
-<div id="ticket_rapport" style="display:none">
+<div id="ticket_rapport" style="display:none" ng-init="init(<?php echo $ticket->getId() ?>,<?php echo $thisstaff->getId(); ?>)" ng-controller="rapportCtrl">
     <div name="rapport" style="display:none" id="rapport" class="col-md-12">
       <div>
-       <input type="hidden" name="ticket_id" value="<?php echo $ticket->getId(); ?>">
-       <input type="hidden" name="agent_id" value="<?php echo $thisstaff->getId(); ?>">
        <div>
             <span></span>
                 <label class="required" for="_b22c0215f6129f93">
@@ -293,7 +291,7 @@ if($ticket->isOverdue())
                                         <span class="error">*</span>
                                       </label>
 
-                <input type="text" name="date_new_inter">
+                <input type="text" ng-model="date_new_inter" name="date_new_inter">
                 <!--<script type="text/javascript">
 
                         $('input[name="date_new_inter"]').datepicker({
@@ -308,12 +306,12 @@ if($ticket->isOverdue())
                           Heure d'arrivé :
                                         <span class="error">*</span>
                                       </label>
-            <select name="arrive_inter" id="b22c0215f6129f93:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
+            <select ng-model="arrive_new_inter" name="arrive_inter" id="b22c0215f6129f93:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
             <label class="required" for="b22c0215f6129f94:time">
                           Heure de départ :
                                         <span class="error">*</span>
                                       </label>
-            <select name="depart_inter" id="b22c0215f6129f94:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
+            <select ng-model="depart_new_inter" name="depart_inter" id="b22c0215f6129f94:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
        </div>
        <br>
                    <!--Gestion des type de rapport-->
@@ -344,15 +342,15 @@ if($ticket->isOverdue())
             </table>
 
         <label>N°Affaire : <span class="error">*</span></label>
-        <input class="num_affaire" maxlength="13" type="text">
+        <input ng_model="new_num_affaire" class="num_affaire" maxlength="13" type="text">
 
       <br><br>
 
        <label class="required" for="symptomesObservations">
                           Symptômes et observations :
                                         <span class="error">*</span>
-                                      </label>
-       <textarea name="symptomesObservations" id="symptomesObservations" cols="50"
+        </label>
+       <textarea name="new_symptomesObservations" id="new_symptomesObservations" cols="50"
                         data-signature-field="signature" data-dept-id="<?php echo $dept->getId(); ?>"
                         data-signature="<?php
                             echo Format::htmlchars(Format::viewableImages($signature)); ?>"
@@ -367,20 +365,14 @@ if($ticket->isOverdue())
                     ?></textarea>
         <br>
         <button class="cancel pending newRapport" type="cancel" style="float:right">Annuler</button>
-        <input class="horaire add save pending pull-right" type="submit" name="addRapport">
+        <input ng-click="addRapport()" class="horaire add save pending pull-right" type="submit" name="addRapport">
         </div>
    </div>
    <div class="addRapport col-md-12">
         <h4>Nouveau rapport</h4>
     </div>
-   <?php
-        //Recuperation des rapports
-        date_default_timezone_set('Europe/Paris');
-        // --- La setlocale() fonctionnne pour strftime mais pas pour DateTime->format()
-        setlocale(LC_TIME, 'fr_FR.utf8','fra');
-        $rapports = Rapport::getInstance()->getRapports($ticket->getId());
-        if(!empty($rapports)){
-    ?>
+
+    <!--RAPPORTS-->
     <div class="col-md-12 rapports">
       <div class="title">
          <div class="titling"></div>
@@ -398,186 +390,132 @@ if($ticket->isOverdue())
                <th>Impression</th>
            </thead>
            <tbody>
-        <?php
-            $i = 0;
-            foreach($rapports as $rapport){
-               ?>
-            <tr class="<?php if($i == 0) echo 'active'?>" id="<?php echo $i ?>">
-                <td><?php echo $rapport['id'] ?></td>
-                <td><?php $dateRapport = new DateTime($rapport['date_rapport']);
-                    echo $dateRapport->format('d/m/Y'); ?></td>
-                <td><?php echo $rapport['firstname'] . ' ' . $rapport['lastname'] ?></td>
-                <td><?php echo $rapport['num_affaire'] ?></td>
-                <td><?php if(empty($rapport['instal'])) echo '<i class="fa fa-check" aria-hidden="true"></i>'?></td>
-                <td><?php if(empty($rapport['contrat'])) echo '<i class="fa fa-check" aria-hidden="true"></i>'?></td>
-                <td><a class="no-pjax" target="_blank" href="./tickets.php?id=<?php echo $ticket->getId() ?>&a=printR&idR=<?php echo $rapport['id'] ?>"><i class="fa fa-print fa-2x" id="<?php echo $rapport['id'] ?>" aria-hidden="true" style="color:black"></i></a></td>
+            <tr ng_click="setRapportID($event,$index,rapport.id)" ng-repeat="rapport in rapports" ng-class="$first ? 'active' : ''" id="{{$index}}">
+                <td>{{rapport.id}}</td>
+                <td>{{rapport.date_rapport}}</td>
+                <td>{{rapport.firstname}} {{rapport.lastname}}</td>
+                <td>{{rapport.num_affaire}}</td>
+                <td><i ng-class="rapport.contrat != '' ? 'fa fa-check' : ''"  aria-hidden="true"></i></td>
+                <td><i ng-class="rapport.instal != '' ? 'fa fa-check' : ''"  aria-hidden="true"></i></td>
+                <td><a class="no-pjax" target="_blank" ng-href="./tickets.php?id={{ticketID}}&a=printR&idR={{rapport.id}}"><i class="fa fa-print fa-2x" id="{{rapport.id}}" aria-hidden="true" style="color:black"></i></a></td>
             </tr>
-
-        <?php
-            $i += 1;
-            }
-        ?>
         </tbody>
         </table>
-    </div>
-    <div style="display:none;margin-bottom: 30px;" class="col-md-12">
-              <div id="addTimeDiv">
-               <span></span>
-                <label class="required" for="_b22c0215f6129f93">
-                          Date d'intervention :
-                                        <span class="error">*</span>
-                                      </label>
-            <input type="text" name="date_new_inter">
+        <div id="addTimeDiv" style="display:none;margin-top:30px">
+            <span></span>
+            <label class="required" for="_b22c0215f6129f93">
+                              Date d'intervention :
+                                            <span class="error">*</span>
+                                          </label>
+            <input ng-model="date_inter" type="text" name="date_inter">
 
             <label class="required" for="b22c0215f6129f93:time">
-                          Heure d'arrivé :
-                                        <span class="error">*</span>
-                                      </label>
-            <select name="arrive_inter" id="b22c0215f6129f93:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
+                              Heure d'arrivé :
+                                            <span class="error">*</span>
+                                          </label>
+            <select ng-model="arrive_inter" name="arrive_inter" id="b22c0215f6129f93:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
             <label class="required" for="b22c0215f6129f94:time">
-                          Heure de départ :
-                                        <span class="error">*</span>
-                                      </label>
-            <select name="depart_inter" id="b22c0215f6129f94:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
-            <br><br>
+                              Heure de départ :
+                                            <span class="error">*</span>
+                                          </label>
+            <select ng-model="depart_inter" name="depart_inter" id="b22c0215f6129f94:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>
+                <br><br>
 
             <label class="required" for="symptomesObservations">
-                          Symptômes et observations :
-                                        <span class="error">*</span>
-                                      </label>
-           <textarea name="symptomesObservations" id="symptomesObservations" cols="50"
-                            data-signature-field="signature" data-dept-id="<?php echo $dept->getId(); ?>"
-                            data-signature="<?php
-                                echo Format::htmlchars(Format::viewableImages($signature)); ?>"
-                            placeholder="<?php echo __(
-                            'Start writing your response here. Use canned responses from the drop-down above'
-                            ); ?>"
-                            rows="9" wrap="soft"
-                            class="<?php if ($cfg->isRichTextEnabled()) echo 'richtext';
-                                ?> draft draft-delete" <?php
-        list($draft, $attrs) = Draft::getDraftAndDataAttrs('ticket.response', $ticket->getId(), $info['response']);
-        echo $attrs; ?>></textarea>
+                              Symptômes et observations :
+                                            <span class="error">*</span>
+                                          </label>
+            <textarea name="symptomesObservations" id="symptomesObservations" cols="50"
+                                data-signature-field="signature" data-dept-id="<?php echo $dept->getId(); ?>"
+                                data-signature="<?php
+                                    echo Format::htmlchars(Format::viewableImages($signature)); ?>"
+                                placeholder="<?php echo __(
+                                'Start writing your response here. Use canned responses from the drop-down above'
+                                ); ?>"
+                                rows="9" wrap="soft"
+                                class="<?php if ($cfg->isRichTextEnabled()) echo 'richtext';
+                                    ?> draft draft-delete" <?php
+            list($draft, $attrs) = Draft::getDraftAndDataAttrs('ticket.response', $ticket->getId(), $info['response']);
+            echo $attrs; ?>></textarea>
             <br>
-            <button class="cancel pending" type="cancel" style="float:right">Annuler</button>
-            <input class="horaire add save pending" type="submit" name="addRapport" style="float:right">
-            </div>
-            </div>
-    <?php
-    $i = 0;
-    foreach($rapports as $rapport) { ?>
-    <div class="col-md-12 col-lg-12 rapport <?php if($i == 0) echo 'active' ?>" id="<?php echo $i ?>">
-       <div class="col-lg-4 col-md-12 col-xs-12" id="borderIdentity">
-        <div class="identity" id="<?php echo $rapport['id'] ?>">
-            <div class="title">
-                <div class="titling"></div>
-                <h4>Rapports n° <?php echo $rapport['id'] ?> :</h4>
-                <img class="addTime" src="../assets/default/images/timeplus.png" id="<?php echo $rapport['id'] ?>"/>
-            </div>
-            <div class="content">
-                <span id="date_inter">Intervenant : <?php
-                    echo $rapports[0]['firstname'] . ' ' . $rapport['lastname'];
-                    ?></span>
-
-                <?php
-                    $horaires = Rapport::getInstance()->getRapportsHoraires($rapport['id']);
-                    $todisplay = new DateTime();
-                    $totalHours = 0;
-                    foreach($horaires as $horaire){
-                ?>
-
-                <div class="horaire">
-                    <div>
-                        <span>Intervention du <?php
-                                $time1 = new DateTime($horaire['arrive_inter']);
-                                echo ucwords(strftime("%A %d %B %Y",$time1->getTimestamp()));
-                                //echo $time1->format('l j F Y');
-                                ?></span>
+            <button ng-click="unShowUpdate($event)" class="cancel pending" type="cancel" style="float:right">Annuler</button>
+            <input ng-click="insertOrUpdateHoraire()" class="horaire add save pending" type="submit" name="addRapport" style="float:right">
+        </div>
+        <div ng-repeat="rapport in rapports" class="eachRapport col-md-12 col-lg-12 col-xs-12" ng-class="$first ? 'active' : ''" id="{{$index}}">
+            <div class="col-md-12 col-xs-12 rapport">
+               <div class="col-lg-4 col-md-12 col-xs-12" id="borderIdentity">
+                <div class="identity" id="{{rapport.id}}">
+                    <div class="title">
+                        <div class="titling"></div>
+                        <h4>Rapports n° {{rapport.id}} :</h4>
+                        <img ng-click="showUpdate()" class="addTime" src="../assets/default/images/timeplus.png" id="<?php echo $rapport['id'] ?>"/>
                     </div>
-                    <div>
-                       <div class="floatSDL">
-                        <p id="startDate"><?php
-                                $time1 = new DateTime($horaire['arrive_inter']);
-                                echo $time1->format('H:i');
-                                ?></p>
-                        </div>
-                        <div class="floatEDR">
-                        <p id="endDate"><?php
-                                $time2 = new DateTime($horaire['depart_inter']);
-                                echo $time2->format('H:i');
-                                ?></p>
-                        </div>
-                        <p class="greenLine"><?php
-                                $time1 = new DateTime($horaire['arrive_inter']);
-                                $time2 = new DateTime($horaire['depart_inter']);
-                                $interval = $time1->diff($time2);
+                    <div class="content">
+                        <span id="date_inter">Intervenant : {{rapport.firstname}} {{rapport.lastname}}</span>
 
-                                $totalHours += $time2->getTimestamp() - $time1->getTimestamp();
+                        <div ng-repeat="horaire in rapport.horaires" class="horaire">
+                            <div>
+                                <span>Intervention du {{horaire.arrive_inter | mFormat:'dddd DD MMMM YYYY' | capitalize}}</span>
+                            </div>
+                            <div>
+                               <div class="floatSDL">
+                                <p id="startDate">{{horaire.arrive_inter | mFormat:'HH:mm' }}</p>
+                                </div>
+                                <div class="floatEDR">
+                                <p id="endDate">{{horaire.depart_inter | mFormat:'HH:mm' }}</p>
+                                </div>
+                                <p class="greenLine">{{horaire.nbHours}}</p>
+                            </div>
+                        </div>
 
-                                echo $interval->format('%H H %I M');
-                                ?></p>
+                    </div>
+                    <div class="totalHour">
+                        <div id="totalTitle">
+                            <span>Total</span>
+                        </div>
+                        <div id="total">
+                                    <?php
+                                    $days = $totalHours / 27900;
+                                    if($days >= 1){
+                                        $totalHours = $totalHours - (intval($days) * 27900);
+                                    }
+                                    $hours = $totalHours / 3600;
+                                    if($hours >= 1){
+                                        $totalHours = $totalHours - (intval($hours) * 3600);
+                                    }
+                                    $minutes = $totalHours / 60;
+                                    ?>
+                            <p><?php echo intval($days) . ' Jours' ; ?></p>
+                            <p><?php echo intval($hours) . ' Heures & ' . intval($minutes) . ' Minutes' ?></p>
+                        </div>
                     </div>
                 </div>
-                <?php  } ?>
-            </div>
-            <div class="totalHour">
-                <div id="totalTitle">
-                    <span>Total</span>
                 </div>
-                <div id="total">
-                            <?php
-
-                            $days = $totalHours / 27900;
-                            if($days >= 1){
-                                $totalHours = $totalHours - (intval($days) * 27900);
-                            }
-                            $hours = $totalHours / 3600;
-                            if($hours >= 1){
-                                $totalHours = $totalHours - (intval($hours) * 3600);
-                            }
-                            $minutes = $totalHours / 60;
-                            ?>
-                    <p><?php echo intval($days) . ' Jours' ; ?></p>
-                    <p><?php echo intval($hours) . ' Heures & ' . intval($minutes) . ' Minutes' ?></p>
+                <div class="col-lg-8 col-md-12 col-xs-12" id="borderProperty">
+                <div class="property" id="<?php echo $rapport['id'] ?>">
+                  <div class="title">
+                     <div class="titling"></div>
+                      <h4>Description : </h4>
+                  </div>
+                  <div class="content">
+                    <div ng-repeat="horaire in rapport.horaires">
+                         <div class="comment">
+                         <div class="titleComment">
+                            <div class="green"></div>
+                            <img class="modifyInter" src="../assets/default/images/edit.png" ng_click="showUpdate($index,$parent.$index,horaire.id)" id="{{horaire.id}}"/>
+                             <div class="commentTitle"><p>Intervention du {{horaire.arrive_inter | mFormat:'dddd DD MMMM YYYY' | capitalize}}</p></div>
+                         </div>
+                         <span class="commentContent">
+                          {{horaire.comment}}
+                          </span>
+                          </div>
+                     </div>
+                  </div>
+                </div>
                 </div>
             </div>
-        </div>
-        </div>
-        <div class="col-lg-8 col-md-12 col-xs-12" id="borderProperty">
-        <div class="property" id="<?php echo $rapport['id'] ?>">
-          <div class="title">
-             <div class="titling"></div>
-              <h4>Description : </h4>
-          </div>
-          <div class="content">
-            <?php
-              foreach($horaires as $horaire){
-              ?>
-             <div class="comment">
-             <div class="titleComment">
-                <div class="green"></div>
-                <img class="modifyInter" src="../assets/default/images/edit.png" id="<?php echo $horaire['id'] ?>" data-arrive="<?php echo $horaire['arrive_inter'] ?>" data-depart="<?php echo $horaire['depart_inter'] ?>"/>
-                 <div class="commentTitle"><p>Intervention du <?php
-                            $time1 = new DateTime($horaire['arrive_inter']);
-                            echo ucwords(strftime("%A %d %B %Y",$time1->getTimestamp()));
-                            //echo $time1->format('l j F Y');
-                 ?></p></div>
-             </div>
-             <span class="commentContent">
-              <?php echo $horaire['comment'] ?>
-              </span>
-              </div>
-              <?php
-              }
-              ?>
-          </div>
-        </div>
         </div>
     </div>
-    <?php
-        $i += 1;
-        }
-    }
-    ?>
 </div>
 
 <div id="ticket_thread" class="tab_content">
@@ -1346,168 +1284,41 @@ $(function() {
 
     $(document).ready(function(){
 
-        var rapports = new Rapport();
-
-        $('input[name="date_new_inter"]').datepicker({
-                            startView: 1,
-                            dateFormat: 'dd/mm/yy',
-                            autoclose: true
-                        });
-
-        $('.rapports tbody tr').click(function(){
+        /*$(document).on('click','.rapports tbody tr',function(){
             var id = $(this).attr('id');
             $('.col-md-4.rapport').removeClass('active');
             $('#'+id+'.col-md-4.rapport').addClass('active');
             $('.rapports tbody tr').removeClass('active');
             $(this).addClass('active');
+            $('.eachRapport.active').removeClass('active');
+            $('#'+id+'.eachRapport').addClass('active');
+        });*/
 
-            /*CHANGEMENT DE RAPPORT*/
-            $('.col-md-12.rapport.active').removeClass('active');
-            $('#'+id+'.col-md-12.rapport').addClass('active');
-       });
-
-       /*Ajout Horaires*/
-        $('.addTime').click(function(){
-
-            if($('#addTimeDiv').parent().css('display') === 'none'){
-
-            var clone = $('#addTimeDiv');
-
-            var id = $(this).attr('id');
-            clone.parent().css('display','block');
-            clone.parent().attr('id',id);
-
-            }
-        });
-        var clickOneAddRapport = function(){
-            $(document).one('click','.horaire.add.save.pending',function(e){
-                    var parent = $(this).parent();
-                    var id = parent.parent().attr('id');
-
-                    if(id == "rapport") id = null;
-
-                    var contrat = "";
-                    var instal = 0;
-                    var date_inter = $('input[name="date_new_inter"]',parent).val();
-                    var arrive = $('select[name="arrive_inter"]',parent).val();
-                    var depart = $('select[name="depart_inter"]',parent).val();
-                    var comment = $('#symptomesObservations',parent).val();
-                    var num_affaire = $('.num_affaire',parent).val();
-
-                    if($('input[value="Contrat"]').is(':checked')){
-                        var i = 1;
-                        $.each($('.contrat.table.table-striped tbody tr:last-child td'),function(){
-                            if($('input',this).is(':checked')){
-                                contrat = contrat + i + ";";
-                            }
-                            i += 1;
+        //INIT DATEPIKCER
+         $('input[name="date_new_inter"]').datepicker({
+                            startView: 1,
+                            dateFormat: 'dd/mm/yy',
+                            autoclose: true
                         });
-                    } else {
-                        instal = 1;
-                    }
+        $('input[name="date_inter"]').datepicker({
+                            startView: 1,
+                            dateFormat: 'dd/mm/yy',
+                            autoclose: true
+                });
 
-                    if((num_affaire != '' && instal == 1) || instal == 0)
-                        {
-                            if(/^\d+$/.test(id) || id == null){
-                                rapports.addHoraires(
-                                       $('.sticky.bar.col-md-12').attr('data_ticket_id'),
-                                       id,
-                                       $('.sticky.bar.col-md-12').attr('data_agent_id'),
-                                       date_inter,
-                                       arrive,
-                                       depart,
-                                       comment,
-                                       contrat,
-                                       instal,
-                                       num_affaire
-                                   ,function(data){
-                                        location.reload();
-                                    });
-                            } else {
-                                id = id.substr(7);
-                                rapports.updateHoraire(
-                                       id,
-                                       date_inter,
-                                       arrive,
-                                       depart,
-                                       comment
-                                , function(data){
-                                    location.reload();
-                                });
-                            }
-                        } else {
-                            clickOneAddRapport();
-                        }
-            });
-        }
-        clickOneAddRapport();
-
-        $('.modifyInter').click(function(){
-            if($('#addTimeDiv').parent().css('display') === 'none'){
-                var id = $(this).attr('id');
-
-                var clone = $('#addTimeDiv');
-
-                $('#addTimeDiv .redactor-editor').removeClass('redactor-placeholder');
-                $('#addTimeDiv .redactor-editor').text($(this).parent().siblings('span').text());
-
-                var arrive = moment($(this).attr('data-arrive'),"YYYY/MM/DD HH:mm:ss");
-                var depart = moment($(this).attr('data-depart'),"YYYY/MM/DD HH:mm:ss");
-                $('#addTimeDiv input[name="date_new_inter"]').val(arrive.format("DD/MM/YYYY"));
-
-                $('#addTimeDiv select[name="arrive_inter"]').val(arrive.format("HH:mm"));
-                $('#addTimeDiv select[name="depart_inter"]').val(depart.format("HH:mm"));
-
-                clone.parent().css('display','block');
-                clone.parent().attr('id','update-'+id);
-
-            }
-
+        //Afficher le nouveau rapport
+        $('.addRapport').click(function(){
+            //$(this).addClass('animated fadeOutDown');
+            $(this).css('display','none');
+            $('#rapport').addClass('animated fadeInDown');
+            $('#rapport').css('display','block');
         });
 
+        //Afficher le bouton nouveau rapport
         $('.cancel.pending.newRapport').click(function(){
             $('.addRapport').css('display','block');
             $('.addRapport').addClass('animated fadeInUp');
             $(this).parent().parent().css('display','none');
-        });
-
-        $('.cancel.pending').click(function(){
-            $(this).parent().parent().css('display','none');
-        });
-
-
-        $('input[name="type"]').click(function(){
-            if($(this).val() == 'Contrat'){
-                $('.table.table-striped.contrat.instal tbody input').attr('disabled',false);
-            } else {
-                $('.table.table-striped.contrat.instal tbody input').attr('disabled',true);
-            }
-        });
-
-        $.ajax({
-            method:"POST",
-            url:"./Request/Contrat.php",
-            data:{
-                request:'getContrat',
-                id_org: $('.mail.icon.org').attr('id')
-            },
-            success:function(data){
-                var json = $.parseJSON(data);
-                if(json['commentaire'] != ""){
-                    $.notify({
-                        title: "<b style='font-size:18px'>Informations : </b><br><br>",
-                        icon: 'fa fa-exclamation-triangle',
-                        message: "<p style='font-size:16px'>" + json['commentaire'] + '</p>'
-                    },{
-                        type: 'danger',
-                        placement: {
-                            from: "top",
-                            align: "center"
-                        },
-                    });
-                }
-
-            }
         });
 
         $(window).scroll(function() {
@@ -1522,18 +1333,6 @@ $(function() {
                 $('.fixed-right').css('width','100%');
             }
         });
-
-        /*NOUVEAU RAPPORT*/
-        $('.addRapport').click(function(){
-            //$(this).addClass('animated fadeOutDown');
-            $(this).css('display','none');
-            $('#rapport').addClass('animated fadeInDown');
-            $('#rapport').css('display','block');
-        });
-
-        /*$('.fa.fa-print.fa-2x').click(function(){
-
-        });*/
 
     });
 

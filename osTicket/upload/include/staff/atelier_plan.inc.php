@@ -387,12 +387,12 @@
 
             $(document).on('click','.contenu .finish img',function(){
 
-                $('.contenu .finish').css({
+                $(this).parent().css({
                         'border': '1px solid #28B463',
                         'border-right': '0px',
                         'border-radius': '20px 0px 0px 20px'
                 });
-                $('.contenu .finish').animate({
+                $(this).parent().animate({
                     width: '130px'
                 },{
                     duration:300,

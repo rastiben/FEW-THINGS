@@ -1,6 +1,5 @@
 <?php
 if(($subnav=$nav->getSubMenu()) && is_array($subnav)){
-    //print_r($subnav);
     $activeMenu=$nav->getActiveMenu();
     if($activeMenu>0 && !isset($subnav[$activeMenu-1]))
         $activeMenu=0;

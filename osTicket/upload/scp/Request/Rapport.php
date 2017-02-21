@@ -52,7 +52,7 @@ class Rapport
         $res = $this->dbh->prepare("SELECT id,date_rapport,date_inter,num_affaire,firstname,lastname,contrat,instal FROM ost_rapport,ost_staff WHERE ost_rapport.id_agent = ost_staff.staff_id AND id_ticket = :ticketID");
         $res->execute(array(':ticketID'=>$ticketID));
 
-        return $res->fetchAll();
+        return $res->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getRapport($id){
@@ -67,6 +67,8 @@ class Rapport
 
         $arrive = DateTime::createFromFormat('d/m/Y H:i', $date->format('d/m/Y') . ' ' . $arriveInter);
         $depart = DateTime::createFromFormat('d/m/Y H:i', $date->format('d/m/Y') . ' ' . $departInter);
+
+        //echo 'toto';
 
         if(empty($rapportID)){
             $date_rapport = date('Y-m-d');
@@ -96,12 +98,15 @@ class Rapport
 
 }
 
-
 if(isset($_POST['request'])){
     if($_POST['request'] == 'addHoraires'){
         Rapport::getInstance()->addHoraires($_POST['ticket_id'],$_POST['agent_id'],$_POST['rapport_id'],$_POST['date_inter'],$_POST['arrive_inter'],$_POST['depart_inter'],$_POST['symptomesObservations'],$_POST['contrat'],$_POST['instal'],$_POST['num_affaire']);
     } else if($_POST['request'] == 'updateHoraire'){
         Rapport::getInstance()->updateHoraire($_POST['horaire_id'],$_POST['date_inter'],$_POST['arrive_inter'],$_POST['depart_inter'],$_POST['symptomesObservations']);
+    } else if ($_POST['request'] == 'getRapports'){
+        echo json_encode(Rapport::getInstance()->getRapports($_POST['ticketID']));
+    } else if($_POST['request'] == 'getRapportsHoraires'){
+        echo json_encode(Rapport::getInstance()->getRapportsHoraires($_POST['rapportID']));
     }
 }
 

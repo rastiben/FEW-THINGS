@@ -35,6 +35,7 @@
 <body>
 
 <?php
+
     $rapport = Rapport::getInstance()->getRapport($_GET['idR']);
     $horaires = Rapport::getInstance()->getRapportsHoraires($_GET['idR']);
 ?>

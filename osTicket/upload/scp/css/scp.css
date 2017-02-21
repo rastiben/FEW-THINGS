@@ -3234,13 +3234,21 @@ span.avatar{
     background-color: skyblue;
 }
 
-.rapport{
+.eachRapport{
     display: none;
+    padding: 0px;
 }
 
-.rapport.active{
+.eachRapport.active{
     display: table;
 }
+
+.rapport{
+    display: table;
+    padding: 0px;
+    margin-top: 30px;
+}
+
 
 .rapport .title{
     height: 60px;
