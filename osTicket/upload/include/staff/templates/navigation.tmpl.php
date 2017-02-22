@@ -8,7 +8,7 @@ if(($tabs=$nav->getTabs()) && is_array($tabs)){
 
         if ($tab['href'][0] != '/')
             $tab['href'] = ROOT_PATH . 'scp/' . $tab['href'];
-        echo sprintf('<li class="%s %s"><a href="%s">%s</a>',
+        echo sprintf('<li class="%s %s no-pjax"><a href="%s">%s</a>',
             $tab['active'] ? 'active':'inactive',
             @$tab['class'] ?: '',
             $tab['href'],$tab['desc']);

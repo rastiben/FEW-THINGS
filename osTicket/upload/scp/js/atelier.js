@@ -14,8 +14,7 @@ function Planche() {
                                           $obj['planche'],
                                           $obj['etat'],
                                           ($obj['0'] == "prepa" ?
-            new Preparation($obj['prepaPEC'],$obj['VD'], $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],
-            $obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
+            new Preparation($obj['prepaPEC'],new VD($obj['id'],$obj['client'],$obj['type'],$obj['numeroSerie'],$obj['versionWindows'],$obj['numLicenceW'],$obj['versionOffice'],$obj['numLicenceO'],$obj['garantie'],$obj['debutGarantie'],$obj['mail'],$obj['mdp']), $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],$obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
             new Reparation($obj['repaPEC'],$obj['typeAppareil'],$obj['motDePasse'],$obj['description'],$obj['comTech'],$obj['tempsInter'],
             $obj['dateMiseADisposition'],$obj['visaClient'],$obj['visaTech'],$obj['intervention'],$obj['tempsPasse'],$obj['svisaTech'],$obj['comIntervention'],$obj['verifClient'],
             $obj['dateReprise']))));
@@ -60,7 +59,7 @@ function Planche() {
             var contenu =  self.getContenu(id);
 
             contenu[0].planche = planche;
-            callback(contenu[0].getType());
+            callback(contenu[0]);
         });
     };
 
@@ -92,11 +91,10 @@ function Planche() {
     /*
     *Mise a jour ou ajout du contenu d'une prepa
     */
-    self.insertOfUpdatePrepa = function(id_contenu, planche, VD, modele, etiquetage, dossierSAV, septZip, acrobat, flash, java, pdf, autre, type, userAccount, mdp, activation, uninstall, maj, register, verifActivation, divers) {
+    self.insertOfUpdatePrepa = function(id_contenu, planche, modele, etiquetage, dossierSAV, septZip, acrobat, flash, java, pdf, autre, type, userAccount, mdp, activation, uninstall, maj, register, verifActivation, divers, client, type, numeroSerie, versionWindows, numLicenceW, versionOffice, numLicenceO, garantie, debutGarantie, mail, mdpMail) {
         var contenu = self.getContenu(id_contenu);
         contenu = contenu[0];
         contenu = contenu['contenu'];
-        contenu.VD = VD;
         contenu.modele = modele;
         contenu.etiquetage = etiquetage;
         contenu.dossierSAV = dossierSAV;
@@ -115,7 +113,22 @@ function Planche() {
         contenu.register = register;
         contenu.verifActivation = verifActivation;
         contenu.divers = divers;
-        AtelierAjax.insertOrUpdatePrepa(id_contenu,VD,modele,etiquetage,dossierSAV, septZip, acrobat, flash, java, pdf, autre, type, userAccount, mdp, activation, uninstall, maj, register, verifActivation, divers);
+
+        //MAJ VD
+        contenu.VD.client = client;
+        contenu.VD.type = type;
+        contenu.VD.numeroSerie = numeroSerie;
+        contenu.VD.versionWindows = versionWindows;
+        contenu.VD.numLicenceW = numLicenceW;
+        contenu.VD.versionOffice = versionOffice;
+        contenu.VD.numLicenceO = numLicenceO;
+        contenu.VD.garantie = garantie;
+        contenu.VD.debutGarantie = debutGarantie;
+        contenu.VD.mail = mail;
+        contenu.VD.mdp = mdpMail;
+
+        AtelierAjax.insertOrUpdatePrepa(id_contenu,modele,etiquetage,dossierSAV, septZip, acrobat, flash, java, pdf, autre, type, userAccount, mdp, activation, uninstall, maj, register, verifActivation, divers);
+        AtelierAjax.updateVD(contenu.VD.id,client,type,numeroSerie,versionWindows,numLicenceW,versionOffice,numLicenceO,garantie,debutGarantie,mail,mdpMail);
     }
 
      /*
@@ -216,6 +229,25 @@ function Reparation(PEC,typeAppareil=null,motDePasse=null,description=null,comTe
     self.dateReprise = dateReprise;
 }
 
+function VD(id,client,type,numeroSerie,versionWindows,numLicenceW,versionOffice,numLicenceO,garantie,debutGarantie,mail,mdp){
+
+    var self = this;
+
+    self.id = id;
+    self.client = client;
+    self.type = type;
+    self.numeroSerie = numeroSerie;
+    self.versionWindows = versionWindows;
+    self.numLicenceW = numLicenceW;
+    self.versionOffice = versionOffice;
+    self.numLicenceO = numLicenceO;
+    self.garantie = garantie;
+    self.debutGarantie = debutGarantie;
+    self.mail = mail;
+    self.mdp = mdp;
+
+}
+
 class AtelierAjax{
 
     static doAjax(data,callback){
@@ -262,14 +294,13 @@ class AtelierAjax{
         this.doAjax(data,callback);
     }
 
-    static insertOrUpdatePrepa(id_contenu,vd,modele,etiquetage,dossierSAV, septZip, acrobat, flash, java, pdf, autre, type, userAccount, mdp, activation, uninstall, maj, register, verifActivation, divers){
+    static insertOrUpdatePrepa(id_contenu,modele,etiquetage,dossierSAV, septZip, acrobat, flash, java, pdf, autre, type, userAccount, mdp, activation, uninstall, maj, register, verifActivation, divers){
         $.ajax({
             url:'./Request/Atelier.php'
             ,method:'POST'
             ,data : {
                 request:'addPrepaInfo'
                 ,id_contenu:id_contenu
-                ,vd:vd
                 ,modele:modele
                 ,etiquetage:etiquetage
                 ,dossierSAV:dossierSAV
@@ -318,4 +349,27 @@ class AtelierAjax{
             }
         });
     }
+
+    static updateVD(id,client,type,numeroSerie,versionWindows,numLicenceW,versionOffice,numLicenceO,garantie,debutGarantie,mail,mdp){
+        $.ajax({
+            url:'./Request/Atelier.php'
+            ,method:'POST'
+            ,data : {
+                request:'updateVD'
+                ,id:id
+                ,client:client
+                ,type:type
+                ,numeroSerie:numeroSerie
+                ,versionWindows:versionWindows
+                ,numLicenceW:numLicenceW
+                ,versionOffice:versionOffice
+                ,numLicenceO:numLicenceO
+                ,garantie:garantie
+                ,debutGarantie:debutGarantie
+                ,mail:mail
+                ,mdp:mdp
+            }
+        });
+    }
+
 }

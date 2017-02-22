@@ -4042,6 +4042,17 @@ table.atelierT td{
     border-width: 3px;
 }
 
+.prepaTmpl .VD{
+    height: 48px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.prepaTmpl .VD span{
+    float: right;
+    font-size: 40px;
+}
+
 .inputField{
     /*width: 200px;*/
     position: relative;
@@ -4184,14 +4195,14 @@ position: absolute;
     color: #0E4962;
 }
 
-.prepa input{
+.prepa h2{
     text-align: center;
     border: none;
     font-size: 20px;
     color: #0E4962;
     position: absolute;
     right: 0px;
-    bottom: 25px;
+    bottom: 18px;
     width: 100%;
 }
 
@@ -4201,6 +4212,16 @@ position: absolute;
     left: 50%;
     margin-left: -50px;
     top: 40px;
+}
+#nomDuPoste{
+    height: 40px;
+    line-height: 40px;
+    padding-top: 0px;
+    text-align: center;
+    background: rgba(40, 180, 99, 1);
+    color: white;
+    font-size: 20px;
+    box-shadow: 0px 3px 10px -1px #656565;
 }
 
 .newContent{

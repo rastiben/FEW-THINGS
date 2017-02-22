@@ -42,8 +42,18 @@ class Atelier
         (SELECT id FROM ost_atelier_planche WHERE planche = :planche),
         (SELECT id FROM ost_atelier_contenu_etat WHERE etat = :etat))");
         $res->execute(array(':ticket_id'=>$ticket_id,':type'=>$type,':planche'=>$planche,':etat'=>$etat));
+
+        $lastContenuInsertedID = $this->dbh->lastInsertId();
+
+        //ajout d'un VD et de la prepa.
+        if($type == "prepa"){
+            $res = $this->dbh->prepare("INSERT INTO ost_atelier_preparation_vd (id) VALUES (NULL);
+                                        INSERT INTO ost_atelier_preparation (id_contenu,id_VD) VALUES (:lastContenuInsertedID,LAST_INSERT_ID());");
+            $res->execute(array(':lastContenuInsertedID'=>$lastContenuInsertedID));
+        }
+
         //return $res->fetchAll();
-        return $this->dbh->lastInsertId();
+        return $lastContenuInsertedID;
     }
 
     public function get_org_planches(){
@@ -59,11 +69,10 @@ class Atelier
         return $res->fetchAll();
     }
 
-    public function addPrepaInfo($id_contenu,$VD,$modele,$etiquetage,$dossierSAV, $septZip, $acrobat, $flash, $java, $pdf, $autre, $type, $userAccount, $mdp, $activation, $uninstall, $maj, $register, $verifActivation, $divers){
-        $res = $this->dbh->prepare("INSERT INTO ost_atelier_preparation (id_contenu, VD, modele, etiquetage, dossierSAV, septZip, acrobat, flash, java, pdf, autre, type, userAccount, mdp, activation, uninstall, maj, register, verifActivation, divers)
-        VALUES(:id_contenu,:vd,:modele,:etiquetage,:dossierSAV, :septZip, :acrobat, :flash, :java, :pdf, :autre, :type, :userAccount, :mdp, :activation, :uninstall, :maj, :register, :verifActivation, :divers)
+    public function addPrepaInfo($id_contenu,$modele,$etiquetage,$dossierSAV, $septZip, $acrobat, $flash, $java, $pdf, $autre, $type, $userAccount, $mdp, $activation, $uninstall, $maj, $register, $verifActivation, $divers){
+        $res = $this->dbh->prepare("INSERT INTO ost_atelier_preparation (id_contenu, modele, etiquetage, dossierSAV, septZip, acrobat, flash, java, pdf, autre, type, userAccount, mdp, activation, uninstall, maj, register, verifActivation, divers)
+        VALUES(:id_contenu,:modele,:etiquetage,:dossierSAV, :septZip, :acrobat, :flash, :java, :pdf, :autre, :type, :userAccount, :mdp, :activation, :uninstall, :maj, :register, :verifActivation, :divers)
         ON DUPLICATE KEY UPDATE
-        VD = :vd,
         modele = :modele,
         etiquetage = :etiquetage,
         dossierSAV = :dossierSAV,
@@ -83,7 +92,6 @@ class Atelier
         verifActivation = :verifActivation,
         divers = :divers");
         $res->execute(array(':id_contenu'=>$id_contenu,
-                            ':vd'=>$VD,
                             ':modele'=>$modele,
                             ':etiquetage'=>$etiquetage,
                             ':dossierSAV'=>$dossierSAV,
@@ -145,7 +153,7 @@ class Atelier
     }
 
     public function getPlanches(){
-        $res = $this->dbh->prepare("SELECT ost_atelier_contenu_type.type,ost_atelier_planche.planche,ost_atelier_contenu_etat.etat,ost_atelier_planche_contenu.id,ifnull(ost_atelier_preparation.id_contenu,'PEC') as prepaPEC, ost_atelier_preparation.*,ifnull(ost_atelier_reparation.id_contenu,'PEC') as repaPEC,ost_atelier_reparation.*
+        $res = $this->dbh->prepare("SELECT ost_atelier_contenu_type.type,ost_atelier_planche.planche,ost_atelier_contenu_etat.etat,ost_atelier_planche_contenu.id,ifnull(ost_atelier_preparation.id_contenu,'PEC') as prepaPEC, ost_atelier_preparation.*,ifnull(ost_atelier_reparation.id_contenu,'PEC') as repaPEC,ost_atelier_reparation.*,ost_atelier_preparation_vd.*
         FROM ost_atelier_planche_contenu
         INNER JOIN ost_atelier_contenu_type
         ON ost_atelier_contenu_type.id = ost_atelier_planche_contenu.type_id
@@ -155,6 +163,8 @@ class Atelier
         ON ost_atelier_planche.id = ost_atelier_planche_contenu.planche_id
         LEFT JOIN ost_atelier_preparation
         ON ost_atelier_planche_contenu.id = ost_atelier_preparation.id_contenu
+        LEFT JOIN ost_atelier_preparation_vd
+        ON ost_atelier_preparation.id_VD = ost_atelier_preparation_vd.id
         LEFT JOIN ost_atelier_reparation
         ON ost_atelier_planche_contenu.id = ost_atelier_reparation.id_contenu");
         $res->execute(array());
@@ -176,6 +186,23 @@ class Atelier
         $res->execute(array(':id'=>$id,':etat'=>$etat));
     }
 
+    public function updateVD($id,$client,$type,$numeroSerie,$versionWindows,$numLicenceW,$versionOffice,$numLicenceO,$garantie,$debutGarantie,$mail,$mdp){
+        $res = $this->dbh->prepare("UPDATE ost_atelier_preparation_vd
+        SET client = :client,
+        type = :type,
+        numeroSerie = :numeroSerie,
+        versionWindows = :versionWindows,
+        numLicenceW = :numLicenceW,
+        versionOffice = :versionOffice,
+        numLicenceO = :numLicenceO,
+        garantie = :garantie,
+        debutGarantie = :debutGarantie,
+        mail = :mail,
+        mdp = :mdp
+        WHERE id = :id");
+        $res->execute(array(':id'=>$id,':client'=>$client,':type'=>$type,':numeroSerie'=>$numeroSerie,':versionWindows'=>$versionWindows,':numLicenceW'=>$numLicenceW,':versionOffice'=>$versionOffice,':numLicenceO'=>$numLicenceO,':garantie'=>$garantie,':debutGarantie'=>$debutGarantie,':mail'=>$mail,':mdp'=>$mdp));
+    }
+
     //43364101
 }
 
@@ -184,7 +211,6 @@ if(isset($_REQUEST['request'])){
         echo Atelier::getInstance()->add_contenu($_REQUEST['ticket_id'],$_REQUEST['type'],$_REQUEST['planche'],$_REQUEST['etat']);
     } else if($_REQUEST['request'] == 'addPrepaInfo'){
         Atelier::getInstance()->addPrepaInfo($_REQUEST['id_contenu'],
-                                            $_REQUEST['vd'],
                                             $_REQUEST['modele'],
                                             $_REQUEST['etiquetage'],
                                             $_REQUEST['dossierSAV'],
@@ -225,6 +251,8 @@ if(isset($_REQUEST['request'])){
         Atelier::getInstance()->affectContenu($_REQUEST['id'],$_REQUEST['planche']);
     } else if($_REQUEST['request'] == 'changeState'){
         Atelier::getInstance()->changeState($_REQUEST['id'],$_REQUEST['etat']);
+    } else if($_REQUEST['request'] == "updateVD"){
+         Atelier::getInstance()->updateVD($_REQUEST['id'],$_REQUEST['client'],$_REQUEST['type'],$_REQUEST['numeroSerie'],$_REQUEST['versionWindows'],$_REQUEST['numLicenceW'],$_REQUEST['versionOffice'],$_REQUEST['numLicenceO'],$_REQUEST['garantie'],$_REQUEST['debutGarantie'],$_REQUEST['mail'],$_REQUEST['mdp']);
     }
 }
 

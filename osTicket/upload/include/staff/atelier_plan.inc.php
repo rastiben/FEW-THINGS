@@ -192,13 +192,71 @@
                         </div>
 
                    <div class="prepaTmpl" style="display:none">
-                            <div class="col-md-12">
-                                <div class="inputField col-md-6">
-                                    <input id="nomDuPoste" required>
-                                    <label for="nomDuPoste">Nom du poste</label>
+                            <div class="col-md-12 VD">
+                                <div class="col-md-12" id="nomDuPoste">
+                                    <!--<input id="nomDuPoste" required>
+                                    <label for="nomDuPoste">Nom du poste</label>-->
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="inputField col-md-12">
+                                        <input type="text" id="client" required>
+                                        <label for="client">Client</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="inputField col-md-6">
+                                        <input type="text" id="denomination" required>
+                                        <label for="denomination">Type</label>
+                                    </div>
+                                    <div class="inputField col-md-6">
+                                        <input type="text" id="numeroSerie" required>
+                                        <label for="numeroSerie">Numero de serie</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="inputField col-md-6">
+                                        <input type="text" id="versionWindows" required>
+                                        <label for="versionWindows">Version de windows</label>
+                                    </div>
+                                    <div class="inputField col-md-6">
+                                        <input type="text" id="numLicenceW" required>
+                                        <label for="numLicenceW">Numero de licence Windows</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="inputField col-md-6">
+                                        <input type="text" id="versionOffice" required>
+                                        <label for="versionOffice">Version d'office</label>
+                                    </div>
+                                    <div class="inputField col-md-6">
+                                        <input type="text" id="numLicenceO" required>
+                                        <label for="numLicenceO">Numero de licence Office</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="inputField col-md-6">
+                                        <input type="text" id="garantie" required>
+                                        <label for="garantie">Garantie</label>
+                                    </div>
+                                    <div class="inputField col-md-6">
+                                        <input type="text" id="debutGarantie" required>
+                                        <label for="debutGarantie">Debut de la garantie</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="inputField col-md-6">
+                                        <input type="text" id="mail" required>
+                                        <label for="mail">Mail</label>
+                                    </div>
+                                    <div class="inputField col-md-6">
+                                        <input type="text" id="mdpMail" required>
+                                        <label for="mdpMail">Mot de passe</label>
+                                    </div>
+                                </div>
+                            </div>
 
-                                <div class="inputField col-md-6">
+                            <div class="col-md-12">
+                                <div class="inputField col-md-12">
                                     <textarea id="modele" required></textarea>
                                     <label for="modele">Modèle</label>
                                 </div>
@@ -347,7 +405,7 @@
                     $('.modal-body .contenu').remove();
 
                     $(contenu).each(function(number,obj){
-                            addContenuInPlanche(obj.getId(),obj.getType());
+                            addContenuInPlanche(obj.getId(),obj.getType(),obj.contenu.VD.id);
                     });
 
                     $('#fichesModal').modal({backdrop: 'static', keyboard: false});
@@ -366,8 +424,8 @@
                 var tr = $(this).closest('tr');
 
                 planches.changeState(id, "Planche");
-                planches.affectContenu(id,planche,function(type){
-                    addContenuInPlanche(id,type);
+                planches.affectContenu(id,planche,function(contenu){
+                    addContenuInPlanche(id,contenu.getType(),contenu.contenu.VD.id);
                     tr.remove();
                 });
 
@@ -432,12 +490,12 @@
 
                 //Récupération de la valeur d'une checkbox
                 function getValue(value){
-                    return !!+value.substr(1,value.indexOf(':')-1);
+                    return value != null ? !!+value.substr(1,value.indexOf(':')-1) : null;
                 }
 
                 //Récupération du staff ayant coché
                 function getStaffId(value){
-                    return value.substring(value.indexOf(':')+1,value.indexOf('}'));
+                    return value != null ? value.substring(value.indexOf(':')+1,value.indexOf('}')) : null;
                     //return value.substr(value.length-2,1);
                 }
 
@@ -446,7 +504,8 @@
                 if(data.getType() == 'prepa'){
                     type = "Fiche de préparation";
                     if(data['contenu'].PEC != "PEC"){
-                        $('#nomDuPoste').val(data['contenu'].VD);
+                        //SET FIELD PREPA
+                        $('#nomDuPoste').html("VD"+data['contenu'].VD.id+" <span class='glyphicon glyphicon-plus' aria-hidden='true'></span>");
                         $('#modele').val(data['contenu'].modele);
                         $('#etiquetage').attr('checked',data['contenu'].etiquetage == "1" ? true:false);
                         $('#dossierSAV').attr('checked',data['contenu'].dossierSAV == "1" ? true:false);
@@ -470,7 +529,19 @@
                         $('#maj').attr('checked', data['contenu'].maj == "1" ? true:false);
                         $('#register').attr('checked', data['contenu'].register == "1" ? true:false);
                         $('#verifActivation').attr('checked', data['contenu'].verifActivation == "1" ? true:false);
-                        $('#divers').val(data['contenu'].divers)
+                        $('#divers').val(data['contenu'].divers);
+                        //SET FIELD VD
+                        $('#client').val(data.contenu.VD.client);
+                        $('#denomination').val(data.contenu.VD.type);
+                        $('#numeroSerie').val(data.contenu.VD.numeroSerie);
+                        $('#versionWindows').val(data.contenu.VD.versionWindows);
+                        $('#numLicenceW').val(data.contenu.VD.numLicenceW);
+                        $('#versionOffice').val(data.contenu.VD.versionOffice);
+                        $('#numLicenceO').val(data.contenu.VD.numLicenceO);
+                        $('#garantie').val(data.contenu.VD.garantie);
+                        $('#debutGarantie').val(data.contenu.VD.debutGarantie);
+                        $('#mail').val(data.contenu.VD.mail);
+                        $('#mdpMail').val(data.contenu.VD.mdp);
                     }
                 } else {
                     type = "Fiche de réparation";
@@ -583,9 +654,8 @@
                 if($(this).text() == 'Enregistrer'){
                     //fade right out
                     if($('.retour h3').text() == 'Fiche de préparation'){
-                        //Recuperation des champs
+                        //Recuperation des champs prepa
                         var id_contenu = $('#fichesModal').attr('data_id_contenu');
-                        var vd = $('#nomDuPoste').val();
                         var modele = $('#modele').val();
                         var etiquetage = $('#etiquetage').is(':checked') ? '1' : '0';
                         var dossierSAV = $('#dossierSAV').is(':checked') ? '1' : '0';
@@ -604,11 +674,22 @@
                         var register = $('#register').is(':checked') ? '1' : '0';
                         var verifActivation = $('#verifActivation').is(':checked') ? '1' : '0';
                         var divers = $('#divers').val();
+                        //recuperation des champs VD
+                        var client = $('#client').val();
+                        var denomination = $('#denomination').val();
+                        var numeroSerie = $('#numeroSerie').val();
+                        var versionWindows = $('#versionWindows').val();
+                        var numLicenceW = $('#numLicenceW').val();
+                        var versionOffice = $('#versionOffice').val();
+                        var numLicenceO = $('#numLicenceO').val();
+                        var garantie = $('#garantie').val();
+                        var debutGarantie = $('#debutGarantie').val();
+                        var mail = $('#mail').val();
+                        var mdpMail = $('#mdpMail').val();
 
                         //Insertion ou mise a jour
                         planches.insertOfUpdatePrepa(id_contenu
                                                     ,$('.modal').attr('data_planche')
-                                                    ,vd
                                                     ,modele
                                                     ,etiquetage
                                                     ,dossierSAV
@@ -626,7 +707,18 @@
                                                     ,maj
                                                     ,register
                                                     ,verifActivation
-                                                    ,divers);
+                                                    ,divers
+                                                    ,client
+                                                    ,denomination
+                                                    ,numeroSerie
+                                                    ,versionWindows
+                                                    ,numLicenceW
+                                                    ,versionOffice
+                                                    ,numLicenceO
+                                                    ,garantie
+                                                    ,debutGarantie
+                                                    ,mail
+                                                    ,mdpMail);
 
                     } else {
                         var id_contenu = $('#fichesModal').attr('data_id_contenu');
@@ -703,13 +795,45 @@
                 }
             });
 
-            var addContenuInPlanche = function(id,type){
+          $('.prepaTmpl .VD #nomDuPoste').click(function(){
+              var css = {};
+              var degD = 0;
+              var degF = 0;
+
+              var self = $(this).parent();
+
+              if(self.css('height') == "370px"){
+                    css = { height: "48px"};
+                    degD = 45;
+                    degF = 0;
+              }
+              else{
+                  css = { height: "370px"};
+                  degD = 0;
+                  degF = 45;
+              }
+
+              self.animate(css,600);
+
+              var elem = $('span',self);
+              //ANIMATE PLUS
+              $({deg: degD}).animate({deg: degF}, {
+                    duration: 450,
+                    step: function(now){
+                        elem.css({
+                             transform: "rotate(" + now + "deg)"
+                        });
+                    }
+                });
+          });
+
+            var addContenuInPlanche = function(id,type,VD){
                 $('.modal-body div:first').prepend('<div class="col-md-3 contenu" id="'+id+'">'+
                     '<div class="prepa">'+
                     '<div class="finish"><img src="../assets/default/images/finish.png"><h3>Valider</h3></div>'+
                     '<img class="remove" src="../assets/default/images/remove.png">'+
                     '<img class="computer" src="../assets/default/images/computer.png">'+
-                    '<input value="'+ (type == "prepa"  ? "VD _ _ _ _" : "REPA") +'"/>'+
+                    '<h2>'+ (type == "prepa"  ? "VD"+VD : "REPA") +'</h2>'+
                     '</div>'+
                     '</div>');
             }
