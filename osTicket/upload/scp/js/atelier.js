@@ -9,14 +9,13 @@ function Planche() {
         console.log(data);
         self.contenu = [];
         $(data).each(function ($number, $obj) {
-            self.contenu.push(new Contenu($obj['0'],
-                                          $obj['id'],
+            self.contenu.push(new Contenu($obj['contenuType'],
+                                          $obj['numContenue'],
                                           $obj['planche'],
                                           $obj['etat'],
-                                          ($obj['0'] == "prepa" ?
-            new Preparation($obj['prepaPEC'],new VD($obj['id'],$obj['client'],$obj['type'],$obj['numeroSerie'],$obj['versionWindows'],$obj['numLicenceW'],$obj['versionOffice'],$obj['numLicenceO'],$obj['garantie'],$obj['debutGarantie'],$obj['mail'],$obj['mdp']), $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],$obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
-            new Reparation($obj['repaPEC'],$obj['typeAppareil'],$obj['motDePasse'],$obj['description'],$obj['comTech'],$obj['tempsInter'],
-            $obj['dateMiseADisposition'],$obj['visaClient'],$obj['visaTech'],$obj['intervention'],$obj['tempsPasse'],$obj['svisaTech'],$obj['comIntervention'],$obj['verifClient'],
+                                          ($obj['contenuType'] == "prepa" ?
+            new Preparation(new VD($obj['id'],$obj['client'],$obj['type'],$obj['numeroSerie'],$obj['versionWindows'],$obj['numLicenceW'],$obj['versionOffice'],$obj['numLicenceO'],$obj['garantie'],$obj['debutGarantie'],$obj['mail'],$obj['mdp']), $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],$obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
+            new Reparation($obj['typeAppareil'],$obj['motDePasse'],$obj['description'],$obj['comTech'],$obj['tempsInter'],$obj['dateMiseADisposition'],$obj['visaClient'],$obj['visaTech'],$obj['intervention'],$obj['tempsPasse'],$obj['svisaTech'],$obj['comIntervention'],$obj['verifClient'],
             $obj['dateReprise']))));
         });
 
@@ -82,8 +81,8 @@ function Planche() {
                                         planche,
                                         etat,
                                         (type == "prepa" ?
-            new Preparation("PEC") :
-            new Reparation("PEC"))));
+            new Preparation() :
+            new Reparation())));
             //callback(data);
         });
     };
@@ -183,10 +182,9 @@ function Contenu(type, id, planche, etat, contenu) {
     }
 }
 
-function Preparation(PEC,VD=null,acrobat=null,activation=null,autre=null,dossierSAV=null,type=null,etiquetage=null,flash=null,id_contenu=null,java=null,maj=null,mdp=null,modele=null,pdf=null,register=null,septZip=null,uninstall=null,userAccount=null,verifActivation=null,divers=null){
+function Preparation(VD=null,acrobat=null,activation=null,autre=null,dossierSAV=null,type=null,etiquetage=null,flash=null,id_contenu=null,java=null,maj=null,mdp=null,modele=null,pdf=null,register=null,septZip=null,uninstall=null,userAccount=null,verifActivation=null,divers=null){
 
     var self = this;
-    self.PEC = PEC;
     self.VD = VD;
     self.acrobat = acrobat;
     self.activation = activation;
@@ -209,10 +207,9 @@ function Preparation(PEC,VD=null,acrobat=null,activation=null,autre=null,dossier
     self.divers = divers;
 }
 
-function Reparation(PEC,typeAppareil=null,motDePasse=null,description=null,comTech=null,tempsInter=null,dateMiseADisposition=null,visaClient=null,visaTech=null,intervention=null,tempsPasse=null,svisaTech=null,comIntervention=null,verifClient=null,dateReprise=null){
+function Reparation(typeAppareil=null,motDePasse=null,description=null,comTech=null,tempsInter=null,dateMiseADisposition=null,visaClient=null,visaTech=null,intervention=null,tempsPasse=null,svisaTech=null,comIntervention=null,verifClient=null,dateReprise=null){
 
     var self = this;
-    self.PEC = PEC;
     self.typeAppareil = typeAppareil;
     self.motDePasse = motDePasse;
     self.description = description;

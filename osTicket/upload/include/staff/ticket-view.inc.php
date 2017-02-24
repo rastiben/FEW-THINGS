@@ -82,7 +82,7 @@ if($ticket->isOverdue())
             }
 
             if ($role->hasPerm(TicketModel::PERM_EDIT)) { ?>
-                <span class="action-button"><a data-placement="bottom" data-toggle="tooltip" title="<?php echo __('Edit'); ?>" href="tickets.php?id=<?php echo $ticket->getId(); ?>&a=edit"><i class="icon-edit"></i></a></span>
+                <span class="action-button"><a data-placement="bottom" class="no-pjax" data-toggle="tooltip" title="<?php echo __('Edit'); ?>" href="tickets.php?id=<?php echo $ticket->getId(); ?>&a=edit"><i class="icon-edit"></i></a></span>
             <?php
             } ?>
             <span class="action-button" data-placement="bottom" data-dropdown="#action-dropdown-print" data-toggle="tooltip" title="<?php echo __('Print'); ?>">
@@ -376,7 +376,7 @@ if($ticket->isOverdue())
     <div class="col-md-12 rapports">
       <div class="title">
          <div class="titling"></div>
-          <img src="../assets/default/images/report.png"/>
+          <img class="imgRapport" src="../assets/default/images/report.png"/>
           <h4>Liste des rapports</h4>
       </div>
        <table width="100%" style="table-layout:fixed">
@@ -447,8 +447,10 @@ if($ticket->isOverdue())
                 <div class="identity" id="{{rapport.id}}">
                     <div class="title">
                         <div class="titling"></div>
-                        <h4>Rapports n° {{rapport.id}} :</h4>
                         <img ng-click="showUpdate()" class="addTime" src="../assets/default/images/timeplus.png" id="<?php echo $rapport['id'] ?>"/>
+                        <div class="commentTitle horaires">
+                            <p>Rapports n° {{rapport.id}} :</p>
+                        </div>
                     </div>
                     <div class="content">
                         <span id="date_inter">Intervenant : {{rapport.firstname}} {{rapport.lastname}}</span>
@@ -473,20 +475,7 @@ if($ticket->isOverdue())
                         <div id="totalTitle">
                             <span>Total</span>
                         </div>
-                        <div id="total">
-                                    <?php
-                                    $days = $totalHours / 27900;
-                                    if($days >= 1){
-                                        $totalHours = $totalHours - (intval($days) * 27900);
-                                    }
-                                    $hours = $totalHours / 3600;
-                                    if($hours >= 1){
-                                        $totalHours = $totalHours - (intval($hours) * 3600);
-                                    }
-                                    $minutes = $totalHours / 60;
-                                    ?>
-                            <p><?php echo intval($days) . ' Jours' ; ?></p>
-                            <p><?php echo intval($hours) . ' Heures & ' . intval($minutes) . ' Minutes' ?></p>
+                        <div id="total" ng-bind-html="rapport.totalHours | pastTimes:this">
                         </div>
                     </div>
                 </div>
@@ -505,8 +494,8 @@ if($ticket->isOverdue())
                             <img class="modifyInter" src="../assets/default/images/edit.png" ng_click="showUpdate($index,$parent.$index,horaire.id)" id="{{horaire.id}}"/>
                              <div class="commentTitle"><p>Intervention du {{horaire.arrive_inter | mFormat:'dddd DD MMMM YYYY' | capitalize}}</p></div>
                          </div>
-                         <span class="commentContent">
-                          {{horaire.comment}}
+                         <span class="commentContent" ng-bind-html="horaire.comment">
+
                           </span>
                           </div>
                      </div>

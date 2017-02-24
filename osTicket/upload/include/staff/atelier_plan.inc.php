@@ -405,7 +405,7 @@
                     $('.modal-body .contenu').remove();
 
                     $(contenu).each(function(number,obj){
-                            addContenuInPlanche(obj.getId(),obj.getType(),obj.contenu.VD.id);
+                            addContenuInPlanche(obj.getId(),obj.getType(),obj.contenu.VD != undefined ? obj.contenu.VD.id : null);
                     });
 
                     $('#fichesModal').modal({backdrop: 'static', keyboard: false});
@@ -425,7 +425,7 @@
 
                 planches.changeState(id, "Planche");
                 planches.affectContenu(id,planche,function(contenu){
-                    addContenuInPlanche(id,contenu.getType(),contenu.contenu.VD.id);
+                    addContenuInPlanche(id,contenu.getType(),contenu.contenu.VD != undefined ? contenu.contenu.VD.id : null);
                     tr.remove();
                 });
 
@@ -503,64 +503,60 @@
                 var type = "";
                 if(data.getType() == 'prepa'){
                     type = "Fiche de préparation";
-                    if(data['contenu'].PEC != "PEC"){
-                        //SET FIELD PREPA
-                        $('#nomDuPoste').html("VD"+data['contenu'].VD.id+" <span class='glyphicon glyphicon-plus' aria-hidden='true'></span>");
-                        $('#modele').val(data['contenu'].modele);
-                        $('#etiquetage').attr('checked',data['contenu'].etiquetage == "1" ? true:false);
-                        $('#dossierSAV').attr('checked',data['contenu'].dossierSAV == "1" ? true:false);
-                        $('#septZip').prop('checked', getValue(data['contenu'].septZip))
+                    //SET FIELD PREPA
+                    $('#nomDuPoste').html("VD"+data['contenu'].VD.id+" <span class='glyphicon glyphicon-plus' aria-hidden='true'></span>");
+                    $('#modele').val(data['contenu'].modele);
+                    $('#etiquetage').attr('checked',data['contenu'].etiquetage == "1" ? true:false);
+                    $('#dossierSAV').attr('checked',data['contenu'].dossierSAV == "1" ? true:false);
+                    $('#septZip').prop('checked', getValue(data['contenu'].septZip))
                             .attr('data_staff', getStaffId(data['contenu'].septZip) == "null" ? null:getStaffId(data['contenu'].septZip));
-                        $('#acrobat').prop('checked', getValue(data['contenu'].acrobat))
+                    $('#acrobat').prop('checked', getValue(data['contenu'].acrobat))
                             .attr('data_staff', getStaffId(data['contenu'].acrobat) == "null" ? null:getStaffId(data['contenu'].acrobat));
-                        $('#flash').prop('checked', getValue(data['contenu'].flash))
+                    $('#flash').prop('checked', getValue(data['contenu'].flash))
                             .attr('data_staff', getStaffId(data['contenu'].flash) == "null" ? null:getStaffId(data['contenu'].flash));
-                        $('#java').prop('checked', getValue(data['contenu'].java))
+                    $('#java').prop('checked', getValue(data['contenu'].java))
                             .attr('data_staff', getStaffId(data['contenu'].java) == "null" ? null:getStaffId(data['contenu'].java));
-                        $('#pdf').prop('checked', getValue(data['contenu'].pdf))
+                    $('#pdf').prop('checked', getValue(data['contenu'].pdf))
                             .attr('data_staff', getStaffId(data['contenu'].pdf) == "null" ? null:getStaffId(data['contenu'].pdf));
-                        $('#autre').val(data['contenu'].autre);
-                        $('#type').val(data['contenu'].type);
-                        $('#userAccount').val(data['contenu'].userAccount);
-                        $('#mdp').val(data['contenu'].mdp);
-                        $('#activation').prop('checked', getValue(data['contenu'].activation))
+                    $('#autre').val(data['contenu'].autre);
+                    $('#type').val(data['contenu'].type);
+                    $('#userAccount').val(data['contenu'].userAccount);
+                    $('#mdp').val(data['contenu'].mdp);
+                    $('#activation').prop('checked', getValue(data['contenu'].activation))
                             .attr('data_staff', getStaffId(data['contenu'].activation) == "null" ? null:getStaffId(data['contenu'].activation));
-                        $('#uninstall').attr('checked', data['contenu'].uninstall == "1" ? true:false);
-                        $('#maj').attr('checked', data['contenu'].maj == "1" ? true:false);
-                        $('#register').attr('checked', data['contenu'].register == "1" ? true:false);
-                        $('#verifActivation').attr('checked', data['contenu'].verifActivation == "1" ? true:false);
-                        $('#divers').val(data['contenu'].divers);
-                        //SET FIELD VD
-                        $('#client').val(data.contenu.VD.client);
-                        $('#denomination').val(data.contenu.VD.type);
-                        $('#numeroSerie').val(data.contenu.VD.numeroSerie);
-                        $('#versionWindows').val(data.contenu.VD.versionWindows);
-                        $('#numLicenceW').val(data.contenu.VD.numLicenceW);
-                        $('#versionOffice').val(data.contenu.VD.versionOffice);
-                        $('#numLicenceO').val(data.contenu.VD.numLicenceO);
-                        $('#garantie').val(data.contenu.VD.garantie);
-                        $('#debutGarantie').val(data.contenu.VD.debutGarantie);
-                        $('#mail').val(data.contenu.VD.mail);
-                        $('#mdpMail').val(data.contenu.VD.mdp);
-                    }
+                    $('#uninstall').attr('checked', data['contenu'].uninstall == "1" ? true:false);
+                    $('#maj').attr('checked', data['contenu'].maj == "1" ? true:false);
+                    $('#register').attr('checked', data['contenu'].register == "1" ? true:false);
+                    $('#verifActivation').attr('checked', data['contenu'].verifActivation == "1" ? true:false);
+                    $('#divers').val(data['contenu'].divers);
+                    //SET FIELD VD
+                    $('#client').val(data.contenu.VD.client);
+                    $('#denomination').val(data.contenu.VD.type);
+                    $('#numeroSerie').val(data.contenu.VD.numeroSerie);
+                    $('#versionWindows').val(data.contenu.VD.versionWindows);
+                    $('#numLicenceW').val(data.contenu.VD.numLicenceW);
+                    $('#versionOffice').val(data.contenu.VD.versionOffice);
+                    $('#numLicenceO').val(data.contenu.VD.numLicenceO);
+                    $('#garantie').val(data.contenu.VD.garantie);
+                    $('#debutGarantie').val(data.contenu.VD.debutGarantie);
+                    $('#mail').val(data.contenu.VD.mail);
+                    $('#mdpMail').val(data.contenu.VD.mdp);
                 } else {
                     type = "Fiche de réparation";
-                    if(data['contenu'].PEC != "PEC"){
-                        $('#typeAppareil').val(data['contenu'].typeAppareil);
-                        $('#motDePasse').val(data['contenu'].motDePasse);
-                        $('#description').val(data['contenu'].description);
-                        $('#comTech').val(data['contenu'].comTech);
-                        $('#tempsInter').val(data['contenu'].tempsInter);
-                        $('#dateMiseADisposition').val(data['contenu'].dateMiseADisposition);
-                        $('#visaClient').val(data['contenu'].visaClient);
-                        $('#visaTech').val(data['contenu'].visaTech);
-                        $('#intervention').val(data['contenu'].intervention);
-                        $('#tempsPasse').val(data['contenu'].tempsPasse);
-                        $('#svisaTech').val(data['contenu'].svisaTech);
-                        $('#comIntervention').val(data['contenu'].comIntervention);
-                        $('#verifClient').prop('checked',data['contenu'].verifClient == "1" ? true:false);
-                        $('#dateReprise').val(data['contenu'].dateReprise);
-                    }
+                    $('#typeAppareil').val(data['contenu'].typeAppareil);
+                    $('#motDePasse').val(data['contenu'].motDePasse);
+                    $('#description').val(data['contenu'].description);
+                    $('#comTech').val(data['contenu'].comTech);
+                    $('#tempsInter').val(data['contenu'].tempsInter);
+                    $('#dateMiseADisposition').val(data['contenu'].dateMiseADisposition);
+                    $('#visaClient').val(data['contenu'].visaClient);
+                    $('#visaTech').val(data['contenu'].visaTech);
+                    $('#intervention').val(data['contenu'].intervention);
+                    $('#tempsPasse').val(data['contenu'].tempsPasse);
+                    $('#svisaTech').val(data['contenu'].svisaTech);
+                    $('#comIntervention').val(data['contenu'].comIntervention);
+                    $('#verifClient').prop('checked',data['contenu'].verifClient == "1" ? true:false);
+                    $('#dateReprise').val(data['contenu'].dateReprise);
                 }
 
                 //CHANGEMENT DES CHOIX DE LA SELECT

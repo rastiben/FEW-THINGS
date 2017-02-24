@@ -178,6 +178,59 @@ if ($_POST)
 <script type="text/javascript">
 +(function() {
 
+    //GET ORG
+    $(document).on('focusout','tr td:contains("Organisation:") ~ td input',function(e){
+        if(!$(clicky).is('p')){
+            $(".orgsList").css('display','none');
+            //$("tr td:contains('Organisation:')").siblings().find('input').focus();
+        } else {
+            $("tr td:contains('Organisation:')").siblings().find('input').focus();
+        }
+    });
+
+    $(document).on('focusin','tr td:contains("Organisation:") ~ td input',function(e){
+        $(".orgsList").css('display','block');
+    });
+
+    $(document).on('keyup','tr td:contains("Organisation:") ~ td input',function(){
+        var orgInput = $("tr td:contains('Organisation:')").siblings().find('input');
+        var top = orgInput.offset().top - 134;
+        var left = orgInput.offset().left - 119;
+        if(orgInput.val().length > 3){
+           $.ajax({
+              method: "POST",
+              url: "./Request/Orgs.php",
+              data : {
+               getOrgsWithName:'',
+               name:orgInput.val()
+            }
+            })
+            .success(function( data ) {
+               data = $.parseJSON(data);
+               $(".orgsList").empty();
+               $(".orgsList").css('top',top);
+               $(".orgsList").css('left',left);
+               $(data).each(function(number,obj){
+                  $(".orgsList").append('<p>'+obj.name+'</p>')
+               });
+               $(".orgsList").css('display','block');
+            });
+        } else {
+            $(".orgsList").css('display','none');
+        }
+    });
+
+    $(document).on('click','.orgsList p',function(){
+        $("tr td:contains('Organisation:')").siblings().find('input').val($(this).text());
+    });
+
+
+
+
+
+
+
+
     /*GET PLACES*/
     /*data_org_id*/
     var textarea = $("tr td:contains('Adresse concerné')").siblings().find('textarea');
@@ -191,14 +244,14 @@ if ($_POST)
               get_places: ''
               , id_org: id_org
           }
-        })
-        .success(function( data ) {
-            places = JSON.parse(data);
-            $('body').prepend('<div class="places"></div>');
-            $(places).each(function(index,place){
-                $('.places').append('<div>'+place['Adresse']+'</div>')
-            });
+    })
+    .success(function( data ) {
+        places = JSON.parse(data);
+        $('body').prepend('<div class="places"></div>');
+        $(places).each(function(index,place){
+            $('.places').append('<div>'+place['Adresse']+'</div>')
         });
+    });
 
     /*click adresse concerné*/
     textarea.click(function(){

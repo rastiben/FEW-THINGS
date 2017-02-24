@@ -327,8 +327,6 @@ class MysqlSearchBackend extends SearchBackend {
     function find($query, QuerySet $criteria, $addRelevance=true) {
         global $thisstaff;
 
-        //print_r($query);
-        //echo "toto";
         // MySQL usually doesn't handle words shorter than three letters
         // (except with special configuration)
         if (strlen($query) < 3)

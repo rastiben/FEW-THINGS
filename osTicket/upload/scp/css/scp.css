@@ -3178,7 +3178,7 @@ span.avatar{
     box-shadow: 2px 2px 2px 1px rgba(189,189,189,1);
 }
 
-.rapports .title img{
+.imgRapport{
     max-height: 25px;
     display: inline-block;
     position: absolute;
@@ -3339,6 +3339,7 @@ span.avatar{
 .rapport .identity .titling{
     width: 15px;
     height: 100%;
+    float: left;
     background-color: skyblue;
     display: inline-block;
 }
@@ -3497,13 +3498,17 @@ span.avatar{
     float: left;
 }
 
-.titleComment div.commentTitle{
+.commentTitle{
     display: table;
     height: 45px;
     padding-left: 10px;
 }
 
-.titleComment div.commentTitle p{
+.commentTitle.horaires{
+    height: 52px;
+}
+
+.commentTitle p{
     display: table-cell;
     vertical-align: middle;
     text-align: left;
@@ -4235,4 +4240,32 @@ position: absolute;
 .newContent img{
     height: 120px;
     cursor: pointer;
+}
+
+
+/*Ajout d'utilisateur a un ticket*/
+.orgsList{
+    display: none;
+    position: absolute;
+    height: 200px;
+    overflow: hidden;
+    background: white;
+    width: 389px;
+    border: 1px solid darkgray;
+    z-index: 5000;
+    overflow-y: scroll;
+    color: black;
+}
+
+.orgsList p{
+    padding-left: 4px;
+    margin: 0px;
+    height: 25px;
+    line-height: 25px;
+    cursor: pointer;
+}
+
+.orgsList p:hover{
+    background: #2E86C1;
+    color:white;
 }

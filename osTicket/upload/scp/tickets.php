@@ -374,7 +374,7 @@ $open_name = _P('queue-name',
 
 /*ATELIER*/
 if($cfg->showAnsweredTickets()) {
-    $nav->addSubMenu(array('desc'=>$open_name.' ('.number_format($stats['open']+$stats['answered']).')',
+    $nav->addSubMenu(array('desc'=>$open_name.' ('.number_format(TicketsInfos::getInstance()->numberOfOpenTickets()).')',
                             'title'=>__('Open Tickets'),
                             'href'=>'tickets.php?status=open',
                             'iconclass'=>'Ticket'),

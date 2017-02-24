@@ -35,6 +35,7 @@ if ($lang) {
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.fr.min.js"></script>
     <script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-sanitize.min.js"></script>
     <script type="application/javascript" src="<?php echo ROOT_PATH; ?>js/angular-local_fr-fr.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.min.css" media="all"/>
     <link rel="stylesheet" href="<?php echo ROOT_PATH ?>css/bootstrap.css" media="all"/>
@@ -62,7 +63,7 @@ if ($lang) {
     }
     ?>
     <script>
-        var app = angular.module('myApp',[]);
+        var app = angular.module('myApp',['ngSanitize']);
     </script>
 </head>
 <body ng-app="myApp">

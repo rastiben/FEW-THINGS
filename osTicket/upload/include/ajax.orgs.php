@@ -35,6 +35,7 @@ class OrgsAjaxAPI extends AjaxController {
         if (strlen($q) < 3)
             return $this->encode(array());
 
+        //echo $q;
         $orgs = Organization::objects()
             ->values_flat('id', 'name')
             ->limit($limit);
@@ -44,11 +45,10 @@ class OrgsAjaxAPI extends AjaxController {
         $orgs->order_by(new SqlCode('__relevance__'), QuerySet::DESC)
             ->distinct('id');
 
-        if (!count($orgs) && preg_match('`\w$`u', $q)) {
-            // Do wildcard full-text search
+        /*if (!count($orgs) && preg_match('`\w$`u', $q)) {
             $_REQUEST['q'] = $q."*";
             return $this->search($type);
-        }
+        }*/
 
         $matched = array();
         foreach ($orgs as $O) {

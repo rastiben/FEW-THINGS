@@ -76,19 +76,18 @@ class TicketsInfos
     }
 
     public function numberOfOpenTickets(){
-        $res = $this->dbh->prepare("SELECT COUNT(*) FROM ost_ticket,ost_ticket_status WHERE ost_ticket.status_id = ost_ticket_status.id AND ost_ticket_status.state = 'open' AND ost_ticket.ticket_id NOT IN(SELECT ost_ticket.ticket_id
-        FROM ost_ticket,ost_form_entry,ost_form_entry_values
-        WHERE ost_form_entry.object_id = ost_ticket.ticket_id
-        AND ost_form_entry_values.entry_id = ost_form_entry.id
-        AND ost_form_entry_values.field_id = '50'
-        AND ost_form_entry_values.value LIKE '%Atelier%')");
+        $res = $this->dbh->prepare("SELECT COUNT(*) FROM ost_ticket,ost_ticket_status,ost_help_topic
+        WHERE ost_ticket.status_id = ost_ticket_status.id
+        AND ost_ticket_status.state = 'open'
+        AND ost_help_topic.topic_id = ost_ticket.topic_id
+        AND ost_help_topic.topic != 'Atelier'");
         $res->execute();
         return $res->fetchAll()[0]['COUNT(*)'];
     }
 
     public function numberOfAssignedTickets(){
         $res = $this->dbh->prepare("SELECT COUNT(*)
-        FROM ost_ticket,ost_ticket__cdata,ost_ticket_status,ost_user,ost_user__cdata,ost_ticket_priority
+        FROM ost_ticket,ost_ticket__cdata,ost_ticket_status,ost_user,ost_user__cdata,ost_ticket_priority,ost_help_topic
         WHERE ost_ticket.ticket_id = ost_ticket__cdata.ticket_id
         AND ost_ticket.status_id = ost_ticket_status.id
         AND ost_ticket.user_id = ost_user.id
@@ -97,12 +96,8 @@ class TicketsInfos
         AND ost_ticket.staff_id = '1'
         AND ost_ticket_status.state = 'open'
         AND (ost_ticket.created IS NOT NULL OR ost_ticket.reopened IS NOT NULL)
-        AND ost_ticket.ticket_id NOT IN(SELECT ost_ticket.ticket_id
-        FROM ost_ticket,ost_form_entry,ost_form_entry_values
-        WHERE ost_form_entry.object_id = ost_ticket.ticket_id
-        AND ost_form_entry_values.entry_id = ost_form_entry.id
-        AND ost_form_entry_values.field_id = '50'
-        AND ost_form_entry_values.value LIKE '%Atelier%')
+        AND ost_help_topic.topic_id = ost_ticket.topic_id
+        AND ost_help_topic.topic != 'Atelier'
         ORDER BY DATE(lastupdate) DESC");
         $res->execute();
         return $res->fetchAll()[0]['COUNT(*)'];
@@ -139,8 +134,8 @@ class TicketsInfos
 
     public function tickets_assigned($staffId)
     {
-        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,status_id,ost_ticket_status.name as status_name,number,lastupdate,closed,subject,source,ost_user.name,ost_user__cdata.firsname,priority_desc
-        FROM ost_ticket,ost_ticket__cdata,ost_ticket_status,ost_user,ost_user__cdata,ost_ticket_priority
+        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,ost_ticket.status_id,ost_ticket_status.name as status_name,number,lastupdate,closed,subject,source,ost_user.name,ost_user__cdata.firsname,priority_desc
+        FROM ost_ticket,ost_ticket__cdata,ost_ticket_status,ost_user,ost_user__cdata,ost_ticket_priority,ost_help_topic
         WHERE ost_ticket.ticket_id = ost_ticket__cdata.ticket_id
         AND ost_ticket.status_id = ost_ticket_status.id
         AND ost_ticket.user_id = ost_user.id
@@ -149,49 +144,39 @@ class TicketsInfos
         AND ost_ticket.staff_id = :staffID
         AND ost_ticket_status.state = 'open'
         AND (ost_ticket.created IS NOT NULL OR ost_ticket.reopened IS NOT NULL)
-        AND ost_ticket.ticket_id NOT IN(SELECT ost_ticket.ticket_id
-        FROM ost_ticket,ost_form_entry,ost_form_entry_values
-        WHERE ost_form_entry.object_id = ost_ticket.ticket_id
-        AND ost_form_entry_values.entry_id = ost_form_entry.id
-        AND ost_form_entry_values.field_id = '50'
-        AND ost_form_entry_values.value LIKE '%Atelier%')
+        AND ost_help_topic.topic_id = ost_ticket.topic_id
+        AND ost_help_topic.topic != 'Atelier'
         ORDER BY DATE(lastupdate) DESC");
         $res->execute(array(':staffID'=>$staffId));
         return $res->fetchAll();
     }
 
     public function atelier_tickets(){
-        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,ost_ticket_status.name as status_name,status_id,number,lastupdate,closed,subject,source,ost_user.name,ost_user__cdata.firsname,priority_desc
-        FROM ost_ticket,ost_ticket_status,ost_ticket__cdata,ost_user,ost_user__cdata,ost_ticket_priority,ost_form_entry,ost_form_entry_values
+        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,ost_ticket_status.name as status_name,ost_ticket.status_id,number,lastupdate,closed,subject,source,ost_user.name,ost_user__cdata.firsname,priority_desc
+        FROM ost_ticket,ost_ticket_status,ost_ticket__cdata,ost_user,ost_user__cdata,ost_ticket_priority,ost_help_topic
         WHERE ost_ticket.ticket_id = ost_ticket__cdata.ticket_id
         AND ost_ticket.status_id = ost_ticket_status.id
         AND ost_ticket.user_id = ost_user.id
         AND ost_user.id = ost_user__cdata.user_id
         AND ost_ticket__cdata.priority = ost_ticket_priority.priority_id
         AND ost_ticket_status.state = 'open'
-        AND ost_form_entry.object_id = ost_ticket.ticket_id
-        AND ost_form_entry_values.entry_id = ost_form_entry.id
-        AND ost_form_entry_values.field_id = '50'
-        AND ost_form_entry_values.value LIKE '%Atelier%'");
+        AND ost_help_topic.topic_id = ost_ticket.topic_id
+        AND ost_help_topic.topic = 'Atelier'");
         $res->execute(array(':status'=>$status));
         return $res->fetchAll();
     }
 
     public function tickets($status="open"){
-        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,ost_ticket_status.name as status_name,status_id,number,lastupdate,closed,subject,source,ost_user.name,ost_user__cdata.firsname,priority_desc
-        FROM ost_ticket,ost_ticket_status,ost_ticket__cdata,ost_user,ost_user__cdata,ost_ticket_priority
+        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,ost_ticket_status.name as status_name,ost_ticket.status_id,number,lastupdate,closed,subject,source,ost_user.name,ost_user__cdata.firsname,priority_desc
+        FROM ost_ticket,ost_ticket_status,ost_ticket__cdata,ost_user,ost_user__cdata,ost_ticket_priority,ost_help_topic
         WHERE ost_ticket.ticket_id = ost_ticket__cdata.ticket_id
         AND ost_ticket.status_id = ost_ticket_status.id
         AND ost_ticket.user_id = ost_user.id
         AND ost_user.id = ost_user__cdata.user_id
         AND ost_ticket__cdata.priority = ost_ticket_priority.priority_id
-        AND ost_ticket_status.state = :status
-        AND ost_ticket.ticket_id NOT IN(SELECT ost_ticket.ticket_id
-        FROM ost_ticket,ost_form_entry,ost_form_entry_values
-        WHERE ost_form_entry.object_id = ost_ticket.ticket_id
-        AND ost_form_entry_values.entry_id = ost_form_entry.id
-        AND ost_form_entry_values.field_id = '50'
-        AND ost_form_entry_values.value LIKE '%Atelier%')");
+        AND ost_ticket_status.state = 'open'
+        AND ost_help_topic.topic_id = ost_ticket.topic_id
+        AND ost_help_topic.topic != 'Atelier'");
         $res->execute(array(':status'=>$status));
         return $res->fetchAll();
     }

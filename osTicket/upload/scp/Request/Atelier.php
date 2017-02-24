@@ -50,6 +50,9 @@ class Atelier
             $res = $this->dbh->prepare("INSERT INTO ost_atelier_preparation_vd (id) VALUES (NULL);
                                         INSERT INTO ost_atelier_preparation (id_contenu,id_VD) VALUES (:lastContenuInsertedID,LAST_INSERT_ID());");
             $res->execute(array(':lastContenuInsertedID'=>$lastContenuInsertedID));
+        } else {
+            $res = $this->dbh->prepare("INSERT INTO ost_atelier_reparation (id_contenu) VALUES (:lastContenuInsertedID)");
+            $res->execute(array(':lastContenuInsertedID'=>$lastContenuInsertedID));
         }
 
         //return $res->fetchAll();
@@ -153,7 +156,7 @@ class Atelier
     }
 
     public function getPlanches(){
-        $res = $this->dbh->prepare("SELECT ost_atelier_contenu_type.type,ost_atelier_planche.planche,ost_atelier_contenu_etat.etat,ost_atelier_planche_contenu.id,ifnull(ost_atelier_preparation.id_contenu,'PEC') as prepaPEC, ost_atelier_preparation.*,ifnull(ost_atelier_reparation.id_contenu,'PEC') as repaPEC,ost_atelier_reparation.*,ost_atelier_preparation_vd.*
+        $res = $this->dbh->prepare("SELECT ost_atelier_contenu_type.type as contenuType,ost_atelier_planche.planche,ost_atelier_contenu_etat.etat,ost_atelier_planche_contenu.id as numContenue, ost_atelier_preparation.*,ost_atelier_reparation.*,ost_atelier_preparation_vd.*
         FROM ost_atelier_planche_contenu
         INNER JOIN ost_atelier_contenu_type
         ON ost_atelier_contenu_type.id = ost_atelier_planche_contenu.type_id
@@ -169,7 +172,7 @@ class Atelier
         ON ost_atelier_planche_contenu.id = ost_atelier_reparation.id_contenu");
         $res->execute(array());
         /*print_r($res->fetchAll());*/
-        return $res->fetchAll();
+        return $res->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function affectContenu($id,$planche){

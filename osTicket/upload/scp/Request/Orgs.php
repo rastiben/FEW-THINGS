@@ -30,6 +30,12 @@ class Organisation
         return self::$instance;
     }
 
+    public function get_orgs_with_name($name){
+        $res = $this->dbh->prepare("SELECT name FROM ost_organization WHERE name LIKE :name");
+        $res->execute(array(':name'=>"%$name%"));
+        return $res->fetchAll();
+    }
+
     public function add_place($id_org,$adresse){
         /*REMOVE ADRESSES*/
         $res = $this->dbh->prepare("DELETE FROM ost_organization_places WHERE id_org = :id_org");
@@ -56,6 +62,8 @@ if(isset($_POST['add_place'])){
 } else if(isset($_POST['get_places'])) {
     $places = Organisation::getInstance()->get_places($_POST['id_org']);
     print_r(json_encode($places));
+} else if(isset($_POST['getOrgsWithName'])){
+    echo json_encode(Organisation::getInstance()->get_orgs_with_name($_POST['name']));
 }
 
 ?>

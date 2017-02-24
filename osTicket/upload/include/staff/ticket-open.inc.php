@@ -417,8 +417,14 @@ print $response_form->getField('attachments')->render();
     ">
 </p>
 </form>
+
+<div class="orgsList" style="display:none">
+
+</div>
+
 <script type="text/javascript">
 $(function() {
+
     $('input#user-email').typeahead({
         source: function (typeahead, query) {
             $.ajax({
@@ -435,6 +441,75 @@ $(function() {
             $('#user-email').val(obj.email);
         },
         property: "/bin/true"
+    });
+    //Organisation:
+    //$("tr td:contains('Organisation:')").siblings().find('input');
+    $("tr td:contains('Organisation:')").on('DOMNodeInserted',function(){
+        alert('toto');
+    });
+
+    var clicky;
+
+    $(document).mousedown(function(e) {
+        // The latest element clicked
+        clicky = $(e.target);
+    });
+
+    $(document).on('focusout','tr td:contains("Organisation:") ~ td input',function(e){
+        if(!$(clicky).is('p')){
+            $(".orgsList").css('display','none');
+            //$("tr td:contains('Organisation:')").siblings().find('input').focus();
+        } else {
+            $("tr td:contains('Organisation:')").siblings().find('input').focus();
+        }
+    });
+
+    $(document).on('focusin','tr td:contains("Organisation:") ~ td input',function(e){
+        $(".orgsList").css('display','block');
+    });
+
+    $(document).on('keyup','tr td:contains("Organisation:") ~ td input',function(){
+        var orgInput = $("tr td:contains('Organisation:')").siblings().find('input');
+        var top = orgInput.offset().top - 134;
+        var left = orgInput.offset().left - 119;
+        if(orgInput.val().length > 3){
+           $.ajax({
+              method: "POST",
+              url: "./Request/Orgs.php",
+              data : {
+               getOrgsWithName:'',
+               name:orgInput.val()
+            }
+            })
+            .success(function( data ) {
+               data = $.parseJSON(data);
+               $(".orgsList").empty();
+               $(".orgsList").css('top',top);
+               $(".orgsList").css('left',left);
+               $(data).each(function(number,obj){
+                  $(".orgsList").append('<p>'+obj.name+'</p>')
+               });
+               $(".orgsList").css('display','block');
+            });
+        } else {
+            $(".orgsList").css('display','none');
+        }
+    });
+
+    $(document).on('click','.orgsList p',function(){
+        $("tr td:contains('Organisation:')").siblings().find('input').val($(this).text());
+    });
+
+
+
+    $(window).resize(function(){
+        var orgInput = $("tr td:contains('Organisation:')").siblings().find('input');
+        if(orgInput.length != 0){
+            var top = orgInput.offset().top - 134;
+            var left = orgInput.offset().left - 119;
+            $(".orgsList").css('top',top);
+            $(".orgsList").css('left',left);
+        }
     });
 
    <?php

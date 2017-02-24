@@ -1,5 +1,6 @@
 moment.locale('fr');
 
+//récupération des informations (Rapports et horaires) + Ajout d'un rapport ou maj d'un horaires
 app.factory('rapportFactory',['$http',function($http){
    return{
        getRapports: function(ticketID) {
@@ -54,11 +55,17 @@ app.controller("rapportCtrl",["$scope","rapportFactory", function($scope,rapport
             angular.forEach($scope.rapports,function(value,key){
                 rapportFactory.getHoraires(value.id).then(function(horaires){
                     value.horaires = horaires;
+                    value.totalHours = moment.duration(0,'h');
                     angular.forEach(value.horaires,function(horaire,key){
                         horaire.arrive_inter = moment(horaire.arrive_inter,"YYYY/MM/DD HH:mm:ss");
                         horaire.depart_inter = moment(horaire.depart_inter,"YYYY/MM/DD HH:mm:ss");
+
                         var temp = moment.duration(horaire.depart_inter.diff(horaire.arrive_inter));
                         horaire.nbHours = temp._data.hours + ":" + temp._data.minutes;
+
+                        //temps total sur un rapport
+                        value.totalHours.add(temp._data.hours,'h');
+                        value.totalHours.add(temp._data.minutes,'m');
                     });
                 });
             });
@@ -73,6 +80,21 @@ app.controller("rapportCtrl",["$scope","rapportFactory", function($scope,rapport
         $('.eachRapport.active').removeClass('active');
         $('#'+id+'.eachRapport').addClass('active');
         $scope.rapportID = rapportID;
+    }
+
+    $scope.tempsPasse = function(duration){
+        var totalHours = duration.as('seconds');
+        var days = Math.floor(totalHours / 27900);
+        if(days >= 1){
+            totalHours = totalHours - (days * 27900);
+        }
+        var hours = Math.floor(totalHours / 3600);
+        if(hours >= 1){
+            totalHours = totalHours - (hours * 3600);
+        }
+        var minutes = Math.floor(totalHours / 60);
+        return "<p>" + days + "  Jours</p> \
+                <p>" + hours + "  Heures & " + minutes + " Minutes</p>";
     }
 
     $scope.addRapport = function(){
@@ -165,15 +187,23 @@ app.controller("rapportCtrl",["$scope","rapportFactory", function($scope,rapport
 
 }]);
 
+//filtre de capitalization.
 app.filter('capitalize', function() {
     return function(input) {
       return (!!input) ? input.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) : '';
     }
 });
 
+//filtre de formatage de moment date
 app.filter('mFormat', function() {
     return function(input, format) {
       return (!!input) ? input.format(format) : '';
+    }
+});
+
+app.filter('pastTimes', function() {
+    return function(input, $scope) {
+      return (!!input) ? $scope.tempsPasse(input) : '';
     }
 });
 

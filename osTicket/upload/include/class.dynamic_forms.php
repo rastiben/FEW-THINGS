@@ -1845,6 +1845,7 @@ class TypeaheadSelectionWidget extends ChoicesWidget {
                     (($extra= $i->getAbbrev()) ? " — $extra" : '')),
             );
         ?>
+
         <span style="display:inline-block">
         <input type="text" size="30" name="<?php echo $this->name; ?>_name"
             id="<?php echo $this->name; ?>" value="<?php echo Format::htmlchars($name); ?>"
