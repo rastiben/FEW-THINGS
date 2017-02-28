@@ -77,6 +77,7 @@
                                 <th>Type</th>
                                 <th>Etat</th>
                                 <th>Affecter</th>
+                                <th>Supprimer</th>
                              </thead>
                              <tbody>
 
@@ -405,7 +406,7 @@
                     $('.modal-body .contenu').remove();
 
                     $(contenu).each(function(number,obj){
-                            addContenuInPlanche(obj.getId(),obj.getType(),obj.contenu.VD != undefined ? obj.contenu.VD.id : null);
+                            addContenuInPlanche(obj.getId(),obj);
                     });
 
                     $('#fichesModal').modal({backdrop: 'static', keyboard: false});
@@ -425,7 +426,18 @@
 
                 planches.changeState(id, "Planche");
                 planches.affectContenu(id,planche,function(contenu){
-                    addContenuInPlanche(id,contenu.getType(),contenu.contenu.VD != undefined ? contenu.contenu.VD.id : null);
+                    addContenuInPlanche(id,contenu);
+                    tr.remove();
+                });
+
+            });
+
+          //Suppression d'un contenu.
+          $(document).on('click','.removeContenu',function(){
+                var id = $(this).attr('id');
+                var tr = $(this).closest('tr');
+
+                planches.deleteContenu(id,function(contenu){
                     tr.remove();
                 });
 
@@ -822,20 +834,27 @@
                     }
                 });
           });
+            /*obj.getType(),obj.contenu.VD != undefined ? obj.contenu.VD.id : null*/
+            var addContenuInPlanche = function(id,contenu){
+                var type = contenu.getType();
+                var VD = contenu.contenu.VD != undefined ? contenu.contenu.VD.id : null;
+                var ticket_id = contenu.ticket_id;
+                var number = contenu.number;
+                var org_name = contenu.org_name;
 
-            var addContenuInPlanche = function(id,type,VD){
                 $('.modal-body div:first').prepend('<div class="col-md-3 contenu" id="'+id+'">'+
                     '<div class="prepa">'+
                     '<div class="finish"><img src="../assets/default/images/finish.png"><h3>Valider</h3></div>'+
                     '<img class="remove" src="../assets/default/images/remove.png">'+
                     '<img class="computer" src="../assets/default/images/computer.png">'+
                     '<h2>'+ (type == "prepa"  ? "VD"+VD : "REPA") +'</h2>'+
+                    '<p><a class="no-pjax" href="./tickets.php?id='+ticket_id+'">'+number + '</a>-' + org_name+'</p>'+
                     '</div>'+
                     '</div>');
             }
 
             var addContenuInListe = function(obj){
-                $('.list.atelierT tbody').append('<tr><td>'+obj.getId()+'</td><td>'+obj.getType()+'</td><td>'+obj.getEtat()+'</td><td><button class="btn btn-success addContenu" id="'+ obj.getId() +'" >Affecter</button></td></tr>');
+                $('.list.atelierT tbody').append('<tr><td>'+obj.getId()+'</td><td>'+obj.getType()+'</td><td>'+obj.getEtat()+'</td><td><button class="btn btn-success addContenu" id="'+ obj.getId() +'" >Affecter</button></td><td><button class="btn btn-danger removeContenu" id="'+ obj.getId() +'" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></td></tr>');
             }
 
 

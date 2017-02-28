@@ -340,6 +340,9 @@ if($_POST && !$errors):
                         $response_form->setSource(array());
                         $response_form->getField('attachments')->reset();
                         unset($_SESSION[':form-data']);
+
+                        //Redirect
+                        header('Location: tickets.php?id='.$ticket->getId());
                     } elseif(!$errors['err']) {
                         $errors['err']=sprintf('%s %s',
                             __('Unable to create the ticket.'),

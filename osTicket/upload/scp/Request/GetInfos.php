@@ -174,7 +174,7 @@ class TicketsInfos
         AND ost_ticket.user_id = ost_user.id
         AND ost_user.id = ost_user__cdata.user_id
         AND ost_ticket__cdata.priority = ost_ticket_priority.priority_id
-        AND ost_ticket_status.state = 'open'
+        AND ost_ticket_status.state = :status
         AND ost_help_topic.topic_id = ost_ticket.topic_id
         AND ost_help_topic.topic != 'Atelier'");
         $res->execute(array(':status'=>$status));

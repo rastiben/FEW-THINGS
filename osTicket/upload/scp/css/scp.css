@@ -3641,13 +3641,17 @@ input[type="radio"]{
     margin-bottom: 30px;
 }
 
-#rapport div:first-child{
+.borderShadow{
     border: 1px solid lightgray;
     padding: 15px;
     padding-bottom: 40px;
     background: white;
     position: relative;
     box-shadow: 2px 2px 2px 1px rgba(189,189,189,1);
+}
+
+.borderShadow div:first-child div{
+    display: inline-block;
 }
 
 /*SEARCH*/
@@ -4218,6 +4222,18 @@ position: absolute;
     margin-left: -50px;
     top: 40px;
 }
+
+.prepa p{
+    text-align: center;
+    border: none;
+    /* font-size: 20px; */
+    color: #0E4962;
+    position: absolute;
+    right: 0px;
+    bottom: -2px;
+    width: 100%;
+}
+
 #nomDuPoste{
     height: 40px;
     line-height: 40px;
@@ -4240,6 +4256,10 @@ position: absolute;
 .newContent img{
     height: 120px;
     cursor: pointer;
+}
+
+.removeContenu{
+    height: 34px;
 }
 
 

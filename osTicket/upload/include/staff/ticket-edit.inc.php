@@ -175,10 +175,26 @@ if ($_POST)
 <div style="display:none;" class="dialog draggable" id="user-lookup">
     <div class="body"></div>
 </div>
+
+<div class="orgsList" style="display:none">
+
+</div>
+
 <script type="text/javascript">
 +(function() {
 
     //GET ORG
+    var clicky;
+
+    $(document).mousedown(function(e) {
+        // The latest element clicked
+        clicky = $(e.target);
+        if($(clicky).parent().hasClass('orgsList')){
+            $("tr td:contains('Organisation:')").siblings().find('input').val($(clicky).text());
+            fillOrgList();
+        }
+    });
+
     $(document).on('focusout','tr td:contains("Organisation:") ~ td input',function(e){
         if(!$(clicky).is('p')){
             $(".orgsList").css('display','none');
@@ -189,10 +205,14 @@ if ($_POST)
     });
 
     $(document).on('focusin','tr td:contains("Organisation:") ~ td input',function(e){
-        $(".orgsList").css('display','block');
+        fillOrgList();
     });
 
     $(document).on('keyup','tr td:contains("Organisation:") ~ td input',function(){
+        fillOrgList();
+    });
+
+    var fillOrgList = function(){
         var orgInput = $("tr td:contains('Organisation:')").siblings().find('input');
         var top = orgInput.offset().top - 134;
         var left = orgInput.offset().left - 119;
@@ -218,18 +238,7 @@ if ($_POST)
         } else {
             $(".orgsList").css('display','none');
         }
-    });
-
-    $(document).on('click','.orgsList p',function(){
-        $("tr td:contains('Organisation:')").siblings().find('input').val($(this).text());
-    });
-
-
-
-
-
-
-
+    }
 
     /*GET PLACES*/
     /*data_org_id*/

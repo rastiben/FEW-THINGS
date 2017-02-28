@@ -1364,7 +1364,7 @@ implements RestrictedAccess, Threadable {
                 null, $options);
         }
 
-        // Send alert to out sleepy & idle staff.
+        // Send alert to out sleepy and idle staff.
         if ($alertstaff
             && $cfg->alertONNewTicket()
             && ($email=$dept->getAlertEmail())

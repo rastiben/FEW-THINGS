@@ -43,11 +43,13 @@ app.factory('rapportFactory',['$http',function($http){
 
 app.controller("rapportCtrl",["$scope","rapportFactory", function($scope,rapportFactory){
     //Init
-    $scope.init = function(ticketID,staffID){
+    $scope.init = function(ticketID,staffID,TopicID){
         $scope.ticketID = ticketID;
         $scope.staffID = staffID;
+        $scope.TopicID = TopicID;
         //Récupération des rapports ainsi que des horaires
         rapportFactory.getRapports($scope.ticketID).then(function(rapports){
+            if(rapports.length > 0){
             $scope.rapports = rapports;
             $scope.rapportID = $scope.rapports[0].id;
 
@@ -69,6 +71,7 @@ app.controller("rapportCtrl",["$scope","rapportFactory", function($scope,rapport
                     });
                 });
             });
+            }
         });
     }
 
@@ -117,17 +120,18 @@ app.controller("rapportCtrl",["$scope","rapportFactory", function($scope,rapport
         var data = $.param({request: 'addHoraires',
                         ticket_id:$scope.ticketID,
                         rapport_id:null,
+                        topic_id:$scope.TopicID,
                         agent_id:$scope.staffID,
                         date_inter:$scope.date_new_inter,
                         arrive_inter:$scope.arrive_new_inter,
                         depart_inter:$scope.depart_new_inter,
                         symptomesObservations:comments,
                         contrat:$scope.contrat,
-                        instal:$scope.instal,
-                        num_affaire:$scope.new_num_affaire
+                        instal:$scope.instal
                         });
         rapportFactory.addHR(data);
         location.reload();
+        //window.location = window.location.href;
     }
 
     $scope.insertOrUpdateHoraire = function(){
@@ -152,8 +156,7 @@ app.controller("rapportCtrl",["$scope","rapportFactory", function($scope,rapport
                         depart_inter:$scope.depart_inter,
                         symptomesObservations:comments,
                         contrat:null,
-                        instal:null,
-                        num_affaire:null
+                        instal:null
                         });
             rapportFactory.addHR(data);
         }

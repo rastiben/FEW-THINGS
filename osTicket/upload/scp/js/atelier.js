@@ -9,7 +9,10 @@ function Planche() {
         console.log(data);
         self.contenu = [];
         $(data).each(function ($number, $obj) {
-            self.contenu.push(new Contenu($obj['contenuType'],
+            self.contenu.push(new Contenu($obj['ticket_id'],
+                                          $obj['number'],
+                                          $obj['name'],
+                                          $obj['contenuType'],
                                           $obj['numContenue'],
                                           $obj['planche'],
                                           $obj['etat'],
@@ -155,13 +158,27 @@ function Planche() {
         AtelierAjax.insertOrUpdateRepa(id_contenu,planche,typeAppareil,motDePasse,description,comTech,tempsInter,dateMiseADisposition,visaClient,visaTech,intervention,tempsPasse,svisaTech,
         comIntervention,verifClient,dateReprise);
     }
+
+
+    /*
+    * Suppression d'un contenu
+    */
+    self.deleteContenu = function(id,callback){
+        var index = self.contenu.indexOf(self.getContenu(id));
+        self.contenu.splice(index,1);
+
+        AtelierAjax.deleteContenu(id,callback);
+    }
 }
 
 
 
-function Contenu(type, id, planche, etat, contenu) {
+function Contenu(ticket_id, number, org_name, type, id, planche, etat, contenu) {
 
     var self = this;
+    self.ticket_id = ticket_id;
+    self.number = number;
+    self.org_name = org_name;
     self.type = type;
     self.id = id;
     self.planche = planche;
@@ -278,6 +295,14 @@ class AtelierAjax{
                 ,etat:state
             };
          this.doAjax(data,callback);
+    }
+
+    static deleteContenu(id,callback){
+        var data = {
+            request:'deleteContenu'
+            ,id:id
+        }
+        this.doAjax(data,callback)
     }
 
     static addContenu(id,type,planche,etat,callback){
