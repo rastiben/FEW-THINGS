@@ -425,6 +425,12 @@ print $response_form->getField('attachments')->render();
 <script type="text/javascript">
 $(function() {
 
+    var staff = '<?php echo $thisstaff->getName(); ?>';
+    var optgroup = $('select optgroup[label^="Agents"]');
+    var option = optgroup.find('option:contains('+staff+')');
+
+    option.attr('selected', true);
+
     $('input#user-email').typeahead({
         source: function (typeahead, query) {
             $.ajax({

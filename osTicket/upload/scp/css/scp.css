@@ -4059,7 +4059,8 @@ table.atelierT td{
 
 .prepaTmpl .VD span{
     float: right;
-    font-size: 40px;
+    font-size: 25px;
+    margin-top: 7px;
 }
 
 .inputField{
@@ -4075,6 +4076,20 @@ table.atelierT td{
     width: 100%;
     border-radius: 0px;
     border-bottom: 3px solid gray;
+}
+
+.inputField.readOnly input,
+.inputField.readOnly textarea{
+    border: none;
+    width: 100%;
+    border-radius: 0px;
+    border-bottom: 3px solid #28B463;
+}
+
+.inputField.readOnly label{
+    font-size: 12px;
+    top: 5px;
+    color: #28B463;
 }
 
 .inputField input{
@@ -4288,4 +4303,36 @@ position: absolute;
 .orgsList p:hover{
     background: #2E86C1;
     color:white;
+}
+
+
+/*Fiche de suivi*/
+#newFicheSuivi{
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 15px;
+    height: 54px;
+    overflow: hidden;
+}
+
+#newFicheSuivi h4{
+    background-color: lightskyblue;
+    line-height: 50px;
+    width: 100%;
+    box-shadow: 2px 2px 2px 1px rgba(189,189,189,1);
+    cursor: pointer;
+    margin: 0px;
+}
+
+#newFicheSuivi span{
+    position: absolute;
+    font-size: 20px;
+    right: 30px;
+    top: 15px;
+    cursor: pointer;
+}
+
+#newFicheSuivi input,
+#newFicheSuivi textarea{
+    background: whitesmoke;
 }

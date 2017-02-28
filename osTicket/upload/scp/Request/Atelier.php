@@ -217,7 +217,28 @@ class Atelier
         $res->execute(array(':id'=>$id));
     }
 
-    //43364101
+    public function getAtelierTicket($ticketID){
+        $res = $this->dbh->prepare('SELECT ost_atelier_contenu_type.type as contenuType,ost_atelier_planche.planche,ost_atelier_contenu_etat.etat,ost_atelier_planche_contenu.id as numContenue, ost_ticket.number, ost_atelier_preparation.*,ost_atelier_reparation.*,ost_atelier_preparation_vd.*
+        FROM ost_atelier_planche_contenu
+        INNER JOIN ost_atelier_contenu_type
+        ON ost_atelier_contenu_type.id = ost_atelier_planche_contenu.type_id
+        INNER JOIN ost_ticket
+        ON ost_atelier_planche_contenu.ticket_id = ost_ticket.ticket_id
+        INNER JOIN ost_atelier_contenu_etat
+        ON ost_atelier_contenu_etat.id = ost_atelier_planche_contenu.etat_id
+        LEFT JOIN ost_atelier_planche
+        ON ost_atelier_planche.id = ost_atelier_planche_contenu.planche_id
+        LEFT JOIN ost_atelier_preparation
+        ON ost_atelier_planche_contenu.id = ost_atelier_preparation.id_contenu
+        LEFT JOIN ost_atelier_preparation_vd
+        ON ost_atelier_preparation.id_VD = ost_atelier_preparation_vd.id
+        LEFT JOIN ost_atelier_reparation
+        ON ost_atelier_planche_contenu.id = ost_atelier_reparation.id_contenu
+        WHERE ost_atelier_planche_contenu.ticket_id = :ticketID');
+        $res->execute(array(':ticketID'=>$ticketID));
+        return $res->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 
 if(isset($_REQUEST['request'])){
@@ -269,6 +290,8 @@ if(isset($_REQUEST['request'])){
          Atelier::getInstance()->updateVD($_REQUEST['id'],$_REQUEST['client'],$_REQUEST['type'],$_REQUEST['numeroSerie'],$_REQUEST['versionWindows'],$_REQUEST['numLicenceW'],$_REQUEST['versionOffice'],$_REQUEST['numLicenceO'],$_REQUEST['garantie'],$_REQUEST['debutGarantie'],$_REQUEST['mail'],$_REQUEST['mdp']);
     } else if($_REQUEST['request'] == "deleteContenu"){
         Atelier::getInstance()->deleteContenu($_REQUEST['id']);
+    } else if($_REQUEST['request'] == "getAtelierTicket"){
+        echo json_encode(Atelier::getInstance()->getAtelierTicket($_REQUEST['ticketID']));
     }
 }
 

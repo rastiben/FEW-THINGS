@@ -262,23 +262,75 @@ if($ticket->isOverdue())
 
     //$prepas = Atelier::getInstance()->get_prepa($ticket->getId());
     //print_r($prepas);
-
 ?>
 
-<div id="atelier" style="display:none">
-    <?php
-        $i = 0;
-        for($i = 0;$i < 12/*intval($prepas[0]['value'])*/;$i++){
-        ?>
-            <div class="col-md-3">
-               <div class="prepa">
-                <img src="../assets/default/images/computer.png">
-                <h3>VD _ _ _ _</h3>
+
+<script src="./js/atelierTicket.js"></script>
+<div id="atelier" style="display:none" ng-init="init(<?php echo $ticket->getId() ?>)" ng-controller="atelierCtrl">
+    <?php $org = $ticket->getOwner()->getOrganization();?>
+    <div id="newFicheSuivi" class="col-md-12" ng-click="displayCard()">
+        <h4>Nouvelle Fiche de suivi</h4>
+        <span class='glyphicon glyphicon-plus' aria-hidden='true'></span>
+        <div ng-click="$event.stopPropagation();">
+            <div class="col-md-12 text-left">
+                <div class="inputField readOnly col-md-6">
+                    <input type="text" id="org" ng-init="org = '<?php echo $ticket->getOwner()->getOrganization(); ?>'" value="<?php echo $ticket->getOwner()->getOrganization(); ?>" readonly>
+                    <label for="org">Organisation</label>
+                </div>
+                <div class="inputField readOnly col-md-6">
+                    <input type="text" id="dateOuverture" ng-init="dateOuverture = '<?php echo $ticket->getCreateDate(); ?>'" value="<?php echo $ticket->getCreateDate(); ?>" readonly>
+                    <label for="dateOuverture">Date d'ouverture</label>
                 </div>
             </div>
-    <?php
-        }
-    ?>
+            <div class="col-md-12 text-left">
+                <div class="inputField readOnly col-md-12">
+                    <textarea id="contact" ng-init="tel = '<?php echo $ticket->getPhoneNumber(); ?>'" readonly><?php echo $ticket->getPhoneNumber(); ?></textarea>
+                    <label for="contact">Adresse - Téléphone</label>
+                </div>
+            </div>
+            <div class="col-md-12 text-left">
+                <div class="inputField readOnly col-md-12">
+                    <textarea id="description" readonly></textarea>
+                    <label for="description">Description du souci</label>
+                </div>
+            </div>
+            <div class="col-md-12 text-left">
+                <div class="inputField readOnly col-md-6">
+                    <input type="text" id="names" ng-init="names = '<?php echo $ticket->getOwner()->getFullName(); ?>'" value="<?php echo $ticket->getOwner()->getFullName(); ?>" readonly>
+                    <label for="names">Nom de la personne</label>
+                </div>
+                <div class="inputField col-md-6">
+                    <input type="text" id="type" required>
+                    <label for="type">Type de matériel</label>
+                </div>
+            </div>
+            <div class="col-md-12 text-left">
+                <div class="inputField readOnly col-md-6">
+                    <input type="text" id="tech" ng-init="tech = '<?php echo $ticket->getStaff()->getName(); ?>'" value="<?php echo $ticket->getStaff()->getName(); ?>" readonly>
+                    <label for="tech">Technicien</label>
+                </div>
+            </div>
+            <div class="col-md-12 text-left">
+                <div class="inputField col-md-12">
+                    <textarea id="accessoire" required></textarea>
+                    <label for="accessoire">Accessoires</label>
+                </div>
+            </div>
+            <div class="col-md-12 text-right">
+                <div class="col-md-12">
+                    <button class="btn btn-success">Mettre à jour</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-repeat="contenu in atelier" class="col-md-4 contenu" id="'+id+'">
+        <div class="prepa">
+            <img class="computer" src="../assets/default/images/computer.png">
+            <h2>{{contenu.contenuType == "prepa"  ? "VD"+contenu.id_VD : "REPA"}}</h2>
+        </div>
+    </div>
+
 </div>
 
 <div id="ticket_rapport" style="display:none" ng-init="init(<?php echo $ticket->getId() ?>,<?php echo $thisstaff->getId(); ?>,<?php echo $ticket->getTopicID(); ?>)" ng-controller="rapportCtrl">
