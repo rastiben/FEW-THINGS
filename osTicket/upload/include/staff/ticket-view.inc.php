@@ -265,69 +265,116 @@ if($ticket->isOverdue())
 ?>
 
 
-<script src="./js/atelierTicket.js"></script>
+<script src="./js/atelier.js"></script>
+<script src="../js/autosize.js"></script>
+
+<?php
+
+    $agents = Staff::objects()
+            ->annotate(array(
+                'teams_count'=>SqlAggregate::COUNT('teams', true),
+            ))
+            ->select_related('dept', 'group');
+
+    $array = [];
+    foreach ($agents as $agent) {
+        array_push($array,['id'=>$agent->getId(),'name'=>$agent->getFirstName().' '.$agent->getLastName()]);
+    }
+
+    $threads = $ticket->getMessages();
+
+    $org = $ticket->getOwner()->getOrganization();
+    //$address = $ticket->getUser()->getOrganization()->getDynamicData();
+
+?>
+
 <div id="atelier" style="display:none" ng-init="init(<?php echo $ticket->getId() ?>)" ng-controller="atelierCtrl">
-    <?php $org = $ticket->getOwner()->getOrganization();?>
-    <div id="newFicheSuivi" class="col-md-12" ng-click="displayCard()">
-        <h4>Nouvelle Fiche de suivi</h4>
-        <span class='glyphicon glyphicon-plus' aria-hidden='true'></span>
-        <div ng-click="$event.stopPropagation();">
-            <div class="col-md-12 text-left">
-                <div class="inputField readOnly col-md-6">
-                    <input type="text" id="org" ng-init="org = '<?php echo $ticket->getOwner()->getOrganization(); ?>'" value="<?php echo $ticket->getOwner()->getOrganization(); ?>" readonly>
-                    <label for="org">Organisation</label>
-                </div>
-                <div class="inputField readOnly col-md-6">
-                    <input type="text" id="dateOuverture" ng-init="dateOuverture = '<?php echo $ticket->getCreateDate(); ?>'" value="<?php echo $ticket->getCreateDate(); ?>" readonly>
-                    <label for="dateOuverture">Date d'ouverture</label>
-                </div>
+
+    <div id="ifNoAtelier" class="col-md-12" ng-show="!showRepa && !showPrepa">
+        <div id="ticketIsRepa" ng-click="setTicketAtelierType('repa')" class="col-md-6">
+            <div class="col-md-12">
+                <h4>Ticket de réparation</h4>
             </div>
-            <div class="col-md-12 text-left">
-                <div class="inputField readOnly col-md-12">
-                    <textarea id="contact" ng-init="tel = '<?php echo $ticket->getPhoneNumber(); ?>'" readonly><?php echo $ticket->getPhoneNumber(); ?></textarea>
-                    <label for="contact">Adresse - Téléphone</label>
-                </div>
+        </div>
+        <div id="ticketIsPrepa" ng-click="setTicketAtelierType('prepa')" class="col-md-6">
+            <div class="col-md-12">
+                <h4>Ticket de préparation</h4>
             </div>
-            <div class="col-md-12 text-left">
-                <div class="inputField readOnly col-md-12">
-                    <textarea id="description" readonly></textarea>
-                    <label for="description">Description du souci</label>
+        </div>
+    </div>
+
+    <div id="ifRepa" ng-show="showRepa">
+        <div id="newFicheSuivi" class="col-md-12" ng-click="displayCard()">
+            <h4>{{ficheSuiviText}}</h4>
+            <span class='glyphicon glyphicon-plus' aria-hidden='true'></span>
+            <div ng-click="$event.stopPropagation();">
+                <div class="col-md-12 text-left">
+                    <div class="inputField readOnly col-md-6">
+                        <input type="text" id="org" ng-init="org = '<?php echo $ticket->getOwner()->getOrganization(); ?>'" value="<?php echo $ticket->getOwner()->getOrganization(); ?>" readonly>
+                        <label for="org">Organisation</label>
+                    </div>
+                    <div class="inputField readOnly col-md-6">
+                        <input type="text" id="dateOuverture" ng-init="dateOuverture = '<?php echo $ticket->getCreateDate(); ?>'" value="<?php echo $ticket->getCreateDate(); ?>" readonly>
+                        <label for="dateOuverture">Date d'ouverture</label>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-12 text-left">
-                <div class="inputField readOnly col-md-6">
-                    <input type="text" id="names" ng-init="names = '<?php echo $ticket->getOwner()->getFullName(); ?>'" value="<?php echo $ticket->getOwner()->getFullName(); ?>" readonly>
-                    <label for="names">Nom de la personne</label>
+                <div class="col-md-12 text-left">
+                    <div class="inputField readOnly col-md-12">
+                        <textarea id="contact" ng-init="tel = '<?php echo $ticket->getPhoneNumber(); ?>'" readonly><?php echo $ticket->getPhoneNumber(); ?></textarea>
+                        <label for="contact">Adresse - Téléphone</label>
+                    </div>
                 </div>
-                <div class="inputField col-md-6">
-                    <input type="text" id="type" required>
-                    <label for="type">Type de matériel</label>
+                <div class="col-md-12 text-left">
+                    <div class="inputField readOnly col-md-12">
+                        <textarea id="description" ng-init="description = <?php echo $threads[0]->getBody(); ?>" readonly><?php echo $threads[0]->getBody(); ?></textarea>
+                        <label for="description">Description du souci</label>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-12 text-left">
-                <div class="inputField readOnly col-md-6">
-                    <input type="text" id="tech" ng-init="tech = '<?php echo $ticket->getStaff()->getName(); ?>'" value="<?php echo $ticket->getStaff()->getName(); ?>" readonly>
-                    <label for="tech">Technicien</label>
+                <div class="col-md-12 text-left">
+                    <div class="inputField readOnly col-md-6">
+                        <input type="text" id="names" ng-init="names = '<?php echo $ticket->getOwner()->getFullName(); ?>'" value="<?php echo $ticket->getOwner()->getFullName(); ?>" readonly>
+                        <label for="names">Nom de la personne</label>
+                    </div>
+                    <div class="inputField col-md-6">
+                        <input type="text" id="type" required>
+                        <label for="type">Type de matériel</label>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-12 text-left">
-                <div class="inputField col-md-12">
-                    <textarea id="accessoire" required></textarea>
-                    <label for="accessoire">Accessoires</label>
+                <div class="col-md-12 text-left">
+                    <div class="inputField col-md-6">
+                        <p for="tech">Technicien</p>
+                        <select id="tech" ng-init="agents = <?php echo htmlspecialchars(json_encode($array)) ?>" required>
+                            <option ng-repeat="agent in agents">{{agent.name}}</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-12 text-right">
-                <div class="col-md-12">
-                    <button class="btn btn-success">Mettre à jour</button>
+                <div class="col-md-12 text-left">
+                    <div class="inputField col-md-12">
+                        <textarea id="accessoire" required></textarea>
+                        <label for="accessoire">Accessoires</label>
+                    </div>
+                </div>
+                <div class="col-md-12 text-right">
+                    <div class="col-md-12">
+                        <button ng-click="addFicheSuivi('repa')" class="btn btn-success">{{buttonFicheSuivi}}</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div ng-repeat="contenu in atelier" class="col-md-4 contenu" id="'+id+'">
-        <div class="prepa">
-            <img class="computer" src="../assets/default/images/computer.png">
-            <h2>{{contenu.contenuType == "prepa"  ? "VD"+contenu.id_VD : "REPA"}}</h2>
+    <div id="ifPrepa" ng-show="showPrepa">
+        <label for="nbPrepa">Nombre de Prepa</label>
+        <input id="nbPrepa" ng-model="nbPrepa">
+        <button ng-click="addContenu('prepa')">Créer</button>
+    </div>
+
+    <div if="ifRepaOrPrepa" ng-show="showRepa || showPrepa">
+        <div ng-repeat="contenu in atelier" class="col-md-4 contenu" id="{{contenu.numContenue}}">
+            <div class="prepa">
+                <img class="computer" src="../assets/default/images/computer.png">
+                <h2>{{contenu.contenuType == "prepa"  ? "VD"+contenu.id_VD : "REPA"}}</h2>
+            </div>
         </div>
     </div>
 

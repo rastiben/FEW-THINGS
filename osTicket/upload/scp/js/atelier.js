@@ -395,3 +395,113 @@ class AtelierAjax{
     }
 
 }
+
+
+
+//moment.locale('fr');
+
+//récupération des informations (Rapports et horaires) + Ajout d'un rapport ou maj d'un horaires
+app.factory('atelierFactory',['$http',function($http){
+   return{
+       getAtelier: function(ticketID) {
+             //return the promise.
+             return $http({method: 'POST',
+                            url: './Request/Atelier.php',
+                            data: $.param({request: 'getAtelierTicket',
+                                           ticketID:ticketID
+                                          }),
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                        })
+                       .then(function(result) {
+                            //resolve the promise as the data
+                            return result.data;
+                        });
+        }
+   };
+}]);
+
+app.controller("atelierCtrl",["$scope","atelierFactory", function($scope,atelierFactory){
+    //Init
+
+    $scope.init = function(ticketID){
+        autosize($('.inputField textarea'));
+        $scope.ticketID = ticketID;
+        atelierFactory.getAtelier($scope.ticketID).then(function(atelier){
+            $scope.atelier = atelier;
+            $scope.showPrepa = atelier.length > 0 ? ( atelier[0].contenuType == "prepa" ? true : false ) : false;
+            $scope.showRepa = atelier.length > 0 ? ( atelier[0].contenuType == "repa" ? true : false ) : false;
+            $scope.ficheSuiviText = atelier.length == 0 ? "Nouvelle fiche de suivi" : "Fiche de suivi";
+            $scope.buttonFicheSuivi = atelier.length == 0 ? "Valider" : "Mettre à jour";
+        });
+    }
+
+    $scope.addFicheSuivi = function(type){
+        //ajout fiche de suivi
+
+        if($scope.atelier.length == 0)
+            $scope.addContenu(type);
+    }
+
+    $scope.addContenu = function(type){
+        var etat = type == "repa" ? "Entrées" : "Planche";
+
+        for(var i=0;i<$scope.nbPrepa;i++){
+            AtelierAjax.addContenu($scope.ticketID,type,null,etat,function(data){
+                data = $.parseJSON(data);
+                $scope.atelier.push({numContenue:data.id,contenuType:type,id_VD:data.vd});
+                $scope.ficheSuiviText = "Fiche de suivi";
+                $scope.buttonFicheSuivi = "Mettre à jour";
+
+                $scope.$apply();
+            });
+        }
+    }
+
+    $scope.setTicketAtelierType = function(type){
+        if(type == "repa")
+            $scope.showRepa = "true";
+        else
+            $scope.showPrepa = "true";
+    }
+
+    $scope.displayCard = function(){
+
+        var element = $('#newFicheSuivi');
+
+        var css = {};
+        $scope.degD = 0;
+        $scope.degF = 0;
+
+        if(element.css('height') != "54px"){
+            css = { height: "54px"};
+            $scope.degD = 45;
+            $scope.degF = 0;
+        }
+        else{
+            //GET AUTO HEIGHT
+            var curHeight = element.height(),
+            autoHeight = element.css('height', 'auto').height();
+            element.height(curHeight);
+
+            css = { height: autoHeight};
+            $scope.degD = 0;
+            $scope.degF = 45;
+        }
+
+        element.animate(css,600,function(){
+            if($scope.degF == 45) element.css('height', 'auto');
+        });
+
+        var elem = $('span',element);
+        //ANIMATE PLUS
+        $({deg: $scope.degD}).animate({deg: $scope.degF}, {
+            duration: 450,
+            step: function(now){
+                elem.css({
+                        transform: "rotate(" + now + "deg)"
+                });
+            }
+        });
+    }
+
+}]);

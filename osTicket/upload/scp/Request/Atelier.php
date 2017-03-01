@@ -47,16 +47,23 @@ class Atelier
 
         //ajout d'un VD et de la prepa.
         if($type == "prepa"){
-            $res = $this->dbh->prepare("INSERT INTO ost_atelier_preparation_vd (id) VALUES (NULL);
-                                        INSERT INTO ost_atelier_preparation (id_contenu,id_VD) VALUES (:lastContenuInsertedID,LAST_INSERT_ID());");
-            $res->execute(array(':lastContenuInsertedID'=>$lastContenuInsertedID));
+            //Insertion du VD
+            $res = $this->dbh->prepare("INSERT INTO ost_atelier_preparation_vd (id) VALUES (NULL)");
+            $res->execute(array());
+            $VD = $this->dbh->lastInsertId();
+
+            //Insertion de la prepa
+            $res = $this->dbh->prepare("INSERT INTO ost_atelier_preparation (id_contenu,id_VD) VALUES (:lastContenuInsertedID,:vd)");
+            $res->execute(array(':lastContenuInsertedID'=>$lastContenuInsertedID,':vd'=>$VD));
+
         } else {
+
             $res = $this->dbh->prepare("INSERT INTO ost_atelier_reparation (id_contenu) VALUES (:lastContenuInsertedID)");
             $res->execute(array(':lastContenuInsertedID'=>$lastContenuInsertedID));
+
         }
 
-        //return $res->fetchAll();
-        return $lastContenuInsertedID;
+        return array('id'=>$lastContenuInsertedID,'vd'=>$VD);
     }
 
     public function get_org_planches(){
@@ -243,7 +250,7 @@ class Atelier
 
 if(isset($_REQUEST['request'])){
     if($_REQUEST['request'] == 'addContenu'){
-        echo Atelier::getInstance()->add_contenu($_REQUEST['ticket_id'],$_REQUEST['type'],$_REQUEST['planche'],$_REQUEST['etat']);
+        echo json_encode(Atelier::getInstance()->add_contenu($_REQUEST['ticket_id'],$_REQUEST['type'],$_REQUEST['planche'],$_REQUEST['etat']));
     } else if($_REQUEST['request'] == 'addPrepaInfo'){
         Atelier::getInstance()->addPrepaInfo($_REQUEST['id_contenu'],
                                             $_REQUEST['modele'],
