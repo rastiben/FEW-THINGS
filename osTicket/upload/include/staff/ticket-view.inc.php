@@ -293,21 +293,23 @@ if($ticket->isOverdue())
     <div id="ifNoAtelier" class="col-md-12" ng-show="!showRepa && !showPrepa">
         <div id="ticketIsRepa" ng-click="setTicketAtelierType('repa')" class="col-md-6">
             <div class="col-md-12">
+                <img src="../assets/atelier/computerRepair.png">
                 <h4>Ticket de réparation</h4>
             </div>
         </div>
         <div id="ticketIsPrepa" ng-click="setTicketAtelierType('prepa')" class="col-md-6">
             <div class="col-md-12">
+                <img src="../assets/atelier/computerPrepair.png">
                 <h4>Ticket de préparation</h4>
             </div>
         </div>
     </div>
 
-    <div id="ifRepa" ng-show="showRepa">
-        <div id="newFicheSuivi" class="col-md-12" ng-click="displayCard()">
-            <h4>{{ficheSuiviText}}</h4>
+    <div id="ifRepa" class="col-md-12" ng-show="showRepa">
+        <div id="newFicheSuivi" class="">
+            <h4 ng-click="displayCard('#newFicheSuivi')">{{ficheSuiviText}}</h4>
             <span class='glyphicon glyphicon-plus' aria-hidden='true'></span>
-            <div ng-click="$event.stopPropagation();">
+            <div class="col-md-12" style="background: white;padding-top:15px;padding-bottom:15px;">
                 <div class="col-md-12 text-left">
                     <div class="inputField readOnly col-md-6">
                         <input type="text" id="org" ng-init="org = '<?php echo $ticket->getOwner()->getOrganization(); ?>'" value="<?php echo $ticket->getOwner()->getOrganization(); ?>" readonly>
@@ -336,7 +338,7 @@ if($ticket->isOverdue())
                         <label for="names">Nom de la personne</label>
                     </div>
                     <div class="inputField col-md-6">
-                        <input type="text" id="type" required>
+                        <input type="text" ng-model="type" id="type" required>
                         <label for="type">Type de matériel</label>
                     </div>
                 </div>
@@ -350,27 +352,80 @@ if($ticket->isOverdue())
                 </div>
                 <div class="col-md-12 text-left">
                     <div class="inputField col-md-12">
-                        <textarea id="accessoire" required></textarea>
+                        <textarea id="accessoire" ng-model="accessoire" required></textarea>
                         <label for="accessoire">Accessoires</label>
-                    </div>
-                </div>
-                <div class="col-md-12 text-right">
-                    <div class="col-md-12">
-                        <button ng-click="addFicheSuivi('repa')" class="btn btn-success">{{buttonFicheSuivi}}</button>
                     </div>
                 </div>
             </div>
         </div>
+            <div id="ficheDuPoste">
+                <h4 ng-click="displayCard('#ficheDuPoste')">Fiche du poste</h4>
+                <span class='glyphicon glyphicon-plus' aria-hidden='true'></span>
+               <div class="col-md-12" style="background: white;padding-top:15px;padding-bottom:15px;">
+                    <div class="col-md-12 text-left">
+                        <div class="inputField col-md-6 ">
+                            <input id="marque" ng-model="marque" required>
+                            <label for="marque">Marque</label>
+                        </div>
+                        <div class="inputField col-md-6">
+                            <input id="model" ng-model="model" required>
+                            <label for="model">Modèle</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-left">
+                        <div class="inputField col-md-6">
+                            <input id="sn" ng-model="sn" required>
+                            <label for="sn">Numéro de série</label>
+                        </div>
+                        <div class="inputField col-md-6">
+                            <input id="vd" ng-model="vd" required>
+                            <label for="vd">Numéro de VD</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-left">
+                        <div class="inputField col-md-6">
+                            <input id="os" ng-model="os" required>
+                            <label for="os">Système d'exploitation</label>
+                        </div>
+                        <div class="inputField col-md-6">
+                            <input id="motDePasse" ng-model="motDePasse" required>
+                            <label for="motDePasse">Mot de passe</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-left">
+                        <div class="inputField col-md-6">
+                            <input id="login" ng-model="login" required>
+                            <label for="login">Login</label>
+                        </div>
+                        <div class="inputField col-md-6">
+                            <input id="office"  ng-model="office" required>
+                            <label for="office">Office</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-left">
+                        <div class="inputField col-md-12">
+                            <textarea id="autreSoft" ng-model="autreSoft" required></textarea>
+                            <label for="autreSoft">Autres Soft</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 text-right">
+                <div class="col-md-12">
+                    <button ng-click="addFicheSuivi('repa')" class="btn btn-success">{{buttonFicheSuivi}}</button>
+                </div>
+            </div>
     </div>
 
     <div id="ifPrepa" ng-show="showPrepa">
-        <label for="nbPrepa">Nombre de Prepa</label>
-        <input id="nbPrepa" ng-model="nbPrepa">
-        <button ng-click="addContenu('prepa')">Créer</button>
+        <div class="form-group form-inline">
+            <input id="nbPrepa" class="form-control" placeholder="Nombre de Prepa" ng-model="nbPrepa">
+            <button class="btn btn-success" ng-click="addContenu('prepa')">Créer</button>
+        </div>
     </div>
 
     <div if="ifRepaOrPrepa" ng-show="showRepa || showPrepa">
-        <div ng-repeat="contenu in atelier" class="col-md-4 contenu" id="{{contenu.numContenue}}">
+        <div ng-repeat="contenu in prepas" class="col-md-4 contenu" id="{{contenu.numContenue}}">
             <div class="prepa">
                 <img class="computer" src="../assets/default/images/computer.png">
                 <h2>{{contenu.contenuType == "prepa"  ? "VD"+contenu.id_VD : "REPA"}}</h2>

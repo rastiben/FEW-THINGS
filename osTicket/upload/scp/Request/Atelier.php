@@ -63,7 +63,7 @@ class Atelier
 
         }
 
-        return array('id'=>$lastContenuInsertedID,'vd'=>$VD);
+        return array('id'=>$lastContenuInsertedID,'vd'=>isset($VD) ? $VD : null);
     }
 
     public function get_org_planches(){
@@ -123,42 +123,29 @@ class Atelier
         return $res->fetchAll();
     }
 
-    public function addRepaInfo($id_contenu,$typeAppareil,$motDePasse,$description,$comTech,$tempsInter,$dateMiseADisposition,$visaClient,$visaTech,$intervention,$tempsPasse,$svisaTech,
-    $comIntervention,$verifClient,$dateReprise){
-        $res = $this->dbh->prepare("INSERT INTO ost_atelier_reparation(id_contenu,typeAppareil,motDePasse,description,comTech,tempsInter,dateMiseADisposition,visaClient,visaTech,intervention,
-        tempsPasse,svisaTech,comIntervention,verifClient,dateReprise)
-        VALUES(:id_contenu,:typeAppareil,:motDePasse,:description,:comTech,:tempsInter,:dateMiseADisposition,:visaClient,:visaTech,:intervention,:tempsPasse,:svisaTech,
-        :comIntervention,:verifClient,:dateReprise)
+    public function addRepaInfo($id_contenu,$marque,$model,$sn,$vd,$os,$motDePasse,$login,$office,$autreSoft){
+        $res = $this->dbh->prepare("INSERT INTO ost_atelier_reparation(id_contenu,marque,model,sn,vd,os,motDePasse,login,office,autreSoft)
+        VALUES(:id_contenu,:marque,:model,:sn,:vd,:os,:motDePasse,:login,:office,:autreSoft)
         ON DUPLICATE KEY UPDATE
-        typeAppareil = :typeAppareil,
+        marque = :marque,
+        model = :model,
+        sn = :sn,
+        vd = :vd,
+        os = :os,
         motDePasse = :motDePasse,
-        description = :description,
-        comTech = :comTech,
-        tempsInter = :tempsInter,
-        dateMiseADisposition = :dateMiseADisposition,
-        visaClient = :visaClient,
-        visaTech = :visaTech,
-        intervention = :intervention,
-        tempsPasse = :tempsPasse,
-        svisaTech = :svisaTech,
-        comIntervention = :comIntervention,
-        verifClient = :verifClient,
-        dateReprise = :dateReprise");
+        login = :login,
+        office = :office,
+        autreSoft = :autreSoft");
         $res->execute(array(':id_contenu'=>$id_contenu,
-                            ':typeAppareil'=>$typeAppareil,
+                            ':marque'=>$marque,
+                            ':model'=>$model,
+                            ':sn'=>$sn,
+                            ':vd'=>$vd,
+                            ':os'=>$os,
                             ':motDePasse'=>$motDePasse,
-                            ':description'=>$description,
-                            ':comTech'=>$comTech,
-                            ':tempsInter'=>$tempsInter,
-                            ':dateMiseADisposition'=>$dateMiseADisposition,
-                            ':visaClient'=>$visaClient,
-                            ':visaTech'=>$visaTech,
-                            ':intervention'=>$intervention,
-                            ':tempsPasse'=>$tempsPasse,
-                            ':svisaTech'=>$svisaTech,
-                            ':comIntervention'=>$comIntervention,
-                            ':verifClient'=>$verifClient,
-                            ':dateReprise'=>$dateReprise));
+                            ':login'=>$login,
+                            ':office'=>$office,
+                            ':autreSoft'=>$autreSoft));
         return $res->fetchAll();
     }
 
@@ -225,7 +212,7 @@ class Atelier
     }
 
     public function getAtelierTicket($ticketID){
-        $res = $this->dbh->prepare('SELECT ost_atelier_contenu_type.type as contenuType,ost_atelier_planche.planche,ost_atelier_contenu_etat.etat,ost_atelier_planche_contenu.id as numContenue, ost_ticket.number, ost_atelier_preparation.*,ost_atelier_reparation.*,ost_atelier_preparation_vd.*
+        $res = $this->dbh->prepare('SELECT ost_atelier_contenu_type.type as contenuType,ost_atelier_planche.planche,ost_atelier_contenu_etat.etat,ost_atelier_planche_contenu.id as numContenue, ost_ticket.number, ost_atelier_preparation.*,ost_atelier_reparation.*,ost_atelier_preparation_vd.*,ost_atelier_reparation_fs.type as typeFiche,ost_atelier_reparation_fs.accessoire as accessoireFiche
         FROM ost_atelier_planche_contenu
         INNER JOIN ost_atelier_contenu_type
         ON ost_atelier_contenu_type.id = ost_atelier_planche_contenu.type_id
@@ -241,9 +228,19 @@ class Atelier
         ON ost_atelier_preparation.id_VD = ost_atelier_preparation_vd.id
         LEFT JOIN ost_atelier_reparation
         ON ost_atelier_planche_contenu.id = ost_atelier_reparation.id_contenu
+        LEFT JOIN ost_atelier_reparation_fs
+        ON ost_atelier_reparation_fs.id_repa = ost_atelier_planche_contenu.id
         WHERE ost_atelier_planche_contenu.ticket_id = :ticketID');
         $res->execute(array(':ticketID'=>$ticketID));
         return $res->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function insertOrUpdateFicheSuivi($repa_id,$type,$accessoire){
+        $res = $this->dbh->prepare('INSERT INTO ost_atelier_reparation_fs VALUES(:id_repa,:type,:accessoire)
+        ON DUPLICATE KEY UPDATE
+        type = :type,
+        accessoire = :accessoire');
+        $res->execute(array(':id_repa'=>$repa_id,':type'=>$type,':accessoire'=>$accessoire));
     }
 
 }
@@ -273,20 +270,15 @@ if(isset($_REQUEST['request'])){
                                             $_REQUEST['divers']);
     } else if($_REQUEST['request'] == 'addRepaInfo'){
         Atelier::getInstance()->addRepaInfo($_REQUEST['id_contenu'],
-                                             $_REQUEST['typeAppareil'],
-                                             $_REQUEST['motDePasse'],
-                                             $_REQUEST['description'],
-                                             $_REQUEST['comTech'],
-                                             $_REQUEST['tempsInter'],
-                                             $_REQUEST['dateMiseADisposition'],
-                                             $_REQUEST['visaClient'],
-                                             $_REQUEST['visaTech'],
-                                             $_REQUEST['intervention'],
-                                             $_REQUEST['tempsPasse'],
-                                             $_REQUEST['svisaTech'],
-                                             $_REQUEST['comIntervention'],
-                                             $_REQUEST['verifClient'],
-                                             $_REQUEST['dateReprise']);
+                                            $_REQUEST['marque'],
+                                            $_REQUEST['model'],
+                                            $_REQUEST['sn'],
+                                            $_REQUEST['vd'],
+                                            $_REQUEST['os'],
+                                            $_REQUEST['motDePasse'],
+                                            $_REQUEST['login'],
+                                            $_REQUEST['office'],
+                                            $_REQUEST['autreSoft']);
     } else if($_REQUEST['request'] == 'getPlanches'){
         echo json_encode(Atelier::getInstance()->getPlanches());
     } else if($_REQUEST['request'] == 'affectContenu'){
@@ -299,6 +291,8 @@ if(isset($_REQUEST['request'])){
         Atelier::getInstance()->deleteContenu($_REQUEST['id']);
     } else if($_REQUEST['request'] == "getAtelierTicket"){
         echo json_encode(Atelier::getInstance()->getAtelierTicket($_REQUEST['ticketID']));
+    } else if($_REQUEST['request'] == 'insertOrUpdateFicheSuivi'){
+        Atelier::getInstance()->insertOrUpdateFicheSuivi($_REQUEST['id_repa'],$_REQUEST['type'],$_REQUEST['accessoire']);
     }
 }
 

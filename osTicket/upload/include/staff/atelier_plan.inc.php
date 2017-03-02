@@ -101,92 +101,54 @@
 
                            <div class="col-md-12">
                                 <div class="inputField col-md-6">
-                                    <input id="typeAppareil" required>
-                                    <label for="typeAppareil">Type d'appareil</label>
+                                    <input id="marque" required>
+                                    <label for="marque">Marque</label>
+                                </div>
+
+                                <div class="inputField col-md-6">
+                                    <input id="model" required>
+                                    <label for="model">Modèle</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="inputField col-md-6">
+                                    <input id="sn" required>
+                                    <label for="sn">Numéro de série</label>
+                                </div>
+                                <div class="inputField col-md-6">
+                                    <input id="vd" required>
+                                    <label for="vd">Numéro de VD</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="inputField col-md-6">
+                                    <input id="os" required>
+                                    <label for="os">Système d'exploitation</label>
                                 </div>
 
                                 <div class="inputField col-md-6">
                                     <input id="motDePasse" required>
-                                    <label for="motDePasse">MDP</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="inputField col-md-12">
-                                    <textarea id="description" required></textarea>
-                                    <label for="description">Description du problème</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="inputField col-md-12">
-                                    <textarea id="comTech" required></textarea>
-                                    <label for="comTech">Commentaire Technicien</label>
+                                    <label for="motDePasse">Mot de passe</label>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="inputField col-md-6">
-                                    <input id="tempsInter" required>
-                                    <label for="tempsInter">Temps d'intervention estimé</label>
+                                    <input id="login" required>
+                                    <label for="login">Login</label>
                                 </div>
-
                                 <div class="inputField col-md-6">
-                                    <input id="dateMiseADisposition" required>
-                                    <label for="dateMiseADisposition">Date de mise à disposition souhaitée</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 col-md-offset-6">
-                                <div class="inputField col-md-12">
-                                    <input id="visaClient" required>
-                                    <label for="visaClient">Visa client</label>
-                                </div>
-                                <div class="inputField col-md-12">
-                                    <input id="visaTech" required>
-                                    <label for="visaTech">Visa tech</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12"><hr></div>
-
-                            <div class="col-md-12">
-                                <div class="inputField col-md-12">
-                                    <textarea id="intervention" required></textarea>
-                                    <label for="intervention">Intervention</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="inputField col-md-6">
-                                    <input id="tempsPasse" required>
-                                    <label for="tempsPasse">Temps passé</label>
-                                </div>
-
-                                <div class="inputField col-md-6">
-                                    <input id="svisaTech" required>
-                                    <label for="sVisaTech">Visa tech</label>
+                                    <input id="office" required>
+                                    <label for="office">Office</label>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="inputField col-md-12">
-                                    <textarea id="comIntervention" required></textarea>
-                                    <label for="comIntervention">Commentaires</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                               <div class="checkboxField col-md-12">
-                                    <input type="checkbox" id="verifClient" required>
-                                    <label for="verifClient">Vérification avec le client</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="inputField col-md-4">
-                                    <input id="dateReprise" required>
-                                    <label for="dateReprise">Date de reprise</label>
+                                    <textarea id="autreSoft" required></textarea>
+                                    <label for="autreSoft">Autres Soft</label>
                                 </div>
                             </div>
 
@@ -555,20 +517,16 @@
                     $('#mdpMail').val(data.contenu.VD.mdp);
                 } else {
                     type = "Fiche de réparation";
-                    $('#typeAppareil').val(data['contenu'].typeAppareil);
+                    $('#id_contenu').val(data['contenu'].id_contenu);
+                    $('#marque').val(data['contenu'].marque);
+                    $('#model').val(data['contenu'].model);
+                    $('#sn').val(data['contenu'].sn);
+                    $('#vd').val(data['contenu'].vd);
+                    $('#os').val(data['contenu'].os);
                     $('#motDePasse').val(data['contenu'].motDePasse);
-                    $('#description').val(data['contenu'].description);
-                    $('#comTech').val(data['contenu'].comTech);
-                    $('#tempsInter').val(data['contenu'].tempsInter);
-                    $('#dateMiseADisposition').val(data['contenu'].dateMiseADisposition);
-                    $('#visaClient').val(data['contenu'].visaClient);
-                    $('#visaTech').val(data['contenu'].visaTech);
-                    $('#intervention').val(data['contenu'].intervention);
-                    $('#tempsPasse').val(data['contenu'].tempsPasse);
-                    $('#svisaTech').val(data['contenu'].svisaTech);
-                    $('#comIntervention').val(data['contenu'].comIntervention);
-                    $('#verifClient').prop('checked',data['contenu'].verifClient == "1" ? true:false);
-                    $('#dateReprise').val(data['contenu'].dateReprise);
+                    $('#login').val(data['contenu'].login);
+                    $('#office').val(data['contenu'].office);
+                    $('#autreSoft').val(data['contenu'].autreSoft);
                 }
 
                 //CHANGEMENT DES CHOIX DE LA SELECT
@@ -730,37 +688,26 @@
 
                     } else {
                         var id_contenu = $('#fichesModal').attr('data_id_contenu');
-                        var typeAppareil = $('#typeAppareil').val();
+                        var marque = $('#marque').val();
+                        var model = $('#model').val();
+                        var sn = $('#sn').val();
+                        var vd = $('#vd').val();
+                        var os = $('#os').val();
                         var motDePasse = $('#motDePasse').val();
-                        var description = $('#description').val();
-                        var comTech = $('#comTech').val();
-                        var tempsInter = $('#tempsInter').val();
-                        var dateMiseADisposition = $('#dateMiseADisposition').val();
-                        var visaClient = $('#visaClient').val();
-                        var visaTech = $('#visaTech').val();
-                        var intervention = $('#intervention').val();
-                        var tempsPasse = $('#tempsPasse').val();
-                        var svisaTech = $('#svisaTech').val();
-                        var comIntervention = $('#comIntervention').val();
-                        var verifClient = $('#verifClient').is(':checked') ? '1' : '0';
-                        var dateReprise = $('#dateReprise').val();
+                        var login = $('#login').val();
+                        var office = $('#office').val();
+                        var autreSoft = $('#autreSoft').val();
 
                         planches.insertOfUpdateRepa(id_contenu
-                                                    ,$('.modal').attr('data_planche')
-                                                    ,typeAppareil
+                                                    ,marque
+                                                    ,model
+                                                    ,sn
+                                                    ,vd
+                                                    ,os
                                                     ,motDePasse
-                                                    ,description
-                                                    ,comTech
-                                                    ,tempsInter
-                                                    ,dateMiseADisposition
-                                                    ,visaClient
-                                                    ,visaTech
-                                                    ,intervention
-                                                    ,tempsPasse
-                                                    ,svisaTech
-                                                    ,comIntervention
-                                                    ,verifClient
-                                                    ,dateReprise);
+                                                    ,login
+                                                    ,office
+                                                    ,autreSoft);
 
                     }
                     switchModal();

@@ -18,8 +18,7 @@ function Planche() {
                                           $obj['etat'],
                                           ($obj['contenuType'] == "prepa" ?
             new Preparation(new VD($obj['id'],$obj['client'],$obj['type'],$obj['numeroSerie'],$obj['versionWindows'],$obj['numLicenceW'],$obj['versionOffice'],$obj['numLicenceO'],$obj['garantie'],$obj['debutGarantie'],$obj['mail'],$obj['mdp']), $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],$obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
-            new Reparation($obj['typeAppareil'],$obj['motDePasse'],$obj['description'],$obj['comTech'],$obj['tempsInter'],$obj['dateMiseADisposition'],$obj['visaClient'],$obj['visaTech'],$obj['intervention'],$obj['tempsPasse'],$obj['svisaTech'],$obj['comIntervention'],$obj['verifClient'],
-            $obj['dateReprise']))));
+            new Reparation($obj['marque'],$obj['model'],$obj['sn'],$obj['vd'],$obj['os'],$obj['motDePasse'],$obj['login'],$obj['office'],$obj['autreSoft']))));
         });
 
 
@@ -136,27 +135,20 @@ function Planche() {
      /*
     *Mise a jour ou ajout du contenu d'une repa
     */
-    self.insertOfUpdateRepa = function(id_contenu,planche,typeAppareil,motDePasse,description,comTech,tempsInter,dateMiseADisposition,visaClient,visaTech,intervention,tempsPasse,svisaTech,
-    comIntervention,verifClient,dateReprise) {
+    self.insertOfUpdateRepa = function(id_contenu,marque,model,sn,vd,os,motDePasse,login,office,autreSoft) {
         var contenu = self.getContenu(id_contenu);
         contenu = contenu[0];
         contenu = contenu['contenu'];
-        contenu.typeAppareil = typeAppareil;
+        contenu.marque = marque;
+        contenu.model = model;
+        contenu.sn = sn;
+        contenu.vd = vd;
+        contenu.os = os;
         contenu.motDePasse = motDePasse;
-        contenu.description = description;
-        contenu.comTech = comTech;
-        contenu.tempsInter = tempsInter;
-        contenu.dateMiseADisposition = dateMiseADisposition;
-        contenu.visaClient = visaClient;
-        contenu.visaTech = visaTech;
-        contenu.intervention = intervention;
-        contenu.tempsPasse = tempsPasse;
-        contenu.svisaTech = svisaTech;
-        contenu.comIntervention = comIntervention;
-        contenu.verifClient = verifClient;
-        contenu.dateReprise = dateReprise;
-        AtelierAjax.insertOrUpdateRepa(id_contenu,planche,typeAppareil,motDePasse,description,comTech,tempsInter,dateMiseADisposition,visaClient,visaTech,intervention,tempsPasse,svisaTech,
-        comIntervention,verifClient,dateReprise);
+        contenu.login = login;
+        contenu.office = office;
+        contenu.autreSoft = autreSoft;
+        AtelierAjax.insertOrUpdateRepa(id_contenu,marque,model,sn,vd,os,motDePasse,login,office,autreSoft);
     }
 
 
@@ -224,23 +216,18 @@ function Preparation(VD=null,acrobat=null,activation=null,autre=null,dossierSAV=
     self.divers = divers;
 }
 
-function Reparation(typeAppareil=null,motDePasse=null,description=null,comTech=null,tempsInter=null,dateMiseADisposition=null,visaClient=null,visaTech=null,intervention=null,tempsPasse=null,svisaTech=null,comIntervention=null,verifClient=null,dateReprise=null){
+function Reparation(marque=null,model=null,sn=null,vd=null,os=null,motDePasse=null,login=null,office=null,autreSoft=null){
 
     var self = this;
-    self.typeAppareil = typeAppareil;
+    self.marque = marque;
+    self.model = model;
+    self.sn = sn;
+    self.vd = vd;
+    self.os = os;
     self.motDePasse = motDePasse;
-    self.description = description;
-    self.comTech = comTech;
-    self.tempsInter = tempsInter;
-    self.dateMiseADisposition = dateMiseADisposition;
-    self.visaClient = visaClient;
-    self.visaTech = visaTech;
-    self.intervention = intervention;
-    self.tempsPasse = tempsPasse;
-    self.svisaTech = svisaTech;
-    self.comIntervention = comIntervention;
-    self.verifClient = verifClient;
-    self.dateReprise = dateReprise;
+    self.login = login;
+    self.office = office;
+    self.autreSoft = autreSoft;
 }
 
 function VD(id,client,type,numeroSerie,versionWindows,numLicenceW,versionOffice,numLicenceO,garantie,debutGarantie,mail,mdp){
@@ -345,29 +332,22 @@ class AtelierAjax{
         });
     }
 
-    static insertOrUpdateRepa(id_contenu,planche,typeAppareil,motDePasse,description,comTech,tempsInter,dateMiseADisposition,visaClient,visaTech,intervention,tempsPasse,svisaTech,
-        comIntervention,verifClient,dateReprise){
+    static insertOrUpdateRepa(id_contenu,marque,model,sn,vd,os,motDePasse,login,office,autreSoft){
         $.ajax({
             url:'./Request/Atelier.php'
             ,method:'POST'
             ,data : {
                 request:'addRepaInfo'
                 ,id_contenu:id_contenu
-                ,planche:planche
-                ,typeAppareil:typeAppareil
+                ,marque:marque
+                ,model:model
+                ,sn:sn
+                ,vd:vd
+                ,os:os
                 ,motDePasse:motDePasse
-                ,description:description
-                ,comTech:comTech
-                ,tempsInter:tempsInter
-                ,dateMiseADisposition:dateMiseADisposition
-                ,visaClient:visaClient
-                ,visaTech:visaTech
-                ,intervention:intervention
-                ,tempsPasse:tempsPasse
-                ,svisaTech:svisaTech
-                ,comIntervention:comIntervention
-                ,verifClient:verifClient
-                ,dateReprise:dateReprise
+                ,login:login
+                ,office:office
+                ,autreSoft:autreSoft
             }
         });
     }
@@ -416,7 +396,30 @@ app.factory('atelierFactory',['$http',function($http){
                             //resolve the promise as the data
                             return result.data;
                         });
-        }
+        },
+       insertOrUpdateFicheSuivi : function(data){
+           return $http({method: 'POST',
+                            url: './Request/Atelier.php',
+                            data: data,
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                        })
+                       .then(function(result) {
+                            //resolve the promise as the data
+                            return result.data;
+                        });
+       },
+       insertOrUpdateRepa : function(data){
+           return $http({method: 'POST',
+                            url: './Request/Atelier.php',
+                            data: data,
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                        })
+                       .then(function(result) {
+                            //resolve the promise as the data
+                            return result.data;
+                        });
+       }
+
    };
 }]);
 
@@ -428,31 +431,91 @@ app.controller("atelierCtrl",["$scope","atelierFactory", function($scope,atelier
         $scope.ticketID = ticketID;
         atelierFactory.getAtelier($scope.ticketID).then(function(atelier){
             $scope.atelier = atelier;
-            $scope.showPrepa = atelier.length > 0 ? ( atelier[0].contenuType == "prepa" ? true : false ) : false;
-            $scope.showRepa = atelier.length > 0 ? ( atelier[0].contenuType == "repa" ? true : false ) : false;
-            $scope.ficheSuiviText = atelier.length == 0 ? "Nouvelle fiche de suivi" : "Fiche de suivi";
-            $scope.buttonFicheSuivi = atelier.length == 0 ? "Valider" : "Mettre à jour";
+            $scope.prepas = [];
+
+            //INIT variable
+            $scope.ficheSuiviText = "Fiche de suivi";
+            $scope.buttonFicheSuivi = "Mettre à jour";
+            if(atelier.length > 0){
+                if(atelier[0].contenuType == "prepa"){
+                    $scope.prepas = $scope.atelier;
+                    $scope.showPrepa = true;
+                } else {
+                    $scope.showRepa = true;
+                    $scope.idRepa = atelier[0].numContenue;
+                    $scope.type = atelier[0].typeFiche;
+                    $scope.accessoire = atelier[0].accessoireFiche;
+
+                    $scope.marque = atelier[0].marque;
+                    $scope.model = atelier[0].model;
+                    $scope.sn = atelier[0].sn;
+                    $scope.vd = atelier[0].vd;
+                    $scope.os = atelier[0].os;
+                    $scope.motDePasse = atelier[0].motDePasse;
+                    $scope.login = atelier[0].login;
+                    $scope.office = atelier[0].office;
+                    $scope.autreSoft = atelier[0].autreSoft;
+                }
+            }
         });
     }
 
     $scope.addFicheSuivi = function(type){
-        //ajout fiche de suivi
+        if($scope.atelier.length == 0){
+            $scope.addContenu(type,function(idRepa){
+                $scope.idRepa = idRepa;
+                $scope.addFiche();
+            });
+        } else {
+            $scope.addFiche();
+        }
 
-        if($scope.atelier.length == 0)
-            $scope.addContenu(type);
+        //ajout fiche de suivi
     }
 
-    $scope.addContenu = function(type){
-        var etat = type == "repa" ? "Entrées" : "Planche";
+    $scope.addFiche = function(){
+        var data = $.param({request: 'insertOrUpdateFicheSuivi',
+                 id_repa:$scope.idRepa,
+                 type: $scope.type,
+                 accessoire: $scope.accessoire
+        });
+        atelierFactory.insertOrUpdateFicheSuivi(data).then(function(){
 
-        for(var i=0;i<$scope.nbPrepa;i++){
+        });
+        //id_contenu,marque,model,sn,vd,os,motDePasse,login,office,autreSoft
+        var data = $.param({request: 'addRepaInfo'
+                            ,id_contenu:$scope.idRepa
+                            ,marque:$scope.marque
+                            ,model:$scope.model
+                            ,sn:$scope.sn
+                            ,vd:$scope.vd
+                            ,os:$scope.os
+                            ,motDePasse:$scope.motDePasse
+                            ,login:$scope.login
+                            ,office:$scope.office
+                            ,autreSoft:$scope.autreSoft});
+        atelierFactory.insertOrUpdateRepa(data).then(function(){
+
+        });
+    }
+
+    $scope.addContenu = function(type,callback){
+        var etat = type == "repa" ? "Entrées" : "Planche";
+        var nb =  type == "repa" ? 1 : $scope.nbPrepa;
+
+        for(var i=0;i<nb;i++){
             AtelierAjax.addContenu($scope.ticketID,type,null,etat,function(data){
                 data = $.parseJSON(data);
-                $scope.atelier.push({numContenue:data.id,contenuType:type,id_VD:data.vd});
-                $scope.ficheSuiviText = "Fiche de suivi";
-                $scope.buttonFicheSuivi = "Mettre à jour";
+
+                if(type == "prepa"){
+                    $scope.prepas.push({numContenue:data.id,contenuType:type,id_VD:data.vd});
+                } else {
+
+                }
 
                 $scope.$apply();
+
+                if(type == "repa") callback(data.id);
             });
         }
     }
@@ -464,18 +527,18 @@ app.controller("atelierCtrl",["$scope","atelierFactory", function($scope,atelier
             $scope.showPrepa = "true";
     }
 
-    $scope.displayCard = function(){
+    $scope.displayCard = function(element){
 
-        var element = $('#newFicheSuivi');
+        var element = $(element);
 
         var css = {};
-        $scope.degD = 0;
-        $scope.degF = 0;
+        var degD = 0;
+        var degF = 0;
 
         if(element.css('height') != "54px"){
             css = { height: "54px"};
-            $scope.degD = 45;
-            $scope.degF = 0;
+            degD = 45;
+            degF = 0;
         }
         else{
             //GET AUTO HEIGHT
@@ -484,17 +547,17 @@ app.controller("atelierCtrl",["$scope","atelierFactory", function($scope,atelier
             element.height(curHeight);
 
             css = { height: autoHeight};
-            $scope.degD = 0;
-            $scope.degF = 45;
+            degD = 0;
+            degF = 45;
         }
 
         element.animate(css,600,function(){
-            if($scope.degF == 45) element.css('height', 'auto');
+            if(degF == 45) element.css('height', 'auto');
         });
 
         var elem = $('span',element);
         //ANIMATE PLUS
-        $({deg: $scope.degD}).animate({deg: $scope.degF}, {
+        $({deg: degD}).animate({deg: degF}, {
             duration: 450,
             step: function(now){
                 elem.css({
