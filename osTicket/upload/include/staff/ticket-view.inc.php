@@ -267,6 +267,10 @@ if($ticket->isOverdue())
 
 <script src="./js/atelier.js"></script>
 <script src="../js/autosize.js"></script>
+<script src="./js/docxtemplater.js"></script>
+<script type="text/javascript" src="./js/jszip.js"></script>
+<script type="text/javascript" src="./js/jszip-utils.js"></script>
+<script type="text/javascript" src="./js/file-saver.min.js"></script>
 
 <?php
 
@@ -284,12 +288,26 @@ if($ticket->isOverdue())
     $threads = $ticket->getMessages();
 
     $org = $ticket->getOwner()->getOrganization();
-    //$address = $ticket->getUser()->getOrganization()->getDynamicData();
+    foreach ($org->getForms() as $form){
+        foreach($form->getFields() as $field){
+            if($field->getAnswer()->_field->ht['name'] == 'address')
+                $address = $field->getAnswer()->value;
+        }
+    }
+
+    $userInfo = $ticket->getOwner();
+    foreach($userInfo->getForms()[0]->_fields as $field){
+        if($field->answer->_field->answer->_field->ht['label'] == "Prénom"){
+            $prenom = $field->answer->_field->answer->ht['value'];
+        }
+    }
+
 
 ?>
 
 <div id="atelier" style="display:none" ng-init="init(<?php echo $ticket->getId() ?>)" ng-controller="atelierCtrl">
 
+   <button ng-click="printRepa()">Imprimer</button>
     <div id="ifNoAtelier" class="col-md-12" ng-show="!showRepa && !showPrepa">
         <div id="ticketIsRepa" ng-click="setTicketAtelierType('repa')" class="col-md-6">
             <div class="col-md-12">
@@ -322,19 +340,19 @@ if($ticket->isOverdue())
                 </div>
                 <div class="col-md-12 text-left">
                     <div class="inputField readOnly col-md-12">
-                        <textarea id="contact" ng-init="tel = '<?php echo $ticket->getPhoneNumber(); ?>'" readonly><?php echo $ticket->getPhoneNumber(); ?></textarea>
+                        <textarea id="contact" ng-init="contact = {tel: '<?php echo $ticket->getPhoneNumber(); ?>',address: '<?php echo $address ?>'}" readonly><?php echo $address ?>&#013;&#010;<?php echo $ticket->getPhoneNumber(); ?></textarea>
                         <label for="contact">Adresse - Téléphone</label>
                     </div>
                 </div>
                 <div class="col-md-12 text-left">
                     <div class="inputField readOnly col-md-12">
-                        <textarea id="description" ng-init="description = <?php echo $threads[0]->getBody(); ?>" readonly><?php echo $threads[0]->getBody(); ?></textarea>
+                        <textarea id="description" ng-init="description = '<?php echo $threads[0]->getBody(); ?>'" readonly><?php echo $threads[0]->getBody(); ?></textarea>
                         <label for="description">Description du souci</label>
                     </div>
                 </div>
                 <div class="col-md-12 text-left">
                     <div class="inputField readOnly col-md-6">
-                        <input type="text" id="names" ng-init="names = '<?php echo $ticket->getOwner()->getFullName(); ?>'" value="<?php echo $ticket->getOwner()->getFullName(); ?>" readonly>
+                        <input type="text" id="names" ng-init="names = '<?php echo ucwords($prenom . ' ' . $userInfo->getName()); ?>'" value="<?php echo ucwords($prenom . ' ' . $userInfo->getName()); ?>" readonly>
                         <label for="names">Nom de la personne</label>
                     </div>
                     <div class="inputField col-md-6">
@@ -345,8 +363,7 @@ if($ticket->isOverdue())
                 <div class="col-md-12 text-left">
                     <div class="inputField col-md-6">
                         <p for="tech">Technicien</p>
-                        <select id="tech" ng-init="agents = <?php echo htmlspecialchars(json_encode($array)) ?>" required>
-                            <option ng-repeat="agent in agents">{{agent.name}}</option>
+                        <select id="tech" ng-model="tech" ng-init="agents = <?php echo htmlspecialchars(json_encode($array)) ?>" ng-options="agent.name for agent in agents" required>
                         </select>
                     </div>
                 </div>
@@ -608,7 +625,7 @@ if($ticket->isOverdue())
 
                         <div ng-repeat="horaire in rapport.horaires" class="horaire">
                             <div>
-                                <span>Intervention du {{horaire.arrive_inter | mFormat:'dddd DD MMMM YYYY' | capitalize}}</span>
+                                <span ng-style="">Intervention du {{horaire.arrive_inter | mFormat:'dddd DD MMMM YYYY' | capitalize}}</span>
                             </div>
                             <div>
                                <div class="floatSDL">

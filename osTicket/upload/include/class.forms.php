@@ -163,6 +163,7 @@ class Form {
     }
 
     function render($staff=true, $title=false, $options=array()) {
+        //echo "toto";
         if ($title)
             $this->title = $title;
         if (isset($options['instructions']))

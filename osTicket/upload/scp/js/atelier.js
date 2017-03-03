@@ -473,6 +473,59 @@ app.controller("atelierCtrl",["$scope","atelierFactory", function($scope,atelier
         //ajout fiche de suivi
     }
 
+    $scope.printRepa = function(){
+        function loadFile(url,callback){
+            JSZipUtils.getBinaryContent(url,callback);
+        }
+        loadFile("./documents/ficheSuivi.docx",function(error,content){
+            if (error) { throw error };
+            var zip = new JSZip(content);
+            var doc=new Docxtemplater().loadZip(zip)
+            doc.setData({
+                tel:$scope.contact.tel
+                ,adresse:$scope.contact.address
+                ,organisation:$scope.org
+                ,name:$scope.names
+                ,openDate:$scope.dateOuverture
+                ,tech:$scope.tech.name
+                ,type:$scope.type
+                ,accessoire:$scope.accessoire
+                ,description:$scope.description
+                ,marque:$scope.marque
+                ,modele:$scope.model
+                ,sn:$scope.sn
+                ,vd:$scope.vd
+                ,os:$scope.os
+                ,mdp:$scope.motDePasse
+                ,login:$scope.login
+                ,office:$scope.office
+                ,autreSoft:$scope.autreSoft
+            });
+
+            try {
+                // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
+                doc.render()
+            }
+            catch (error) {
+                var e = {
+                    message: error.message,
+                    name: error.name,
+                    stack: error.stack,
+                    properties: error.properties,
+                }
+                console.log(JSON.stringify({error: e}));
+                // The error thrown here contains additional information when logged with JSON.stringify (it contains a property object).
+                throw error;
+            }
+
+            var out=doc.getZip().generate({
+                type:"blob",
+                mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            }) //Output the document using Data-URI
+            saveAs(out,"output.docx")
+        })
+    }
+
     $scope.addFiche = function(){
         var data = $.param({request: 'insertOrUpdateFicheSuivi',
                  id_repa:$scope.idRepa,

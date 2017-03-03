@@ -55,6 +55,12 @@ class Organisation
         $res->execute(array(':id_org'=>$id_org));
         return $res->fetchAll();
     }
+
+    /*public function getPrincipalAdress($id_org){
+        $res = $this->dbh->prepare("SELECT * FROM ost_organization__cdata WHERE id_org = :id_org");
+        $res->execute(array(':id_org'=>$id_org));
+        return $res->fetchAll();
+    }*/
 }
 
 if(isset($_POST['add_place'])){
