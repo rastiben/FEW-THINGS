@@ -1,6 +1,10 @@
 <?php
 if(!defined('OSTSCPINC') || !$thisstaff) die('Access Denied');
 
+
+//$toto = OrganisationFactory::createWithData();
+$testorg = OrganisationFactory::createWithData();
+
 OrganizationForm::ensureDynamicDataView();
 
 $qs = array();
@@ -57,6 +61,51 @@ $_SESSION[':Q:orgs'] = $orgs;
 $orgs->values('id', 'name', 'created', 'updated');
 $orgs->order_by($order . $order_column);
 ?>
+
+
+<table class="list" border="0" cellspacing="1" cellpadding="0" width="100%">
+    <thead>
+        <tr>
+            <th nowrap width="4%">&nbsp;</th>
+            <th width="45%"><a <?php echo $name_sort; ?> href="orgs.php?<?php echo $qstr; ?>&sort=name"><?php echo __('Name'); ?></a></th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php
+        foreach ($testorg as $org) {
+            ?>
+        <tr>
+            <td nowrap align="center">
+                <input type="checkbox" class="ckb mass nowarn"/>
+            </td>
+            <td>&nbsp; <?php echo $org->getName(); ?></td>
+        </tr>
+
+        <?php
+        }
+        ?>
+    </tbody>
+    <tfoot>
+     <tr>
+        <td colspan="7">
+            <?php if ($total) { ?>
+            <?php echo __('Select');?>:&nbsp;
+            <a id="selectAll" href="#ckb"><?php echo __('All');?></a>&nbsp;&nbsp;
+            <a id="selectNone" href="#ckb"><?php echo __('None');?></a>&nbsp;&nbsp;
+            <a id="selectToggle" href="#ckb"><?php echo __('Toggle');?></a>&nbsp;&nbsp;
+            <?php }else{
+                echo '<i>';
+                echo __('Query returned 0 results.');
+                echo '</i>';
+            } ?>
+        </td>
+     </tr>
+    </tfoot>
+</table>
+
+
+
+
 <div id="basic_search">
     <div style="min-height:25px;">
         <form action="orgs.php" method="get">
@@ -177,7 +226,10 @@ if ($total): //Show options..
 endif;
 ?>
 </form>
+<?php
 
+
+?>
 <script type="text/javascript">
 $(function() {
     $('input#basic-org-search').typeahead({
