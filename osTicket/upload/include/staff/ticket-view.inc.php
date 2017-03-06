@@ -287,6 +287,9 @@ if($ticket->isOverdue())
 
     $threads = $ticket->getMessages();
 
+    /*
+    *Récupération du premier message ( dans notre cas la problématique pour une repa ).
+    */
     $org = $ticket->getOwner()->getOrganization();
     foreach ($org->getForms() as $form){
         foreach($form->getFields() as $field){
@@ -295,6 +298,9 @@ if($ticket->isOverdue())
         }
     }
 
+    /*
+    *Récupération du prénom de l'utilisateur
+    */
     $userInfo = $ticket->getOwner();
     foreach($userInfo->getForms()[0]->_fields as $field){
         if($field->answer->_field->answer->_field->ht['label'] == "Prénom"){
