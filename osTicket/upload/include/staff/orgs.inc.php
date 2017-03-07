@@ -1,67 +1,50 @@
 <?php
 if(!defined('OSTSCPINC') || !$thisstaff) die('Access Denied');
 
+/*
+*Récupération des organisation
+*/
+$orgsC = OrganisationCollection::getInstance();
 
-//$toto = OrganisationFactory::createWithData();
-$testorg = OrganisationFactory::createWithData();
+$page = isset($_REQUEST['p']) ? $_REQUEST['p'] : 1;
 
-OrganizationForm::ensureDynamicDataView();
+/*
+*Récupération de la page des organisation
+*/
 
-$qs = array();
-$orgs = Organization::objects()
-    ->annotate(array('user_count'=>SqlAggregate::COUNT('users')));
-
-if ($_REQUEST['query']) {
-    $search = $_REQUEST['query'];
-    $orgs->filter(Q::any(array(
-        'name__contains' => $search,
-        // TODO: Add search for cdata
-    )));
-    $qs += array('query' => $_REQUEST['query']);
+//Si recherche
+if(isset($_REQUEST['query']) && !empty($_REQUEST['query'])){
+    //query=toto
+    $orgs = $orgsC->lookUpByName($_REQUEST['query'],$page);
+} else {
+    $orgs = $orgsC->lookUp($page);
 }
 
-$sortOptions = array(
-        'name' => 'name',
-        'users' => 'users',
-        'create' => 'created',
-        'update' => 'updated'
-        );
+/*
+*Récupération du nombre d'organisation
+*/
+$total = $orgsC->nbOrg();
 
-$orderWays = array('DESC' => '-', 'ASC' => '');
-$sort= ($_REQUEST['sort'] && $sortOptions[strtolower($_REQUEST['sort'])]) ? strtolower($_REQUEST['sort']) : 'name';
-//Sorting options...
-if ($sort && $sortOptions[$sort])
-    $order_column = $sortOptions[$sort];
+/*
+*Création de la pagination
+*/
+$pages = new Pagination($total,50);
+$pagination = $pages->paginate($page);
 
-$order_column = $order_column ?: 'name';
-
-if ($_REQUEST['order'] && $orderWays[strtoupper($_REQUEST['order'])])
-    $order = $orderWays[strtoupper($_REQUEST['order'])];
-
-if ($order_column && strpos($order_column,','))
-    $order_column = str_replace(','," $order,",$order_column);
-
-$x=$sort.'_sort';
-$$x=' class="'.($order == '' ? 'asc' : 'desc').'" ';
-$order_by="$order_column $order ";
-
-$total = $orgs->count();
-$page=($_GET['p'] && is_numeric($_GET['p']))? $_GET['p'] : 1;
-$pageNav=new Pagenate($total, $page, PAGE_LIMIT);
-$pageNav->paginate($orgs);
-
-$qstr = '&amp;'. Http::build_query($qs);
-$qs += array('sort' => $_REQUEST['sort'], 'order' => $_REQUEST['order']);
-$pageNav->setURL('orgs.php', $qs);
-$qstr.='&amp;order='.($order=='-' ? 'ASC' : 'DESC');
-
-//echo $query;
-$_SESSION[':Q:orgs'] = $orgs;
-
-$orgs->values('id', 'name', 'created', 'updated');
-$orgs->order_by($order . $order_column);
 ?>
 
+
+<div id="basic_search">
+    <div style="min-height:25px;">
+        <form action="orgs.php" method="get">
+            <div class="attached input">
+            <input type="search" class="basic-search" id="basic-org-search" name="query" autofocus size="30" value="<?php echo Format::htmlchars($_REQUEST['query']); ?>" autocomplete="off" autocorrect="off" autocapitalize="off">
+                <button type="submit" class="attached button"><i class="icon-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <table class="list" border="0" cellspacing="1" cellpadding="0" width="100%">
     <thead>
@@ -72,7 +55,7 @@ $orgs->order_by($order . $order_column);
     </thead>
     <tbody>
     <?php
-        foreach ($testorg as $org) {
+        foreach ($orgs as $org) {
             ?>
         <tr>
             <td nowrap align="center">
@@ -102,11 +85,16 @@ $orgs->order_by($order . $order_column);
      </tr>
     </tfoot>
 </table>
+<div style="text-align:center">
+<?php
+
+echo $pagination;
+
+?>
+</div>
 
 
-
-
-<div id="basic_search">
+<!--<div id="basic_search">
     <div style="min-height:25px;">
         <form action="orgs.php" method="get">
             <?php csrf_token(); ?>
@@ -115,7 +103,6 @@ $orgs->order_by($order . $order_column);
             <input type="search" class="basic-search" id="basic-org-search" name="query" autofocus size="30" value="<?php echo Format::htmlchars($_REQUEST['query']); ?>" autocomplete="off" autocorrect="off" autocapitalize="off">
                 <button type="submit" class="attached button"><i class="icon-search"></i>
                 </button>
-            <!-- <td>&nbsp;&nbsp;<a href="" id="advanced-user-search">[advanced]</a></td> -->
             </div>
         </form>
     </div>
@@ -217,22 +204,19 @@ else
     </tfoot>
 </table>
 <?php
-if ($total): //Show options..
+/*if ($total): //Show options..
     echo sprintf('<div>&nbsp;%s: %s &nbsp; <a class="no-pjax"
             href="orgs.php?a=export">%s</a></div>',
             __('Page'),
             $pageNav->getPageLinks(),
             __('Export'));
-endif;
+endif;*/
 ?>
-</form>
-<?php
+</form>-->
 
-
-?>
 <script type="text/javascript">
 $(function() {
-    $('input#basic-org-search').typeahead({
+    /*$('input#basic-org-search').typeahead({
         source: function (typeahead, query) {
             $.ajax({
                 url: "ajax.php/orgs/search?q="+query,
@@ -246,7 +230,7 @@ $(function() {
             window.location.href = 'orgs.php?id='+obj.id;
         },
         property: "/bin/true"
-    });
+    });*/
 
     $(document).on('click', 'a.add-org', function(e) {
         e.preventDefault();
