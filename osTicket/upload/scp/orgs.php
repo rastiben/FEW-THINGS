@@ -19,8 +19,8 @@ require_once INCLUDE_DIR . 'class.organization.php';
 require_once INCLUDE_DIR . 'class.note.php';
 
 $org = null;
-if ($_REQUEST['id'] || $_REQUEST['org_id'])
-    $org = Organization::lookup($_REQUEST['org_id'] ?: $_REQUEST['id']);
+if ($_REQUEST['org_id'])
+    $org = Organization::lookup($_REQUEST['org_id']);
 
 if ($_POST) {
     switch ($_REQUEST['a']) {
@@ -106,10 +106,11 @@ if ($_POST) {
         $errors['err'] = __('Internal error: Unable to export results');
 }
 
+/*TEST*/
 $page = 'orgs.inc.php';
-if ($org) {
+if ($_REQUEST['id']) {
     $page = 'org-view.inc.php';
-    switch (strtolower($_REQUEST['t'])) {
+    /*switch (strtolower($_REQUEST['t'])) {
     case 'tickets':
         if (isset($_SERVER['HTTP_X_PJAX'])) {
             $page='templates/tickets.tmpl.php';
@@ -123,7 +124,7 @@ if ($org) {
                 $errors['err'] = __('Internal error: Unable to dump query results');
         }
         break;
-    }
+    }*/
 }
 
 $nav->setTabActive('users');

@@ -46,7 +46,7 @@ class bdd_org{
     */
     public function getOrgs($page){
         /*Création de la requete*/
-        $fields = ["CT_Num","CT_Adresse","CT_Complement","CT_CodePostal","CT_Ville","CT_Telephone","CT_Site"];
+        $fields = ["cbMarq","CT_Num","CT_Adresse","CT_Complement","CT_CodePostal","CT_Ville","CT_Telephone","CT_Site"];
         $whereClauses = [["CT_Num","LIKE","'%411%'"]];
         $orderBy = "CT_Num";
 
@@ -61,13 +61,28 @@ class bdd_org{
         return $prepare;
     }
 
-    public function getOrgWithName($names,$page){
+    public function getOrgWithId($id){
         /*Préparation et execution de celle ci.*/
-        $prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site FROM F_COMPTET WHERE CT_Num LIKE ?");
-        $values = array("411".$names."%");
+        $prepare = $this->DB->prepare("SELECT cbMarq,CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site
+                                        FROM F_COMPTET
+                                        WHERE cbMarq LIKE ?
+                                        ORDER BY CT_Num");
+        $values = array($id);
         $this->DB->execute($prepare,$values);
         return $prepare;
     }
+
+    public function getOrgWithName($name){
+        /*Préparation et execution de celle ci.*/
+        $prepare = $this->DB->prepare("SELECT cbMarq,CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site
+                                        FROM F_COMPTET
+                                        WHERE CT_Num LIKE ?
+                                        ORDER BY CT_Num");
+        $values = array('411' . $name . '%');
+        $this->DB->execute($prepare,$values);
+        return $prepare;
+    }
+
 
     public function nbOrg($search){
         /*Préparation et execution de celle ci.*/

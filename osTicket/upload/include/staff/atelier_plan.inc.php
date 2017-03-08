@@ -1,5 +1,5 @@
 <?php
-    require_once('./Request/GetInfos.php');
+    require_once('./Request/Tickets.php');
     require_once('./Request/Atelier.php');
 
 ?>

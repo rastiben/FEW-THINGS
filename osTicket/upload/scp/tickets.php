@@ -22,7 +22,7 @@ require_once(INCLUDE_DIR.'class.canned.php');
 require_once(INCLUDE_DIR.'class.json.php');
 require_once(INCLUDE_DIR.'class.dynamic_forms.php');
 require_once(INCLUDE_DIR.'class.export.php');       // For paper sizes
-require_once(SCP_DIR.'Request/GetInfos.php');
+require_once(SCP_DIR.'Request/Tickets.php');
 
 $page='';
 $ticket = $user = null; //clean start.

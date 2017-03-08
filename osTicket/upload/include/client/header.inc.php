@@ -82,7 +82,7 @@ if ($lang) {
     ?>
 
     <?php
-    require_once("./scp/Request/GetInfos.php");
+    require_once("./scp/Request/Tickets.php");
     ?>
 </head>
 <body>

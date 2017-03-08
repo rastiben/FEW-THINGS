@@ -1,6 +1,6 @@
 <?php
 
-require_once(SCP_DIR . 'Request/GetInfos.php');
+require_once(SCP_DIR . 'Request/Tickets.php');
 $atelier = TicketsInfos::getInstance()->atelier_tickets();
 
 $queue_columns = array(

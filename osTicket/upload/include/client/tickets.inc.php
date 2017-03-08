@@ -1,7 +1,7 @@
 <?php
 if(!defined('OSTCLIENTINC') || !is_object($thisclient) || !$thisclient->isValid()) die('Access Denied');
 
-require_once("./scp/Request/GetInfos.php");
+require_once("./scp/Request/Tickets.php");
 
 $settings = &$_SESSION['client:Q'];
 

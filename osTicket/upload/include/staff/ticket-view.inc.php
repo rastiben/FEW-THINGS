@@ -8,7 +8,7 @@ if(!@$thisstaff->isStaff() || !$ticket->checkStaffPerm($thisstaff)) die('Access 
 //Re-use the post info on error...savekeyboards.org (Why keyboard? -> some people care about objects than users!!)
 $info=($_POST && $errors)?Format::input($_POST):array();
 
-require_once(SCP_DIR . 'Request/GetInfos.php');
+require_once(SCP_DIR . 'Request/Tickets.php');
 require_once(SCP_DIR . 'Request/Rapport.php');
 require_once(SCP_DIR . 'Request/Agent.php');
 require_once(SCP_DIR . 'Request/Atelier.php');

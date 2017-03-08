@@ -46,7 +46,7 @@ class bdd_org{
     */
     public function getOrgs($page){
         /*Création de la requete*/
-        $fields = ["CT_Num","CT_Adresse","CT_Complement","CT_CodePostal","CT_Ville","CT_Telephone","CT_Site"];
+        $fields = ["cbMarq","CT_Num","CT_Adresse","CT_Complement","CT_CodePostal","CT_Ville","CT_Telephone","CT_Site"];
         $whereClauses = [["CT_Num","LIKE","'%411%'"]];
         $orderBy = "CT_Num";
 
@@ -54,8 +54,6 @@ class bdd_org{
 
         $request = $this->DB->selectBetween("F_COMPTET",$fields,$whereClauses,$orderBy,$range);
 
-
-        echo $request;
         /*Préparation et execution de celle ci.*/
         $prepare = $this->DB->prepare($request);
         $values = array();
@@ -65,7 +63,10 @@ class bdd_org{
 
     public function getOrgWithName($names,$page){
         /*Préparation et execution de celle ci.*/
-        $prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site FROM F_COMPTET WHERE CT_Num LIKE ?");
+        $prepare = $this->DB->prepare("SELECT cbMarq,CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site
+                                        FROM F_COMPTET
+                                        WHERE CT_Num LIKE ?
+                                        ORDER BY CT_Num");
         $values = array("411".$names."%");
         $this->DB->execute($prepare,$values);
         return $prepare;
@@ -80,5 +81,6 @@ class bdd_org{
     }
 
 }
+
 
 ?>

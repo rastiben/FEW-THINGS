@@ -162,7 +162,7 @@ class Organisation{
 }
 
 $orgsC = OrganisationCollection::getInstance();
-$orgs = $orgsC->lookUp($_REQUEST['p']);
+$orgs = $orgsC->lookUpByName('2FRENOVATION');
 print_r($orgs);
 
 ?>

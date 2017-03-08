@@ -103,12 +103,27 @@ class OrganisationCollection{
     /*
     *Récupération des Organisation
     */
-    public function lookUpByName($query,$offset=1){
-        $result = $this->bdd_org->getOrgWithName($query,$offset);
+    public function lookUpById($query,$offset=1){
+        $result = $this->bdd_org->getOrgWithId($query);
 
         while($myRow = odbc_fetch_array($result)){
             $this->addOrg($myRow);
         }
+        print_r($myRow);
+
+        return $this->getCollectionPage($offset,$query);
+    }
+
+    /*
+    *Récupération des Organisation
+    */
+    public function lookUpByName($query,$offset=1){
+        $result = $this->bdd_org->getOrgWithName($query);
+
+        while($myRow = odbc_fetch_array($result)){
+            $this->addOrg($myRow);
+        }
+        print_r($myRow);
 
         return $this->getCollectionPage($offset,$query);
     }
@@ -138,7 +153,7 @@ class OrganisationCollection{
         return array_values(odbc_fetch_array($this->bdd_org->nbOrg($search)))[0];
     }
 }
-
+//CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site
 class Organisation{
 
     /*
@@ -154,11 +169,61 @@ class Organisation{
     }
 
     /*
+    *Récupération de l'id
+    */
+    public function getId(){
+        return $this->data[0];
+    }
+
+    /*
     *Récupération du nom de l'organisation
     */
     public function getName(){
-        return $this->data[0];
+        return $this->data[1];
     }
+
+    /*
+    *Récupération de l'adresse de l'organisation
+    */
+    public function getAddress(){
+        return $this->data[2];
+    }
+
+    /*
+    *Récupération de l'adresse de l'organisation
+    */
+    public function getComplement(){
+        return $this->data[3];
+    }
+
+    /*
+    *Récupération du Code Postal
+    */
+    public function getCP(){
+        return $this->data[4];
+    }
+
+    /*
+    *Récupération de la Ville
+    */
+    public function getCity(){
+        return $this->data[5];
+    }
+
+    /*
+    *Récupération du numéro de téléphone
+    */
+    public function getPhone(){
+        return $this->data[6];
+    }
+
+    /*
+    *Récupération du site web
+    */
+    public function getWebSite(){
+        return $this->data[7];
+    }
+
 }
 //echo $org->getName();
 

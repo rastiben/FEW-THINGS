@@ -62,7 +62,7 @@ $pagination = $pages->paginate($page);
             <td nowrap align="center">
                 <input type="checkbox" class="ckb mass nowarn"/>
             </td>
-            <td>&nbsp; <?php echo $org->getName(); ?></td>
+            <td>&nbsp;  <a href="orgs.php?id=<?php echo $org->getId(); ?>"><?php echo $org->getName(); ?></td>
         </tr>
 
         <?php

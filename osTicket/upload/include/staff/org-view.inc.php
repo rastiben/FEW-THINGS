@@ -1,84 +1,77 @@
 <?php
 require_once(SCP_DIR.'Request/Contrat.php');
+require_once(SCP_DIR.'Request/Tickets.php');
 
-if(!defined('OSTSCPINC') || !$thisstaff || !is_object($org)) die('Invalid path');
+if(!defined('OSTSCPINC') || !$thisstaff || !isset($_REQUEST['id'])) die('Invalid path');
+
+$orgsC = OrganisationCollection::getInstance();
+
+$org = $orgsC->lookUpById($_REQUEST['id'])[0];
+
+$apiKey = "AIzaSyB4pINEbEV_CczgRAhMhIza1OAEzSJV6JA";
 
 ?>
-<table width="100%" cellpadding="2" cellspacing="0" border="0">
-    <tr>
-        <td width="50%" class="has_bottom_border">
-             <h2><a href="orgs.php?id=<?php echo $org->getId(); ?>"
-             title="Reload"><i class="icon-refresh"></i> <?php echo $org->getName(); ?></a></h2>
-        </td>
-        <td width="50%" class="right_align has_bottom_border">
-<?php if ($thisstaff->hasPerm(Organization::PERM_DELETE)) { ?>
-            <a id="org-delete" class="red button action-button org-action"
-            href="#orgs/<?php echo $org->getId(); ?>/delete"><i class="icon-trash"></i>
-            <?php echo __('Delete Organization'); ?></a>
-<?php } ?>
-<?php if ($thisstaff->hasPerm(Organization::PERM_EDIT)) { ?>
-            <span class="action-button" data-dropdown="#action-dropdown-more">
-                <i class="icon-caret-down pull-right"></i>
-                <span ><i class="icon-cog"></i> <?php echo __('More'); ?></span>
-            </span>
-<?php } ?>
-            <div id="action-dropdown-more" class="action-dropdown anchor-right">
-              <ul>
-<?php if ($thisstaff->hasPerm(Organization::PERM_EDIT)) { ?>
-                <li><a href="#ajax.php/orgs/<?php echo $org->getId();
-                    ?>/forms/manage" onclick="javascript:
-                    $.dialog($(this).attr('href').substr(1), 201);
-                    return false"
-                    ><i class="icon-paste"></i>
-                    <?php echo __('Manage Forms'); ?></a></li>
-<?php } ?>
-              </ul>
+<h3>Profile : <?php echo $org->getName(); ?></h3>
+<br>
+<div class="col-md-12 block">
+    <div class="col-md-2 logo">
+        <img class="logo" src="../assets/default/images/company_building.png"/>
+    </div>
+    <div class="col-md-10 infos">
+        <b><div class="col-md-12 group">
+            <div class="col-md-3">
+                <img class="icon" src="../assets/default/images/location.png"/>
+                <p class="infoLabel">Adresse :</p>
             </div>
-        </td>
-    </tr>
-</table>
-<table class="ticket_info" cellspacing="0" cellpadding="0" width="100%" border="0">
-    <tr>
-        <td width="50%">
-            <table border="0" cellspacing="" cellpadding="4" width="100%">
-                <tr>
-                    <th width="150"><?php echo __('Name'); ?>:</th>
-                    <td>
-<?php if ($thisstaff->hasPerm(Organization::PERM_EDIT)) { ?>
-                    <b><a href="#orgs/<?php echo $org->getId();
-                    ?>/edit" class="org-action"><i
-                        class="icon-edit"></i>
-<?php }
-                    echo $org->getName();
-    if ($thisstaff->hasPerm(Organization::PERM_EDIT)) { ?>
-                    </a></b>
-<?php } ?>
-                    </td>
-                </tr>
-                <tr>
-                    <th><?php echo __('Account Manager'); ?>:</th>
-                    <td><?php echo $org->getAccountManager(); ?>&nbsp;</td>
-                </tr>
-            </table>
-        </td>
-        <td width="50%" style="vertical-align:top">
-            <table border="0" cellspacing="" cellpadding="4" width="100%">
-                <tr>
-                    <th width="150"><?php echo __('Created'); ?>:</th>
-                    <td><?php echo Format::datetime($org->getCreateDate()); ?></td>
-                </tr>
-                <tr>
-                    <th><?php echo __('Last Updated'); ?>:</th>
-                    <td><?php echo Format::datetime($org->getUpdateDate()); ?></td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
+            <div class="col-md-9">
+               <p> <?php echo $org->getAddress() . " " . $org->getComplement(); ?><br>
+                <?php echo $org->getCP() . " " . $org->getCity(); ?></p>
+            </div>
+        </div>
+        <div class="col-md-12 group">
+            <div class="col-md-3">
+                <img class="icon" src="../assets/default/images/tel.png"/>
+                <p class="infoLabel">Numéro de téléphone :</p>
+            </div>
+            <div class="col-md-9">
+                <p> <?php echo $org->getPhone(); ?></p>
+            </div>
+        </div>
+        <div class="col-md-12 group">
+            <div class="col-md-3">
+                <img class="icon" src="../assets/default/images/website.png"/>
+                <p class="infoLabel">Site Web :</p>
+            </div>
+            <div class="col-md-9">
+                <p> <?php echo $org->getWebSite(); ?></p>
+            </div>
+        </div></b>
+    </div>
+</div>
+
+<div class="col-md-12 block">
+    <?php
+    include STAFFINC_DIR . 'templates/tickets.tmpl.php';
+    ?>
+</div>
+
+<div class="col-md-12 block">
+    <?php
+    include STAFFINC_DIR . 'templates/users.tmpl.php';
+    ?>
+</div>
+
+<script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=<?php echo $apiKey; ?>">
+    </script>
+
+<!--MAP-->
+<div style="height:400px;width:800px;margin:auto" id="map"></div>
+
 <br>
 <div class="clear"></div>
 
-<ul class="clean tabs" id="orgtabs">
+<!--<ul class="clean tabs" id="orgtabs">
     <li class="active"><a href="#users"><i
     class="icon-user"></i>&nbsp;<?php echo __('Users'); ?></a></li>
     <li><a href="#tickets"><i
@@ -88,9 +81,11 @@ if(!defined('OSTSCPINC') || !$thisstaff || !is_object($org)) die('Invalid path')
     <li><a href="#contrat">&nbsp;<?php echo __('Contrat'); ?></a></li>
 </ul>
 <div id="orgtabs_container">
+
+
+
 <div class="tab_content" id="contrat" style="display:none">
 
-<!--GET CONTRAT INFO-->
 <?php
     $contrat = Contrat::getInstance()->getContrat($org->getId());
 
@@ -155,10 +150,10 @@ if(!defined('OSTSCPINC') || !$thisstaff || !is_object($org)) die('Invalid path')
 <button type="button" class="btn btn-success" id="insertOrUpdate">Valider</button>
 
 <h3>Temps passé : </h3>
-<!--<?php if (in_array('1',$types)) echo '<p><b>Hotline : </b> </p>' ?>
 <?php if (in_array('1',$types)) echo '<p><b>Hotline : </b> </p>' ?>
 <?php if (in_array('1',$types)) echo '<p><b>Hotline : </b> </p>' ?>
-<?php if (in_array('1',$types)) echo '<p><b>Hotline : </b> </p>' ?>-->
+<?php if (in_array('1',$types)) echo '<p><b>Hotline : </b> </p>' ?>
+<?php if (in_array('1',$types)) echo '<p><b>Hotline : </b> </p>' ?>
 
 <canvas id="tempsPasse" height="400"></canvas>
 
@@ -224,7 +219,7 @@ if(!defined('OSTSCPINC') || !$thisstaff || !is_object($org)) die('Invalid path')
 
 <?php
 
-    function sumHours($array){
+    /*function sumHours($array){
         if(empty($array)){
             return 0;
         } else {
@@ -248,11 +243,11 @@ if(!defined('OSTSCPINC') || !$thisstaff || !is_object($org)) die('Invalid path')
     $tempsPasseHotline = sumHours($arrayHotline);
     $tempsPasseAtelierSurSite = sumHours($arrayAtelierSurSite);
     $tempsPasseRegie = sumHours($arrayRegie);
-    $tempsPasseTelephonie = sumHours($arrayTelephonie);
+    $tempsPasseTelephonie = sumHours($arrayTelephonie);*/
 
 ?>
 <script>
-    var data = {
+    /*var data = {
         labels: ["Hotline","Atelier-Sur site","Régie","Téléphonie"],
         datasets: [{
             label: "Temps passé" ,
@@ -300,7 +295,6 @@ if(!defined('OSTSCPINC') || !$thisstaff || !is_object($org)) die('Invalid path')
         , }
     , });
 
-    /*$id,$id_org,$depart,$fin,$types,$commentaire*/
     $('#insertOrUpdate').click(function(){
         var types = '';
         var id = $('.contrat.table.table-striped').attr('id');
@@ -333,45 +327,59 @@ if(!defined('OSTSCPINC') || !$thisstaff || !is_object($org)) die('Invalid path')
                 location.reload();
            }
         });
-    });
+    });*/
 
 </script>
 
 </div>
-<div class="tab_content" id="users" style="display:none">
-<?php
-include STAFFINC_DIR . 'templates/users.tmpl.php';
-?>
-</div>
-<div class="tab_content" id="tickets">
-<?php
-include STAFFINC_DIR . 'templates/tickets.tmpl.php';
-?>
-</div>
 
 <div class="tab_content" id="notes" style="display:none">
 <?php
-$notes = QuickNote::forOrganization($org);
+/*$notes = QuickNote::forOrganization($org);
 $create_note_url = 'orgs/'.$org->getId().'/note';
-include STAFFINC_DIR . 'templates/notes.tmpl.php';
+include STAFFINC_DIR . 'templates/notes.tmpl.php';*/
 ?>
 </div>
-</div>
+</div>-->
 
 <script type="text/javascript">
-$(function() {
-    $(document).on('click', 'a.org-action', function(e) {
-        e.preventDefault();
-        var url = 'ajax.php/'+$(this).attr('href').substr(1);
-        $.dialog(url, [201, 204], function (xhr) {
-            if (xhr.status == 204)
-                window.location.href = 'orgs.php';
-            else
-                window.location.href = window.location.href;
-         }, {
-            onshow: function() { $('#org-search').focus(); }
-         });
-        return false;
+
+    $(function() {
+        $(document).on('click', 'a.org-action', function(e) {
+            e.preventDefault();
+            var url = 'ajax.php/'+$(this).attr('href').substr(1);
+            $.dialog(url, [201, 204], function (xhr) {
+                if (xhr.status == 204)
+                    window.location.href = 'orgs.php';
+                else
+                    window.location.href = window.location.href;
+             }, {
+                onshow: function() { $('#org-search').focus(); }
+             });
+            return false;
+        });
     });
-});
+
+    var map = null;
+    var address = "<?php echo str_replace(" ","+",$org->getComplement() . " " . $org->getAddress() . " " . $org->getCP()) ?>";
+
+    $.ajax({
+        method:"GET",
+        url:"https://maps.googleapis.com/maps/api/geocode/json?address="+address+"&key=<?php echo $apiKey; ?>",
+        success: function(data){
+            //if no result test without address or without complement.
+            //alert(data.results[0].geometry.location);
+            var location = data.results[0].geometry.location;
+            var LatLng = {lat: location.lat, lng: location.lng};
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: LatLng,
+                zoom: 12
+            });
+            var marker = new google.maps.Marker({
+                position: LatLng,
+                map: map
+            });
+        }
+    });
 </script>

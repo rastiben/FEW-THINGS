@@ -1,5 +1,5 @@
 <?php
-$args = array();
+/*$args = array();
 parse_str($_SERVER['QUERY_STRING'], $args);
 $args['t'] = 'tickets';
 unset($args['p'], $args['_pjax']);
@@ -77,151 +77,74 @@ $tickets->values('staff_id', 'staff__firstname', 'staff__lastname', 'team__name'
 
 $tickets->order_by('-created');
 
-TicketForm::ensureDynamicDataView();
+TicketForm::ensureDynamicDataView();*/
+
+$tickets = TicketsInfos::getInstance()->ticket_org($org->getId());
+
+
 // Fetch the results
 ?>
-<div class="pull-left" style="margin-top:5px;">
-   <?php
-    if ($total) {
-        echo '<strong>'.$pageNav->showing().'</strong>';
-    } else {
-        echo sprintf(__('%s does not have any tickets'), $user? 'User' : 'Organization');
-    }
-   ?>
-</div>
-<div style="margin-bottom:10px;">
-    <div class="pull-right flush-right">
-        <?php
-        if ($user) { ?>
-            <a class="green button action-button" href="tickets.php?a=open&uid=<?php echo $user->getId(); ?>">
-                <i class="icon-plus"></i> <?php print __('Create New Ticket'); ?></a>
-        <?php
-        } ?>
+<div class="col-md-2">
+    <div class="nbTickets">
+        <p><?php echo count($tickets); ?></p>
     </div>
 </div>
-<br/>
-<div>
-<?php
-if ($total) { ?>
-<form action="users.php" method="POST" name='tickets' style="padding-top:10px;">
+
+<div class="col-md-10">
+<form action="users.php" method="POST" name='tickets' style="">
 <?php csrf_token(); ?>
  <input type="hidden" name="a" value="mass_process" >
  <input type="hidden" name="do" id="action" value="" >
- <table class="list" border="0" cellspacing="1" cellpadding="2" width="100%">
+ <table class="list" style="margin:0px" border="0" cellspacing="1" cellpadding="2" width="100%">
     <thead>
         <tr>
-            <?php
-            if (0) {?>
-            <th width="4%">&nbsp;</th>
-            <?php
-            } ?>
+           <!--ost_ticket.ticket_id,ost_ticket.number,ost_ticket.created,subject,ost_user.name,firsname-->
             <th width="10%"><?php echo __('Ticket'); ?></th>
-            <th width="18%"><?php echo __('Last Updated'); ?></th>
-            <th width="8%"><?php echo __('Status'); ?></th>
+            <th width="10%"><?php echo __('User'); ?></th>
+            <th width="18%"><?php echo __('Created'); ?></th>
             <th width="30%"><?php echo __('Subject'); ?></th>
-            <?php
-            if ($user) { ?>
-            <th width="15%"><?php echo __('Department'); ?></th>
-            <th width="15%"><?php echo __('Assignee'); ?></th>
-            <?php
-            } else { ?>
-            <th width="30%"><?php echo __('User'); ?></th>
-            <?php
-            } ?>
         </tr>
     </thead>
     <tbody>
-    <?php
-    $subject_field = TicketForm::objects()->one()->getField('subject');
-    $user_id = $user ? $user->getId() : 0;
-    foreach($tickets as $T) {
-        $flag=null;
-        if ($T['lock__lock_id'] && $T['lock__staff_id'] != $thisstaff->getId())
-            $flag='locked';
-        elseif ($T['isoverdue'])
-            $flag='overdue';
-
-        $assigned='';
-        if ($T['staff_id'])
-            $assigned = new AgentsName(array(
-                'first' => $T['staff__firstname'],
-                'last' => $T['staff__lastname']
-            ));
-        elseif ($T['team_id'])
-            $assigned = Team::getLocalById($T['team_id'], 'name', $T['team__name']);
-        else
-            $assigned=' ';
-
-        $status = TicketStatus::getLocalById($T['status_id'], 'value', $T['status__name']);
-        $tid = $T['number'];
-        $subject = $subject_field->display($subject_field->to_php($T['cdata__subject']));
-        $threadcount = $T['thread_count'];
-        ?>
-        <tr id="<?php echo $T['ticket_id']; ?>">
-            <?php
-            //Implement mass  action....if need be.
-            if (0) { ?>
-            <td align="center" class="nohover">
-                <input class="ckb" type="checkbox" name="tids[]" value="<?php echo $T['ticket_id']; ?>" <?php echo $sel?'checked="checked"':''; ?>>
-            </td>
-            <?php
-            } ?>
-            <td nowrap>
-              <a class="Icon <?php
-                echo strtolower($T['source']); ?>Ticket preview"
-                title="<?php echo __('Preview Ticket'); ?>"
-                href="tickets.php?id=<?php echo $T['ticket_id']; ?>"
-                data-preview="#tickets/<?php echo $T['ticket_id']; ?>/preview"><?php
-                echo $tid; ?></a>
-               <?php
-                if ($user_id && $user_id != $T['user_id'])
-                    echo '<span class="pull-right faded-more" data-toggle="tooltip" title="'
-                            .__('Collaborator').'"><i class="icon-eye-open"></i></span>';
-            ?></td>
-            <td nowrap><?php echo Format::datetime($T['lastupdate']); ?></td>
-            <td><?php echo $status; ?></td>
-            <td><a class="truncate <?php if ($flag) { ?> Icon <?php echo $flag; ?>Ticket" title="<?php echo ucfirst($flag); ?> Ticket<?php } ?>"
-                style="max-width: 230px;"
-                href="tickets.php?id=<?php echo $T['ticket_id']; ?>"><?php echo $subject; ?></a>
-                 <?php
-                    if ($T['attachment_count'])
-                        echo '<i class="small icon-paperclip icon-flip-horizontal" data-toggle="tooltip" title="'
-                            .$T['attachment_count'].'"></i>';
-                    if ($threadcount > 1) { ?>
-                            <span class="pull-right faded-more"><i class="icon-comments-alt"></i>
-                            <small><?php echo $threadcount; ?></small></span>
-<?php               }
-                    if ($T['attachments'])
-                        echo '<i class="small icon-paperclip icon-flip-horizontal"></i>';
-                    if ($T['collab_count'])
-                        echo '<span class="faded-more" data-toggle="tooltip" title="'
-                            .$T['collab_count'].'"><i class="icon-group"></i></span>';
+        <?php
+            foreach ($tickets as $T) {
+                $total += 1;
+                $tid=$T['number'];
                 ?>
-            </td>
+            <tr id="<?php echo $T['ticket_id']; ?>">
+                <?php if($thisstaff->canManageTickets()) {
+
+                    $sel=false;
+                    if($ids && in_array($T['ticket_id'], $ids))
+                        $sel=true;
+                    ?>
+                <td title="<?php echo $T['user__default_email__address']; ?>" nowrap>
+                  <a class="Icon <?php echo strtolower($T['source']); ?>Ticket preview no-pjax"
+                    title="Preview Ticket"
+                    href="tickets.php?id=<?php echo $T['ticket_id']; ?>"
+                    data-preview="#tickets/<?php echo $T['ticket_id']; ?>/preview"
+                    ><?php echo $tid; ?></a></td>
+                <td nowrap><div><?php
+                    if ($T['collab_count'])
+                        echo '<span class="pull-right faded-more" data-toggle="tooltip" title="'
+                            .$T['collab_count'].'"><i class="icon-group"></i></span>';
+                    ?><span class="truncate" style="max-width:<?php
+                        echo $T['collab_count'] ? '150px' : '170px'; ?>"><?php
+                    /*TO CHANGE*/
+                    $un = new UsersName($T['user__name']);
+                        echo '<a href="./users.php?id='. TicketsInfos::getInstance()->ticket_user_id($T['ticket_id']) .'#tickets">' . ucwords($T['firsname'] . ' ' . $T['name']) . '</a>';
+                    ?></span></div></td>
+                <?php } ?>
+                <td><?php echo $T['created'] ?></td>
+                <td><?php echo $T['subject'] ?></td>
+            </tr>
             <?php
-            if ($user) {
-                $dept = Dept::getLocalById($T['dept_id'], 'name', $T['dept__name']); ?>
-            <td><span class="truncate" style="max-wdith:125px"><?php
-                echo Format::htmlchars($dept); ?></span></td>
-            <td><span class="truncate" style="max-width:125px"><?php
-                echo Format::htmlchars($assigned); ?></span></td>
-            <?php
-            } else { ?>
-            <td><a class="truncate" style="max-width:250px" href="users.php?id="<?php
-                echo $T['user_id']; ?>><?php echo Format::htmlchars($T['user__name']);
-                    ?> <em>&lt;<?php echo Format::htmlchars($T['user__default_email__address']);
-                ?>&gt;</em></a>
-            </td>
-            <?php
-            } ?>
-        </tr>
-   <?php
-    }
-    ?>
+            } //end of foreach
+        ?>
     </tbody>
 </table>
 <?php
-if ($total>0) {
+/*if ($total>0) {
     echo '<div>';
     echo __('Page').':'.$pageNav->getPageLinks('tickets', '#tickets').'&nbsp;';
     echo sprintf('<a class="export-csv no-pjax" href="?%s">%s</a>',
@@ -231,8 +154,6 @@ if ($total>0) {
                     't' => 'tickets')),
             __('Export'));
     echo '</div>';
-} ?>
+}*/ ?>
 </form>
-<?php
- } ?>
 </div>

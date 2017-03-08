@@ -6,7 +6,7 @@ $view_all_tickets = $date_header = $date_col = false;
 $view_all_tickets = $date_header = $date_col = false;
 
 //echo SCP_DIR;
-require_once(SCP_DIR.'Request/GetInfos.php');
+require_once(SCP_DIR.'Request/Tickets.php');
 
 // Make sure the cdata materialized view is available
 TicketForm::ensureDynamicDataView();

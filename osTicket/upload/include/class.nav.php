@@ -328,7 +328,7 @@ class UserNav {
     function getNavLinks(){
         global $cfg;
 
-        require_once('./scp/Request/GetInfos.php');
+        require_once('./scp/Request/Tickets.php');
         //Paths are based on the root dir.
         if(!$this->navs){
 
