@@ -28,7 +28,7 @@ class Pagination{
 
         $result .= "<select onchange=\"location = this.value;\">";
 
-        for($i = 1;$i<=$this->nbPage+1;$i++){
+        for($i = 1;$i<=$this->nbPage;$i++){
             $result .= "<option ". (($i == $page) ? "selected" : "") ." value=\"". "http://".$_SERVER['HTTP_HOST'].$uri_parts[0]."?p=".($i).$query."\" >". $i ."</option>";
         }
 
@@ -91,33 +91,51 @@ class OrganisationCollection{
     *Récupération des Organisation
     */
     public function lookUp($offset=1){
-        $offset -= 1;
-        $result = $this->bdd_org->getOrgs();
+        $result = $this->bdd_org->getOrgs($offset);
 
         while($myRow = odbc_fetch_array($result)){
-            array_push($this->orgs,new Organisation($myRow));
+            $this->addOrg($myRow);
         }
 
-        return array_splice($this->orgs,(50*$offset),50);
+        return $this->getCollectionPage($offset);
     }
 
     /*
     *Récupération des Organisation
     */
-    public function lookUpByName($query,$offset){
-        $offset -= 1;
-        $result = $this->bdd_org->getOrgWithName($query);
+    public function lookUpByName($query,$offset=1){
+        $result = $this->bdd_org->getOrgWithName($query,$offset);
 
         while($myRow = odbc_fetch_array($result)){
-            array_push($this->orgs,new Organisation($myRow));
+            $this->addOrg($myRow);
         }
 
-
-        return array_splice($this->orgs,(50*$offset),50);
+        return $this->getCollectionPage($offset,$query);
     }
 
-    public function nbOrg(){
-        return count($this->orgs);
+    /*
+    *Ajout d'un élément dans la collection
+    */
+    private function addOrg($data){
+        array_push($this->orgs,new Organisation($data));
+    }
+
+    /*
+    *Récupération des occurences à afficher
+    */
+    public function getCollectionPage($offset,$query=null){
+        if(empty($query)){
+            return $this->orgs;
+        } else {
+            return array_splice($this->orgs,(50*($offset-1)),49);
+        }
+    }
+
+    /*
+    *Retourne le nombre d'organisation retounée
+    */
+    public function nbOrg($search){
+        return array_values(odbc_fetch_array($this->bdd_org->nbOrg($search)))[0];
     }
 }
 

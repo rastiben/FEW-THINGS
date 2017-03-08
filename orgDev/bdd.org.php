@@ -34,18 +34,47 @@ class bdd_org{
     }
 
     /*
+    *Range
+    */
+    private function getRange($offset){
+        $between = (50*($offset-1)) + 49;
+        return [(50*($offset-1)),$between];
+    }
+
+    /*
     *Récupération des organisation
     */
-    public function getOrgs(){
-        $prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site FROM F_COMPTET WHERE CT_Num LIKE '%411%' ORDER BY CT_Num");
+    public function getOrgs($page){
+        /*Création de la requete*/
+        $fields = ["CT_Num","CT_Adresse","CT_Complement","CT_CodePostal","CT_Ville","CT_Telephone","CT_Site"];
+        $whereClauses = [["CT_Num","LIKE","'%411%'"]];
+        $orderBy = "CT_Num";
+
+        $range = $this->getRange($page);
+
+        $request = $this->DB->selectBetween("F_COMPTET",$fields,$whereClauses,$orderBy,$range);
+
+
+        echo $request;
+        /*Préparation et execution de celle ci.*/
+        $prepare = $this->DB->prepare($request);
         $values = array();
         $this->DB->execute($prepare,$values);
         return $prepare;
     }
 
-    public function getOrgWithName($names){
-        $prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site FROM F_COMPTET WHERE CT_Num LIKE ? ORDER BY CT_Num");
-        $values = array('%'.$names.'%');
+    public function getOrgWithName($names,$page){
+        /*Préparation et execution de celle ci.*/
+        $prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site FROM F_COMPTET WHERE CT_Num LIKE ?");
+        $values = array("411".$names."%");
+        $this->DB->execute($prepare,$values);
+        return $prepare;
+    }
+
+    public function nbOrg($search){
+        /*Préparation et execution de celle ci.*/
+        $prepare = $this->DB->prepare("SELECT COUNT(*) FROM F_COMPTET WHERE CT_Num LIKE ?");
+        $values = array("411".$search."%");
         $this->DB->execute($prepare,$values);
         return $prepare;
     }

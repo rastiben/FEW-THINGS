@@ -7,7 +7,7 @@ class Pagination{
     public function __construct($total,$nb){
         $this->total = $total;
         $this->nbPerPage = $nb;
-        $this->nbPage = $this->total/$this->nbPerPage;
+        $this->nbPage = ceil($this->total/$this->nbPerPage);
     }
 
     private function createPagination($page){
@@ -15,26 +15,30 @@ class Pagination{
 
         $uri_parts = explode('?', $_SERVER['REQUEST_URI'], 2);
 
-        if($page > 1){
-            //begin
-            $result .= "<a href=\"http://".$_SERVER['HTTP_HOST'].$uri_parts[0]."?p=".(1)."\">&lt;&lt;</a>&nbsp";
-            //start
-            $result .= "<a href=\"http://".$_SERVER['HTTP_HOST'].$uri_parts[0]."?p=".($page-1)."\">&lt;</a>&nbsp";
+        if(isset($_REQUEST['query'])){
+            $query = "&query=" . $_REQUEST['query'];
         }
 
-        $result .= "<select>";
+        if($page > 1){
+            //begin
+            $result .= "<a href=\"http://".$_SERVER['HTTP_HOST'].$uri_parts[0]."?p=".(1).$query."\">&lt;&lt;</a>&nbsp";
+            //start
+            $result .= "<a href=\"http://".$_SERVER['HTTP_HOST'].$uri_parts[0]."?p=".($page-1).$query."\">&lt;</a>&nbsp";
+        }
+
+        $result .= "<select onchange=\"location = this.value;\">";
 
         for($i = 1;$i<=$this->nbPage;$i++){
-            $result .= "<option ". (($i == $page) ? "selected" : "") .">". $i ."</option>";
+            $result .= "<option ". (($i == $page) ? "selected" : "") ." value=\"". "http://".$_SERVER['HTTP_HOST'].$uri_parts[0]."?p=".($i).$query."\" >". $i ."</option>";
         }
 
         $result .= "</select>&nbsp";
 
         if($page < $this->nbPage){
             //after
-            $result .= "<a href=\"http://".$_SERVER['HTTP_HOST'].$uri_parts[0]."?p=".($page+1)."\">&gt;</a>&nbsp";
+            $result .= "<a href=\"http://".$_SERVER['HTTP_HOST'].$uri_parts[0]."?p=".($page+1).$query."\">&gt;</a>&nbsp";
             //end
-            $result .= "<a href=\"http://".$_SERVER['HTTP_HOST'].$uri_parts[0]."?p=".($this->nbPage)."\">&gt;&gt;</a>";
+            $result .= "<a href=\"http://".$_SERVER['HTTP_HOST'].$uri_parts[0]."?p=".($this->nbPage).$query."\">&gt;&gt;</a>";
         }
 
         return $result;
@@ -87,33 +91,51 @@ class OrganisationCollection{
     *Récupération des Organisation
     */
     public function lookUp($offset=1){
-        $offset -= 1;
-        $result = $this->bdd_org->getOrgs();
+        $result = $this->bdd_org->getOrgs($offset);
 
         while($myRow = odbc_fetch_array($result)){
-            array_push($this->orgs,new Organisation($myRow));
+            $this->addOrg($myRow);
         }
 
-        return array_splice($this->orgs,(50*$offset),50);
+        return $this->getCollectionPage($offset);
     }
 
     /*
     *Récupération des Organisation
     */
-    public function lookUpByName($query,$offset){
-        $offset -= 1;
-        $result = $this->bdd_org->getOrgWithName($query);
+    public function lookUpByName($query,$offset=1){
+        $result = $this->bdd_org->getOrgWithName($query,$offset);
 
         while($myRow = odbc_fetch_array($result)){
-            array_push($this->orgs,new Organisation($myRow));
+            $this->addOrg($myRow);
         }
 
-
-        return array_splice($this->orgs,(50*$offset),50);
+        return $this->getCollectionPage($offset,$query);
     }
 
-    public function nbOrg(){
-        return count($this->orgs);
+    /*
+    *Ajout d'un élément dans la collection
+    */
+    private function addOrg($data){
+        array_push($this->orgs,new Organisation($data));
+    }
+
+    /*
+    *Récupération des occurences à afficher
+    */
+    public function getCollectionPage($offset,$query=null){
+        if(empty($query)){
+            return $this->orgs;
+        } else {
+            return array_splice($this->orgs,(50*($offset-1)),49);
+        }
+    }
+
+    /*
+    *Retourne le nombre d'organisation retounée
+    */
+    public function nbOrg($search){
+        return array_values(odbc_fetch_array($this->bdd_org->nbOrg($search)))[0];
     }
 }
 
@@ -138,14 +160,9 @@ class Organisation{
         return $this->data[0];
     }
 }
+
 $orgsC = OrganisationCollection::getInstance();
-
-$page = isset($_REQUEST['p']) ? $_REQUEST['p'] : 1;
-
-if(isset($_REQUEST['query'])){
-    //query=toto
-    $orgs = $orgsC->lookUpByName($_REQUEST['query'],$page);
-    print_r($orgs);
-}
+$orgs = $orgsC->lookUp($_REQUEST['p']);
+print_r($orgs);
 
 ?>

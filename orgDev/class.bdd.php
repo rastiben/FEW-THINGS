@@ -50,8 +50,38 @@ class BDD{
         return odbc_execute($prepare,$values);
     }
 
+    /*
+    *Préparation d'une requete
+    */
     public function prepare($query){
         return odbc_prepare($this->BDD,$query);
+    }
+
+    /*
+    *Création d'une requete select
+    */
+    public function selectBetween($table,$fields,$clauses="",$orderBy="",$range){
+                print_r($range);
+        $listField = "";
+
+        foreach($fields as $key=>$field){
+            $listField .= $field . ",";
+            /*if(count($fields) > ($key+1))
+                $listField .= ",";*/
+        }
+
+        $listClause = "";
+        foreach($clauses as $key=>$clause){
+            foreach($clause as $def){
+                $listClause .= $def . " ";
+            }
+            if(count($clauses) > ($key+1))
+                $listClause .= "AND ";
+        }
+
+        return "WITH OrderedOrg AS (SELECT ". $listField ."ROW_NUMBER() OVER (ORDER BY ". $orderBy .") AS 'RowNumber' FROM ". $table ." WHERE ". $listClause .") SELECT * FROM OrderedOrg WHERE RowNumber BETWEEN ".$range[0]." AND ".$range[1].";";
+
+        //return "SELECT " . $listField . " FROM " . $table . " WHERE " . $listClause . " ORDER BY " . $orderBy;
     }
 
 }

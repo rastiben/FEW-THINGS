@@ -14,16 +14,17 @@ $page = isset($_REQUEST['p']) ? $_REQUEST['p'] : 1;
 
 //Si recherche
 if(isset($_REQUEST['query']) && !empty($_REQUEST['query'])){
-    //query=toto
     $orgs = $orgsC->lookUpByName($_REQUEST['query'],$page);
-} else {
+} /*else if(empty($_REQUEST['query'])) {
+    header('Location : .');
+} */ else {
     $orgs = $orgsC->lookUp($page);
 }
 
 /*
 *Récupération du nombre d'organisation
 */
-$total = $orgsC->nbOrg();
+$total = $orgsC->nbOrg(isset($_REQUEST['query']) ? $_REQUEST['query'] : "");
 
 /*
 *Création de la pagination
