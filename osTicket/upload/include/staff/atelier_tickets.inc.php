@@ -40,6 +40,9 @@ $queue_columns = array(
             ),
         );
 
+$orgsC = OrganisationCollection::getInstance();
+//$org = $orgsC->lookUpById($user->getOrgId())[0];
+
 ?>
 
 
@@ -189,7 +192,12 @@ $queue_columns = array(
                 $tid=$T['number'];
                 ?>
             <tr id="<?php echo $T['ticket_id']; ?>">
-                <?php if($thisstaff->canManageTickets()) {
+                <?php
+
+                $ticket = TicketsInfos::getInstance();
+                $org = $orgsC->lookUpById(TicketsInfos::getInstance()->ticket_org_id($T['ticket_id']))[0];
+
+                if($thisstaff->canManageTickets()) {
 
                     $sel=false;
                     if($ids && in_array($T['ticket_id'], $ids))
@@ -225,7 +233,7 @@ $queue_columns = array(
                         echo $T['collab_count'] ? '150px' : '170px'; ?>"><?php
                     /*TO CHANGE*/
                     $un = new UsersName($T['user__name']);
-                        echo '<a href="./users.php?id='. TicketsInfos::getInstance()->ticket_user_id($T['ticket_id']) .'#tickets">' . ucwords($T['firsname'] . ' ' . $T['name']) . '</a>';
+                        echo '<a href="./users.php?id='. $ticket->ticket_user_id($T['ticket_id']) .'#tickets">' . ucwords($T['firsname'] . ' ' . $T['name']) . '</a>';
                     ?></span></div></td>
                 <td nowrap><div><?php
                     if ($T['collab_count'])
@@ -233,7 +241,7 @@ $queue_columns = array(
                             .$T['collab_count'].'"><i class="icon-group"></i></span>';
                     ?><span class="truncate" style="max-width:<?php
                         echo $T['collab_count'] ? '150px' : '170px'; ?>"><?php
-                        echo '<a href="./orgs.php?id='. TicketsInfos::getInstance()->ticket_org_id($T['ticket_id']) .'#users">'. TicketsInfos::getInstance()->ticket_org_name($T['ticket_id']) .'</a>';
+                        echo '<a href="./orgs.php?id='. $org->getId() .'#users">'. $org->getName() .'</a>';
                     ?></span></div></td>
                 <?php
                 if($search && !$status){

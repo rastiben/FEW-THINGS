@@ -67,12 +67,9 @@ class Atelier
     }
 
     public function get_org_planches(){
-        $res = $this->dbh->prepare("SELECT ost_organization.name,ost_atelier_planche_contenu.planche_id
-        FROM ost_user,ost_organization,ost_user__cdata,ost_ticket,ost_atelier_planche,ost_atelier_planche_contenu,ost_atelier_contenu_type
-        WHERE ost_user.org_id = ost_organization.id
-        AND ost_user.id = ost_user__cdata.user_id
-        AND ost_ticket.user_id = ost_user.id
-        AND ost_ticket.ticket_id = ost_atelier_planche_contenu.ticket_id
+        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,ost_atelier_planche_contenu.planche_id
+        FROM ost_ticket,ost_atelier_planche,ost_atelier_planche_contenu,ost_atelier_contenu_type
+        WHERE ost_ticket.ticket_id = ost_atelier_planche_contenu.ticket_id
         AND ost_atelier_planche.id = ost_atelier_planche_contenu.planche_id
         AND ost_atelier_contenu_type.id = ost_atelier_planche_contenu.type_id");
         $res->execute();
@@ -150,7 +147,7 @@ class Atelier
     }
 
     public function getPlanches(){
-        $res = $this->dbh->prepare("SELECT ost_atelier_contenu_type.type as contenuType,ost_atelier_planche.planche,ost_atelier_contenu_etat.etat,ost_atelier_planche_contenu.id as numContenue, ost_atelier_planche_contenu.ticket_id,ost_organization.name , ost_ticket.number, ost_atelier_preparation.*,ost_atelier_reparation.*,ost_atelier_preparation_vd.*
+        $res = $this->dbh->prepare("SELECT ost_atelier_contenu_type.type as contenuType,ost_atelier_planche.planche,ost_atelier_contenu_etat.etat,ost_atelier_planche_contenu.id as numContenue, ost_atelier_planche_contenu.ticket_id, ost_ticket.number, ost_user.org_id, ost_atelier_preparation.*,ost_atelier_reparation.*,ost_atelier_preparation_vd.*
         FROM ost_atelier_planche_contenu
         INNER JOIN ost_atelier_contenu_type
         ON ost_atelier_contenu_type.id = ost_atelier_planche_contenu.type_id
@@ -158,8 +155,6 @@ class Atelier
         ON ost_atelier_planche_contenu.ticket_id = ost_ticket.ticket_id
         INNER JOIN ost_user
         ON ost_user.id = ost_ticket.user_id
-        INNER JOIN ost_organization
-        ON ost_user.org_id = ost_organization.id
         INNER JOIN ost_atelier_contenu_etat
         ON ost_atelier_contenu_etat.id = ost_atelier_planche_contenu.etat_id
         LEFT JOIN ost_atelier_planche

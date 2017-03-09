@@ -56,30 +56,26 @@ else
     $showing .= __("This organization doesn't have any users yet");
 
 ?>
+
+
+<div class="col-md-2">
+    <div class="nbUsers">
+        <p><?php echo db_num_rows($res) ?></p>
+    </div>
+</div>
+
+<div class="col-md-10 listOrg">
 <form action="orgs.php?id=<?php echo $org->getId(); ?>" method="POST" name="users" >
 
-<div style="margin-top:5px;" class="pull-left"><b><?php echo $showing; ?></b></div>
-<?php if ($thisstaff->hasPerm(User::PERM_EDIT)) { ?>
-<div class="pull-right flush-right" style="margin-bottom:10px;">
-    <a href="#orgs/<?php echo $org->getId(); ?>/add-user" class="green button action-button add-user"
-        ><i class="icon-plus"></i> <?php echo __('Add User'); ?></a>
-    <a href="#orgs/<?php echo $org->getId(); ?>/import-users" class="button action-button add-user">
-        <i class="icon-cloud-upload icon-large"></i>
-    <?php echo __('Import'); ?></a>
-    <button id="actions" class="red button action-button" type="submit" name="remove-users"><i class="icon-trash"></i> <?php echo __('Remove'); ?></button>
-</div>
-<?php } ?>
 <div class="clear"></div>
-<?php
-if ($num) { ?>
+
  <?php csrf_token(); ?>
  <input type="hidden" name="do" value="mass_process" >
  <input type="hidden" id="id" name="id" value="<?php echo $org->getId(); ?>" >
  <input type="hidden" id="action" name="a" value="" >
- <table class="list" border="0" cellspacing="1" cellpadding="0" width="100%">
+ <table class="table table-striped" border="0" style="margin:0px;" cellspacing="1" cellpadding="0" width="100%">
     <thead>
         <tr>
-            <th width="4%">&nbsp;</th>
             <th width="38%"><?php echo __('Name'); ?></th>
             <th width="35%"><?php echo __('Email'); ?></th>
             <th width="8%"><?php echo __('Status'); ?></th>
@@ -99,10 +95,6 @@ if ($num) { ?>
                     $sel=true;
                 ?>
                <tr id="<?php echo $row['id']; ?>">
-                <td align="center">
-                  <input type="checkbox" class="ckb" name="ids[]"
-                    value="<?php echo $row['id']; ?>" <?php echo $sel?'checked="checked"':''; ?> >
-                </td>
                 <td>&nbsp;
                     <a class="preview"
                         href="users.php?id=<?php echo $row['id']; ?>"
@@ -124,37 +116,8 @@ if ($num) { ?>
             } //end of while.
         endif; ?>
     </tbody>
-    <tfoot>
-     <tr>
-        <td colspan="5">
-            <?php
-            if ($res && $num) {
-                ?>
-            <?php echo __('Select'); ?>:&nbsp;
-            <a id="selectAll" href="#ckb"><?php echo __('All'); ?></a>&nbsp;&nbsp;
-            <a id="selectNone" href="#ckb"><?php echo __('None'); ?></a>&nbsp;&nbsp;
-            <a id="selectToggle" href="#ckb"><?php echo __('Toggle'); ?></a>&nbsp;&nbsp;
-            <?php
-            } else {
-                echo __('No users found!');
-            }
-            ?>
-        </td>
-     </tr>
-    </tfoot>
 </table>
-<?php
-if ($res && $num) { //Show options..
-    echo '<div>&nbsp;'.__('Page').':'.$pageNav->getPageLinks().'&nbsp;</div>';
-
-    ?>
-
-<?php
-}
-?>
 </form>
-<?php
-} ?>
 
 <div style="display:none;" class="dialog" id="confirm-action">
     <h3 class="drag-handle"><?php echo __('Please Confirm'); ?></h3>
@@ -177,6 +140,8 @@ if ($res && $num) { //Show options..
         </span>
      </p>
     <div class="clear"></div>
+</div>
+
 </div>
 
 <script type="text/javascript">

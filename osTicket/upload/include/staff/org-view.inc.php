@@ -10,6 +10,8 @@ $org = $orgsC->lookUpById($_REQUEST['id'])[0];
 
 $apiKey = "AIzaSyB4pINEbEV_CczgRAhMhIza1OAEzSJV6JA";
 
+$tickets = TicketsInfos::getInstance()->ticket_org($org->getId());
+
 ?>
 <h3>Profile : <?php echo $org->getName(); ?></h3>
 <br>

@@ -9,20 +9,49 @@ function Planche() {
         console.log(data);
         self.contenu = [];
         $(data).each(function ($number, $obj) {
-            self.contenu.push(new Contenu($obj['ticket_id'],
+
+            //Récupération de l'organisation
+            $.ajax({
+                type: "GET",
+                url: "./ajax.org.php/org/"+$obj['org_id']+"/name",
+                async: false
+            }).success(function(org_name){
+                self.contenu.push(new Contenu($obj['ticket_id'],
                                           $obj['number'],
-                                          $obj['name'],
+                                          org_name,
                                           $obj['contenuType'],
                                           $obj['numContenue'],
                                           $obj['planche'],
                                           $obj['etat'],
                                           ($obj['contenuType'] == "prepa" ?
-            new Preparation(new VD($obj['id'],$obj['client'],$obj['type'],$obj['numeroSerie'],$obj['versionWindows'],$obj['numLicenceW'],$obj['versionOffice'],$obj['numLicenceO'],$obj['garantie'],$obj['debutGarantie'],$obj['mail'],$obj['mdp']), $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],$obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
-            new Reparation($obj['marque'],$obj['model'],$obj['sn'],$obj['vd'],$obj['os'],$obj['motDePasse'],$obj['login'],$obj['office'],$obj['autreSoft']))));
+                new Preparation(new VD($obj['id'],$obj['client'],$obj['type'],$obj['numeroSerie'],$obj['versionWindows'],$obj['numLicenceW'],$obj['versionOffice'],$obj['numLicenceO'],$obj['garantie'],$obj['debutGarantie'],$obj['mail'],$obj['mdp']), $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],$obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
+                new Reparation($obj['marque'],$obj['model'],$obj['sn'],$obj['vd'],$obj['os'],$obj['motDePasse'],$obj['login'],$obj['office'],$obj['autreSoft']))));
+            });
+
         });
 
-
     });
+
+    /*
+    *Mise a jour de la colonne en cours.
+    */
+    self.majEnCours = function(){
+        //reset
+        var array = ["b1","b2","b3","p1","p2","p3","m1","m2","m3","m4","s1","s2","s3","s4","s5","s6"];
+        $.each(array,function(key,value){
+            $('.'+value+" h4").text(value.toUpperCase() + " : ");
+        });
+
+        //maj
+        $.each(self.contenu,function(key,value){
+            $('.'+value.planche+" h4").text($('.'+value.planche).text() + value.org_name + " ; ");
+        });
+
+        //remove two lasts char
+        $.each(array,function(key,value){
+            $('.'+value+" h4").text($('.'+value+" h4").text().substr(0,$('.'+value+" h4").text().length-2));
+        });
+    }
 
     /*
     *Recupération des contenu non affectés à une planche
@@ -62,6 +91,7 @@ function Planche() {
             contenu[0].planche = planche;
             callback(contenu[0]);
         });
+        self.majEnCours();
     };
 
     self.changeState = function(id,state){
@@ -375,7 +405,6 @@ class AtelierAjax{
     }
 
 }
-
 
 
 //moment.locale('fr');

@@ -4,6 +4,7 @@
 
 <?php
 require('staff.inc.php');
+require(INCLUDE_DIR.'class.org.php');
 //require_once(INCLUDE_DIR.'class.ticket.php');
 //require_once(INCLUDE_DIR.'class.dept.php');
 //require_once(INCLUDE_DIR.'class.filter.php');

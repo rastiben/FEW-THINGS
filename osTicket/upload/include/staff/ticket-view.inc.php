@@ -290,13 +290,11 @@ if($ticket->isOverdue())
     /*
     *Récupération du premier message ( dans notre cas la problématique pour une repa ).
     */
-    $org = $ticket->getOwner()->getOrganization();
-    foreach ($org->getForms() as $form){
-        foreach($form->getFields() as $field){
-            if($field->getAnswer()->_field->ht['name'] == 'address')
-                $address = $field->getAnswer()->value;
-        }
-    }
+    $orgsC = OrganisationCollection::getInstance();
+    $org = $orgsC->lookUpById($ticket->getOwner()->getOrgId())[0];
+    $address = $org->getAddress() . " " . $org->getComplement() . "&#013;&#010;" . $org->getCP() . " " . $org->getCity();
+    $phone = $org->getPhone();
+    $name = $org->getName();
 
     /*
     *Récupération du prénom de l'utilisateur
@@ -336,7 +334,7 @@ if($ticket->isOverdue())
             <div class="col-md-12" style="background: white;padding-top:15px;padding-bottom:15px;">
                 <div class="col-md-12 text-left">
                     <div class="inputField readOnly col-md-6">
-                        <input type="text" id="org" ng-init="org = '<?php echo $ticket->getOwner()->getOrganization(); ?>'" value="<?php echo $ticket->getOwner()->getOrganization(); ?>" readonly>
+                        <input type="text" id="org" ng-init="org = '<?php echo $name; ?>'" value="<?php echo $name; ?>" readonly>
                         <label for="org">Organisation</label>
                     </div>
                     <div class="inputField readOnly col-md-6">
@@ -346,7 +344,7 @@ if($ticket->isOverdue())
                 </div>
                 <div class="col-md-12 text-left">
                     <div class="inputField readOnly col-md-12">
-                        <textarea id="contact" ng-init="contact = {tel: '<?php echo $ticket->getPhoneNumber(); ?>',address: '<?php echo $address ?>'}" readonly><?php echo $address ?>&#013;&#010;<?php echo $ticket->getPhoneNumber(); ?></textarea>
+                        <textarea id="contact" ng-init="contact = {tel: '<?php echo $phone; ?>',address: '<?php echo $address ?>'}" readonly><?php echo $address ?>&#013;&#010;<?php echo $phone; ?></textarea>
                         <label for="contact">Adresse - Téléphone</label>
                     </div>
                 </div>
@@ -1066,7 +1064,7 @@ if ($errors['err'] && isset($_POST['a'])) {
     </div>
     <div class="mail icon">
         <img width="20" src="../assets/default/images/company.png">
-        <a href="./orgs.php?id=<?php echo Format::htmlchars($ticket->getOwner()->getOrgId()) ?>#users"><span><?php echo Format::htmlchars($ticket->getOwner()->getOrganization()) ?></span></a>
+        <a href="./orgs.php?id=<?php echo Format::htmlchars($org->getId()) ?>#users"><span><?php echo Format::htmlchars($org->getName()) ?></span></a>
     </div>
     <div class="mail icon org" id="<?php echo $ticket->getOwner()->getOrgId(); ?>">
         <img width="20" src="../assets/default/images/mail.png">

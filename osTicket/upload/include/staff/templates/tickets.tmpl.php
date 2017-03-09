@@ -79,9 +79,6 @@ $tickets->order_by('-created');
 
 TicketForm::ensureDynamicDataView();*/
 
-$tickets = TicketsInfos::getInstance()->ticket_org($org->getId());
-
-
 // Fetch the results
 ?>
 <div class="col-md-2">
@@ -90,12 +87,12 @@ $tickets = TicketsInfos::getInstance()->ticket_org($org->getId());
     </div>
 </div>
 
-<div class="col-md-10">
+<div class="col-md-10 listOrg">
 <form action="users.php" method="POST" name='tickets' style="">
 <?php csrf_token(); ?>
  <input type="hidden" name="a" value="mass_process" >
  <input type="hidden" name="do" id="action" value="" >
- <table class="list" style="margin:0px" border="0" cellspacing="1" cellpadding="2" width="100%">
+ <table class="table table-striped" style="margin:0px" border="0" cellspacing="1" cellpadding="2" width="100%">
     <thead>
         <tr>
            <!--ost_ticket.ticket_id,ost_ticket.number,ost_ticket.created,subject,ost_user.name,firsname-->

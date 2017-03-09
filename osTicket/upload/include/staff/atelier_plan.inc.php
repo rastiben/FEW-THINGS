@@ -2,8 +2,14 @@
     require_once('./Request/Tickets.php');
     require_once('./Request/Atelier.php');
 
+    $orgsC = OrganisationCollection::getInstance();
+
 ?>
 
+    <div class="balls">
+        <div class="ball"></div>
+        <div class="ball1"></div>
+    </div>
     <div class="plan col-md-12">
         <h1 class="col-md-12">Plan de l'atelier : </h1>
         <div class="atelier col-md-9">
@@ -29,34 +35,23 @@
         </div>
         <div class="enCours col-md-3">
             <h2>En cours</h2>
-            <?php
 
-            $orgPlanche = Atelier::getInstance()->get_org_planches();
-            $orgList = [];
-            foreach($orgPlanche as $obj){
-                $orgList[$obj['planche_id']]=$obj['name'];
-            }
-            //print_r($orgList);
-            //print_r($orgPlanche);
-
-            ?>
-
-            <div class="bureau1"><div class="color"></div><h4>B1 : <?php echo $orgList['1'] ?></h4></div>
-            <div class="bureau2"><div class="color"></div><h4>B2 : <?php echo $orgList['2'] ?></h4></div>
-            <div class="bureau3"><div class="color"></div><h4>B3 : <?php echo $orgList['3'] ?></h4></div>
-            <div class="portable1"><div class="color"></div><h4>P1 : <?php echo $orgList['4'] ?></h4></div>
-            <div class="portable2"><div class="color"></div><h4>P2 : <?php echo $orgList['5'] ?></h4></div>
-            <div class="portable3"><div class="color"></div><h4>P3 : <?php echo $orgList['6'] ?></h4></div>
-            <div class="mur1"><div class="color"></div><h4>M1 : <?php echo $orgList['7'] ?></h4></div>
-            <div class="mur2"><div class="color"></div><h4>M2 : <?php echo $orgList['8'] ?></h4></div>
-            <div class="mur3"><div class="color"></div><h4>M3 : <?php echo $orgList['9'] ?></h4></div>
-            <div class="mur4"><div class="color"></div><h4>M4 : <?php echo $orgList['10'] ?></h4></div>
-            <div class="serveur1"><div class="color"></div><h4>S1 : <?php echo $orgList['11'] ?></h4></div>
-            <div class="serveur2"><div class="color"></div><h4>S2 : <?php echo $orgList['12'] ?></h4></div>
-            <div class="serveur3"><div class="color"></div><h4>S3 : <?php echo $orgList['13'] ?></h4></div>
-            <div class="serveur4"><div class="color"></div><h4>S4 : <?php echo $orgList['14'] ?></h4></div>
-            <div class="serveur5"><div class="color"></div><h4>S5 : <?php echo $orgList['15'] ?></h4></div>
-            <div class="serveur6"><div class="color"></div><h4>S6 : <?php echo $orgList['16'] ?></h4></div>
+            <div class="b1"><div class="color"></div><h4>B1 : </h4></div>
+            <div class="b2"><div class="color"></div><h4>B2 : </h4></div>
+            <div class="b3"><div class="color"></div><h4>B3 : </h4></div>
+            <div class="p1"><div class="color"></div><h4>P1 : </h4></div>
+            <div class="p2"><div class="color"></div><h4>P2 : </h4></div>
+            <div class="p3"><div class="color"></div><h4>P3 : </h4></div>
+            <div class="m1"><div class="color"></div><h4>M1 : </h4></div>
+            <div class="m2"><div class="color"></div><h4>M2 : </h4></div>
+            <div class="m3"><div class="color"></div><h4>M3 : </h4></div>
+            <div class="m4"><div class="color"></div><h4>M4 : </h4></div>
+            <div class="s1"><div class="color"></div><h4>S1 : </h4></div>
+            <div class="s2"><div class="color"></div><h4>S2 : </h4></div>
+            <div class="s3"><div class="color"></div><h4>S3 : </h4></div>
+            <div class="s4"><div class="color"></div><h4>S4 : </h4></div>
+            <div class="s5"><div class="color"></div><h4>S5 : </h4></div>
+            <div class="s6"><div class="color"></div><h4>S6 : </h4></div>
         </div>
 
             <div class="modal fade" id="fichesModal" data_planche="" data_id_contenu="" data_staff="<?php echo $thisstaff->getId() ?>">
@@ -343,6 +338,11 @@
         //$(function() {
 
             var planches = new Planche();
+
+            $(document).ajaxStop(function() {
+                $('.balls').css('display','none');
+                planches.majEnCours();
+            });
 
             //Initiate
             /*$(document).off('click', '.atelier div');

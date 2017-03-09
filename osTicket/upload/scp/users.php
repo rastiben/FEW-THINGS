@@ -18,6 +18,7 @@ if (!$thisstaff->hasPerm(User::PERM_DIRECTORY))
     Http::redirect('index.php');
 
 require_once INCLUDE_DIR.'class.note.php';
+require_once INCLUDE_DIR.'class.org.php';
 
 $user = null;
 if ($_REQUEST['id'] && !($user=User::lookup($_REQUEST['id'])))

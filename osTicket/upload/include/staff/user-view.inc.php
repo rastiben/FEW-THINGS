@@ -1,8 +1,15 @@
 <?php
 if(!defined('OSTSCPINC') || !$thisstaff || !is_object($user)) die('Invalid path');
 
+require_once(SCP_DIR."Request/Tickets.php");
+
 $account = $user->getAccount();
-$org = $user->getOrganization();
+//$org = $user->getOrganization();
+
+$orgsC = OrganisationCollection::getInstance();
+$org = $orgsC->lookUpById($user->getOrgId())[0];
+
+$tickets = TicketsInfos::getInstance()->ticket_user($user->getId());
 
 
 ?>

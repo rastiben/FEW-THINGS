@@ -65,6 +65,18 @@ class TicketsInfos
         return $res->fetchAll();
     }
 
+    public function ticket_user($user){
+        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,ost_ticket.number,ost_ticket.created,subject,ost_user.name,firsname
+        FROM ost_ticket,ost_user,ost_user__cdata,ost_ticket__cdata
+        WHERE ost_ticket.user_id = ost_user.id
+        AND ost_user.id = ost_user__cdata.user_id
+        AND ost_ticket.ticket_id = ost_ticket__cdata.ticket_id
+        AND ost_user.id = :user
+        AND ( ost_ticket.status_id = '1' OR ost_ticket.status_id = '6')");
+        $res->execute(array(':user'=>$user));
+        return $res->fetchAll();
+    }
+
     public function ticket_close_org($org,$user){
         $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,ost_ticket.number,ost_ticket.created,subject,ost_user.name,firsname
         FROM ost_ticket,ost_user,ost_user__cdata,ost_ticket__cdata
