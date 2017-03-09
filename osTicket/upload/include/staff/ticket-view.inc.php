@@ -292,9 +292,12 @@ if($ticket->isOverdue())
     */
     $orgsC = OrganisationCollection::getInstance();
     $org = $orgsC->lookUpById($ticket->getOwner()->getOrgId())[0];
-    $address = $org->getAddress() . " " . $org->getComplement() . "&#013;&#010;" . $org->getCP() . " " . $org->getCity();
-    $phone = $org->getPhone();
-    $name = $org->getName();
+    if(!empty($org)){
+        $address = $org->getAddress() . " " . $org->getComplement() . "&#013;&#010;" . $org->getCP() . " " . $org->getCity();
+        $phone = $org->getPhone();
+        $orgName = $org->getName();
+        $id = $org->getId();
+    }
 
     /*
     *Récupération du prénom de l'utilisateur
@@ -334,7 +337,7 @@ if($ticket->isOverdue())
             <div class="col-md-12" style="background: white;padding-top:15px;padding-bottom:15px;">
                 <div class="col-md-12 text-left">
                     <div class="inputField readOnly col-md-6">
-                        <input type="text" id="org" ng-init="org = '<?php echo $name; ?>'" value="<?php echo $name; ?>" readonly>
+                        <input type="text" id="org" ng-init="org = '<?php echo $orgName; ?>'" value="<?php echo $orgName; ?>" readonly>
                         <label for="org">Organisation</label>
                     </div>
                     <div class="inputField readOnly col-md-6">
@@ -1063,8 +1066,13 @@ if ($errors['err'] && isset($_POST['a'])) {
         <a href="./users.php?id=<?php echo $ticket->getUserId() ?>#tickets"><span><?php echo Format::htmlchars($ticket->getName()) ?></span></a>
     </div>
     <div class="mail icon">
-        <img width="20" src="../assets/default/images/company.png">
-        <a href="./orgs.php?id=<?php echo Format::htmlchars($org->getId()) ?>#users"><span><?php echo Format::htmlchars($org->getName()) ?></span></a>
+        <?php if(!empty($org)) { ?>
+            <img width="20" src="../assets/default/images/company.png">
+            <a href="./orgs.php?id=<?php echo Format::htmlchars($id) ?>#users"><span><?php echo Format::htmlchars($orgName) ?></span></a>
+        <?php } else { ?>
+            <img width="20" src="../assets/default/images/company.png">
+            <input class="user_org" type="text">
+        <?php } ?>
     </div>
     <div class="mail icon org" id="<?php echo $ticket->getOwner()->getOrgId(); ?>">
         <img width="20" src="../assets/default/images/mail.png">
@@ -1078,6 +1086,9 @@ if ($errors['err'] && isset($_POST['a'])) {
             $phone = chunk_split($phone,2,' ');
             echo $phone;
         ?></span>
+    </div>
+    <div class="orgsList" style="display:none">
+
     </div>
 </div>
 
@@ -1445,6 +1456,7 @@ $(function() {
 
     $(document).ready(function(){
 
+        var user = <?php echo $user->getId(); ?>;
         /*$(document).on('click','.rapports tbody tr',function(){
             var id = $(this).attr('id');
             $('.col-md-4.rapport').removeClass('active');
@@ -1482,19 +1494,94 @@ $(function() {
             $(this).parent().parent().css('display','none');
         });
 
+        $(window).resize(function(){
+            if($('.fixed-right').css('position') == "fixed"){
+                $('.fixed-right').css('height',$(window).height()-80);
+            } else {
+                $('.fixed-right').css('height','auto');
+            }
+        });
+
         $(window).scroll(function() {
             //console.log($(document).scrollTop());
             if($(document).scrollTop() > 208 && $(document).width() > 974){
                 $('.fixed-right').css('position','fixed');
                 $('.fixed-right').css('top','60px');
                 $('.fixed-right').css('width','18.4%');
+                $('.fixed-right').css('height',$(window).height()-80);
             } else if($(document).width() > 974) {
                 $('.fixed-right').css('position','relative');
                 $('.fixed-right').css('top','initial');
                 $('.fixed-right').css('width','100%');
+                $('.fixed-right').css('height','auto');
             }
         });
 
+            var clicky;
+
+    $(document).mousedown(function(e) {
+        // The latest element clicked
+        clicky = $(e.target);
     });
+
+    $(document).on('focusout','.user_org',function(e){
+        if(!$(clicky).is('p')){
+            $(".orgsList").css('display','none');
+            //$("tr td:contains('Organisation:')").siblings().find('input').focus();
+        } else {
+            $(".user_org").focus();
+        }
+    });
+
+    $(document).on('focusin','.user_org',function(e){
+        if($('.user_org').val().length > 0){
+            var orgInput = $(this);
+            var top = 323;
+            var left = 75;
+            $(".orgsList").css('top',top);
+            $(".orgsList").css('left',left);
+            $(".orgsList").css('width','auto');
+            $(".orgsList").css('display','block');
+        }
+    });
+
+    $(document).on('keyup','.user_org',function(){
+        var orgInput = $(this);
+        var top = 323;
+        var left = 75;
+
+        if(orgInput.val().length > 0){
+            $.ajax({
+                method: "GET",
+                url: "./ajax.org.php/orgs/"+orgInput.val()
+            })
+            .success(function( data ) {
+                data = $.parseJSON(data);
+                $(".orgsList").empty();
+                $(".orgsList").css('top',top);
+                $(".orgsList").css('left',left);
+                $(".orgsList").css('width','auto');
+                $(data).each(function(number,obj){
+                    $(".orgsList").append('<p id="'+obj.data[0]+'">'+obj.data[1]+'</p>')
+                });
+                $(".orgsList").css('display','block');
+            });
+        }
+    });
+
+    $(document).on('click','.orgsList p',function(){
+        $(".user_org").val($(this).text());
+        $.ajax({
+                method: "POST",
+                url: "./ajax.php/users/"+user+"/org",
+                data: {
+                    orgid:$(this).attr('id')
+                }
+        }).success(function( data ) {
+
+        });
+    });
+
+});
 
 </script>

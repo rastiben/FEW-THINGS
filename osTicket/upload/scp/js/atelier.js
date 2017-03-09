@@ -11,24 +11,26 @@ function Planche() {
         $(data).each(function ($number, $obj) {
 
             //Récupération de l'organisation
-            $.ajax({
-                type: "GET",
-                url: "./ajax.org.php/org/"+$obj['org_id']+"/name",
-                async: false
-            }).success(function(org_name){
-                self.contenu.push(new Contenu($obj['ticket_id'],
-                                          $obj['number'],
-                                          org_name,
-                                          $obj['contenuType'],
-                                          $obj['numContenue'],
-                                          $obj['planche'],
-                                          $obj['etat'],
-                                          ($obj['contenuType'] == "prepa" ?
-                new Preparation(new VD($obj['id'],$obj['client'],$obj['type'],$obj['numeroSerie'],$obj['versionWindows'],$obj['numLicenceW'],$obj['versionOffice'],$obj['numLicenceO'],$obj['garantie'],$obj['debutGarantie'],$obj['mail'],$obj['mdp']), $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],$obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
-                new Reparation($obj['marque'],$obj['model'],$obj['sn'],$obj['vd'],$obj['os'],$obj['motDePasse'],$obj['login'],$obj['office'],$obj['autreSoft']))));
-            });
-
+            if($obj['org_id'] != "0"){
+                $.ajax({
+                    type: "GET",
+                    url: "./ajax.org.php/org/"+$obj['org_id']+"/name",
+                    async: false
+                }).success(function(org_name){
+                    self.contenu.push(new Contenu($obj['ticket_id'],
+                                              $obj['number'],
+                                              org_name,
+                                              $obj['contenuType'],
+                                              $obj['numContenue'],
+                                              $obj['planche'],
+                                              $obj['etat'],
+                                              ($obj['contenuType'] == "prepa" ?
+                    new Preparation(new VD($obj['id'],$obj['client'],$obj['type'],$obj['numeroSerie'],$obj['versionWindows'],$obj['numLicenceW'],$obj['versionOffice'],$obj['numLicenceO'],$obj['garantie'],$obj['debutGarantie'],$obj['mail'],$obj['mdp']), $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],$obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
+                    new Reparation($obj['marque'],$obj['model'],$obj['sn'],$obj['vd'],$obj['os'],$obj['motDePasse'],$obj['login'],$obj['office'],$obj['autreSoft']))));
+                });
+            }
         });
+
 
     });
 

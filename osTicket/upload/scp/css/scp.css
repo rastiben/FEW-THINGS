@@ -3606,8 +3606,8 @@ input[type="radio"]{
 }
 
 .fixed-right{
-    height: 80%;
-    min-height: 680px;
+    /*height: 80%;
+    min-height: 680px;*/
 }
 
 @media (min-width:992px){

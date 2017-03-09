@@ -21,6 +21,8 @@ $routes = array
     'org'   => array('org', ':id'),
     'orgV'   => array('org', ':id', ':variable'),
     'orgA'   => array('org', ':action', ':id'),
+    'orgs'   => array('orgs', ':name'),
+    'userA' => array('user', ':action', ':id')
 );
 
 function dispatcher($url, $routes)
@@ -65,22 +67,35 @@ function dispatcher($url, $routes)
 $url = dispatcher($url, $routes);
 
 if(strstr($url['path'],"org")){
-    if($action = isset($url['parameters']['action'])){
-
-    } else if($variable = isset($url['parameters']['variable'])) {
-        $org = $org->lookUpById($url['parameters']['id'])[0];
-        if($variable == "name"){
-            echo $org->getName();
-        }
-    } else {
+    if($url['path'] == "orgs"){
         switch($method){
             case "GET":
-                print_r($org->lookUpById($url['parameters']['id']));
+                echo json_encode($org->searchByName($url['parameters']['name']));
                 break;
+        }
+    } else {
+        if($action = isset($url['parameters']['action'])){
+
+        } else if($variable = isset($url['parameters']['variable'])) {
+            $org = $org->lookUpById($url['parameters']['id'])[0];
+            if($variable == "name"){
+                echo $org->getName();
+            }
+        } else {
+            switch($method){
+                case "GET":
+                    echo json_encode($org->lookUpById($url['parameters']['id']));
+                    break;
+            }
+        }
+    }
+
+}  else if(strstr($url['path'],"userA")){
+    if($action = isset($url['parameters']['action'])){
+        if($action == "setOrg"){
+
         }
     }
 }
-
-
 
 ?>

@@ -109,9 +109,21 @@ class OrganisationCollection{
         while($myRow = odbc_fetch_array($result)){
             $this->addOrg($myRow);
         }
-        print_r($myRow);
 
         return $this->getCollectionPage($offset,$query);
+    }
+
+    /*
+    *Recherche par nom sans utilisation de classe
+    */
+    public function searchByName($query){
+        $result = $this->bdd_org->getOrgWithName($query);
+
+        while($myRow = odbc_fetch_array($result)){
+            $this->addOrg($myRow);
+        }
+
+        return $this->getCollectionPage();
     }
 
     /*
@@ -123,7 +135,6 @@ class OrganisationCollection{
         while($myRow = odbc_fetch_array($result)){
             $this->addOrg($myRow);
         }
-        print_r($myRow);
 
         return $this->getCollectionPage($offset,$query);
     }
@@ -138,7 +149,7 @@ class OrganisationCollection{
     /*
     *Récupération des occurences à afficher
     */
-    public function getCollectionPage($offset,$query=null){
+    public function getCollectionPage($offset=null,$query=null){
         if(empty($query)){
             return $this->orgs;
         } else {
@@ -159,13 +170,16 @@ class Organisation{
     /*
     *Données relative à l'organisation
     */
-    private $data = null;
+    public $data = null;
 
     /*
     *Constructeur
     */
     public function __construct($data){
         $this->data = array_values($data);
+        for($i=0;$i<count($this->data);$i++){
+            $this->data[$i] = iconv('Windows-1250', 'UTF-8', $this->data[$i]);
+        }
     }
 
     /*

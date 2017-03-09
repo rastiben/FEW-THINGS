@@ -196,6 +196,10 @@ $orgsC = OrganisationCollection::getInstance();
 
                 $ticket = TicketsInfos::getInstance();
                 $org = $orgsC->lookUpById(TicketsInfos::getInstance()->ticket_org_id($T['ticket_id']))[0];
+                if(!empty($org)){
+                    $id = $org->getId();
+                    $orgName = $org->getName();
+                }
 
                 if($thisstaff->canManageTickets()) {
 
@@ -241,7 +245,7 @@ $orgsC = OrganisationCollection::getInstance();
                             .$T['collab_count'].'"><i class="icon-group"></i></span>';
                     ?><span class="truncate" style="max-width:<?php
                         echo $T['collab_count'] ? '150px' : '170px'; ?>"><?php
-                        echo '<a href="./orgs.php?id='. $org->getId() .'#users">'. $org->getName() .'</a>';
+                        echo '<a href="./orgs.php?id='. $id .'#users">'. $orgName .'</a>';
                     ?></span></div></td>
                 <?php
                 if($search && !$status){
