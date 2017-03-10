@@ -56,6 +56,7 @@ if ($lang) {
     <link type="text/css" rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/select2.min.css?901e5ea"/>
     <link type="text/css" rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/rtl.css?901e5ea"/>
     <link type="text/css" rel="stylesheet" href="<?php echo ROOT_PATH ?>scp/css/translatable.css?901e5ea"/>
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:500" rel="stylesheet">
 
     <?php
     if($ost && ($headers=$ost->getExtraHeaders())) {

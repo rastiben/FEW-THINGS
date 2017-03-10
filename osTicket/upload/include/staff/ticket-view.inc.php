@@ -285,7 +285,7 @@ if($ticket->isOverdue())
         array_push($array,['id'=>$agent->getId(),'name'=>$agent->getFirstName().' '.$agent->getLastName()]);
     }
 
-    $threads = $ticket->getMessages();
+    $threads = $ticket->getThreadEntries(array('M','R','N'));
 
     /*
     *Récupération du premier message ( dans notre cas la problématique pour une repa ).
@@ -687,13 +687,14 @@ if($ticket->isOverdue())
 <?php
     // Render ticket thread
     $ticket->getThread()->render(
-            array('M', 'R', 'N'),
+            array('M','R', 'N'),
             array(
                 'html-id'   => 'ticketThread',
                 'mode'      => Thread::MODE_STAFF,
                 'sort'      => $thisstaff->thread_view_order
                 )
             );
+
 ?>
 <div class="clear"></div>
 <!--<?php
@@ -965,7 +966,7 @@ if ($errors['err'] && isset($_POST['a'])) {
                 </td>
             </tr>
             <tr><td colspan="2">&nbsp;</td></tr>
-            <tr>
+            <!--<tr>
                 <td colspan="2">
                     <fieldset class="field " id="field_b22c0215f6129f93" data-field-id="42">
                       <label class="required" for="_b22c0215f6129f93">
@@ -987,7 +988,7 @@ if ($errors['err'] && isset($_POST['a'])) {
                 </script>
                 &nbsp;<select name="b22c0215f6129f93:time" id="b22c0215f6129f93:time" style="display:inline-block;width:auto"><option value="" selected="">Temps</option><option value="23:45">23:45</option><option value="23:30">23:30</option><option value="23:15">23:15</option><option value="23:00">23:00</option><option value="22:45">22:45</option><option value="22:30">22:30</option><option value="22:15">22:15</option><option value="22:00">22:00</option><option value="21:45">21:45</option><option value="21:30">21:30</option><option value="21:15">21:15</option><option value="21:00">21:00</option><option value="20:45">20:45</option><option value="20:30">20:30</option><option value="20:15">20:15</option><option value="20:00">20:00</option><option value="19:45">19:45</option><option value="19:30">19:30</option><option value="19:15">19:15</option><option value="19:00">19:00</option><option value="18:45">18:45</option><option value="18:30">18:30</option><option value="18:15">18:15</option><option value="18:00">18:00</option><option value="17:45">17:45</option><option value="17:30">17:30</option><option value="17:15">17:15</option><option value="17:00">17:00</option><option value="16:45">16:45</option><option value="16:30">16:30</option><option value="16:15">16:15</option><option value="16:00">16:00</option><option value="15:45">15:45</option><option value="15:30">15:30</option><option value="15:15">15:15</option><option value="15:00">15:00</option><option value="14:45">14:45</option><option value="14:30">14:30</option><option value="14:15">14:15</option><option value="14:00">14:00</option><option value="13:45">13:45</option><option value="13:30">13:30</option><option value="13:15">13:15</option><option value="13:00">13:00</option><option value="12:45">12:45</option><option value="12:30">12:30</option><option value="12:15">12:15</option><option value="12:00">12:00</option><option value="11:45">11:45</option><option value="11:30">11:30</option><option value="11:15">11:15</option><option value="11:00">11:00</option><option value="10:45">10:45</option><option value="10:30">10:30</option><option value="10:15">10:15</option><option value="10:00">10:00</option><option value="09:45">09:45</option><option value="09:30">09:30</option><option value="09:15">09:15</option><option value="09:00">09:00</option><option value="08:45">08:45</option><option value="08:30">08:30</option><option value="08:15">08:15</option><option value="08:00">08:00</option><option value="07:45">07:45</option><option value="07:30">07:30</option><option value="07:15">07:15</option><option value="07:00">07:00</option><option value="06:45">06:45</option><option value="06:30">06:30</option><option value="06:15">06:15</option><option value="06:00">06:00</option><option value="05:45">05:45</option><option value="05:30">05:30</option><option value="05:15">05:15</option><option value="05:00">05:00</option><option value="04:45">04:45</option><option value="04:30">04:30</option><option value="04:15">04:15</option><option value="04:00">04:00</option><option value="03:45">03:45</option><option value="03:30">03:30</option><option value="03:15">03:15</option><option value="03:00">03:00</option><option value="02:45">02:45</option><option value="02:30">02:30</option><option value="02:15">02:15</option><option value="02:00">02:00</option><option value="01:45">01:45</option><option value="01:30">01:30</option><option value="01:15">01:15</option><option value="01:00">01:00</option><option value="00:45">00:45</option><option value="00:30">00:30</option><option value="00:15">00:15</option><option value="00:00" selected="selected">00:00</option></select>     </fieldset>
                </td>
-            </tr>
+            </tr>-->
             <tr>
                 <td width="120">
                     <label><?php echo __('Ticket Status');?>:</label>
@@ -1495,29 +1496,53 @@ $(function() {
         });
 
         $(window).resize(function(){
-            if($('.fixed-right').css('position') == "fixed"){
-                $('.fixed-right').css('height',$(window).height()-80);
+            /*if($('.fixed-right').css('position') == "fixed"){
+                $('.fixed-right').css('height',$('.ticket_left').height());
             } else {
                 $('.fixed-right').css('height','auto');
-            }
+            }*/
         });
 
         $(window).scroll(function() {
             //console.log($(document).scrollTop());
-            if($(document).scrollTop() > 208 && $(document).width() > 974){
-                $('.fixed-right').css('position','fixed');
-                $('.fixed-right').css('top','60px');
-                $('.fixed-right').css('width','18.4%');
-                $('.fixed-right').css('height',$(window).height()-80);
-            } else if($(document).width() > 974) {
-                $('.fixed-right').css('position','relative');
-                $('.fixed-right').css('top','initial');
-                $('.fixed-right').css('width','100%');
-                $('.fixed-right').css('height','auto');
+            if($(document).width() > 974){
+                $('.ticket_right').height($('.ticket_left').height());
+
+                /*PERCENTAGE*/
+                var st = $(this).scrollTop();
+                var wh = $('.ticket_right').height();
+                var perc = (st*100)/wh;
+
+                var st2 = $('.ticket_left').height();
+                var wh2 = $(document).height();
+                var perc2 = (st2*100)/wh2;
+
+                var perc3 = (perc*100)/perc2;
+
+                if(perc3 > 65){
+                    $('.fixed-right').css('position','absolute');
+                    $('.fixed-right').css('bottom','0px');
+                    $('.fixed-right').css('top','initial');
+                    $('.fixed-right').css('width','100%');
+                } else if($(document).scrollTop() > 208){
+                    $('.fixed-right').css('position','fixed');
+                    $('.fixed-right').css('top','60px');
+                    $('.fixed-right').css('bottom','0px');
+                    $('.fixed-right').css('width','20%');
+                    $('.fixed-right').css('height',$(window).height()-60);
+                } else {
+                    $('.fixed-right').css('position','relative');
+                    $('.fixed-right').css('top','initial');
+                    $('.fixed-right').css('bottom','initial');
+                    $('.fixed-right').css('width','100%');
+                    $('.fixed-right').css('height','auto');
+                }
             }
         });
 
-            var clicky;
+        //$(".fixed-right").stick_in_parent();
+
+        var clicky;
 
     $(document).mousedown(function(e) {
         // The latest element clicked
@@ -1536,8 +1561,9 @@ $(function() {
     $(document).on('focusin','.user_org',function(e){
         if($('.user_org').val().length > 0){
             var orgInput = $(this);
-            var top = 323;
-            var left = 75;
+            var pos = orgInput.position();
+            var top = pos.top + 27;
+            var left = pos.left;
             $(".orgsList").css('top',top);
             $(".orgsList").css('left',left);
             $(".orgsList").css('width','auto');
@@ -1545,29 +1571,46 @@ $(function() {
         }
     });
 
-    $(document).on('keyup','.user_org',function(){
-        var orgInput = $(this);
-        var top = 323;
-        var left = 75;
-
-        if(orgInput.val().length > 0){
-            $.ajax({
-                method: "GET",
-                url: "./ajax.org.php/orgs/"+orgInput.val()
-            })
-            .success(function( data ) {
-                data = $.parseJSON(data);
-                $(".orgsList").empty();
-                $(".orgsList").css('top',top);
-                $(".orgsList").css('left',left);
-                $(".orgsList").css('width','auto');
-                $(data).each(function(number,obj){
-                    $(".orgsList").append('<p id="'+obj.data[0]+'">'+obj.data[1]+'</p>')
-                });
-                $(".orgsList").css('display','block');
+    (function ($) {
+        $.fn.delayKeyup = function(callback, ms){
+            var timer = 0;
+            $(this).keyup(function(){
+                clearTimeout (timer);
+                timer = setTimeout(callback, ms);
             });
-        }
-    });
+            return $(this);
+        };
+    })(jQuery);
+
+    $('.user_org').delayKeyup(function(){
+        //alert("5 secondes passed from the last event keyup.");
+            var orgInput = $('.user_org');
+            var pos = orgInput.position();
+            var top = pos.top + 27;
+            var left = pos.left;
+
+            if(orgInput.val().length > 0){
+                $.ajax({
+                    method: "GET",
+                    url: "./ajax.org.php/orgs/"+orgInput.val()
+                })
+                .success(function( data ) {
+                    data = $.parseJSON(data);
+                    $(".orgsList").empty();
+                    $(".orgsList").css('top',top);
+                    $(".orgsList").css('left',left);
+                    $(".orgsList").css('width','auto');
+                    $(data).each(function(number,obj){
+                        $(".orgsList").append('<p id="'+obj.data[0]+'">'+obj.data[1]+'</p>')
+                    });
+                    $(".orgsList").css('display','block');
+                });
+            } else {
+                $(".orgsList").css('display','none');
+            }
+    }, 500);
+
+    //temporisation
 
     $(document).on('click','.orgsList p',function(){
         $(".user_org").val($(this).text());

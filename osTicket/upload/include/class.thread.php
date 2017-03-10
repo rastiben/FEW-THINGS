@@ -242,6 +242,7 @@ class Thread extends VerySimpleModel {
         if ($type && is_array($type))
             $entries->filter(array('type__in' => $type));
 
+
         if ($options['sort'] && !strcasecmp($options['sort'], 'DESC'))
             $entries->order_by('-id');
 

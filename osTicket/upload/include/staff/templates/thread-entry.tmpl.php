@@ -13,6 +13,7 @@ $name = $user ? $user->getName() : $entry->poster;
 $avatar = '';
 if ($user && $cfg->isAvatarsEnabled())
     $avatar = $user->getAvatar();
+
 ?>
 
 <?php
