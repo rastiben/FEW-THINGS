@@ -105,14 +105,17 @@ app.controller("rapportCtrl",["$scope","rapportFactory", function($scope,rapport
         //Récupération des contrat ou instal (a changer)
         if($('input[value="Contrat"]').is(':checked')){
             var i = 1;
-            $.each($('.contrat.table.table-striped tbody tr:last-child td'),function(){
-            if($('input',this).is(':checked')){
-                $scope.contrat = $scope.contrat + i + ";";
+            $scope.contrat = "";
+            $.each($('.contrat.table.table-striped tbody tr:last-child td'),function(index, element){
+            if($('input',element).is(':checked')){
+                $scope.contrat += $scope.contrat + i + ";";
             }
             i += 1;
+            $scope.instal = 0;
         });
         } else {
             $scope.instal = 1;
+            $scope.contrat = null;
         }
 
         var comments = $('#new_symptomesObservations').val();
@@ -130,7 +133,7 @@ app.controller("rapportCtrl",["$scope","rapportFactory", function($scope,rapport
                         instal:$scope.instal
                         });
         rapportFactory.addHR(data);
-        location.reload();
+        /*location.reload();*/
         //window.location = window.location.href;
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('OSTSCPINC')
         || !$ticket
         || !($ticket->checkStaffPerm($thisstaff, TicketModel::PERM_EDIT)))

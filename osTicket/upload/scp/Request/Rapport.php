@@ -71,9 +71,11 @@ class Rapport
         //echo 'toto';
 
         if(empty($rapportID)){
+
             $date_rapport = date('Y-m-d');
 
             $res = $this->dbh->prepare("INSERT INTO ost_rapport (id_ticket,id_agent,date_rapport,date_inter,topic_id,contrat,instal) VALUES (:ticket_id,:id_agent,:date_rapport,:date_inter,:topic_id,:contrat,:instal)");
+
             $res->execute(array(':ticket_id'=>$ticketId,':id_agent'=>$agentId,':date_rapport'=>$date_rapport,':date_inter'=>$date->format('Y-m-d'),':topic_id'=>$topic_id,':contrat'=>$contrat,':instal'=>$instal));
 
             $rapportID = $this->dbh->lastInsertId();

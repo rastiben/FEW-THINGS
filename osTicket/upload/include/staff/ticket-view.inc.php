@@ -293,7 +293,7 @@ if($ticket->isOverdue())
     $orgsC = OrganisationCollection::getInstance();
     $org = $orgsC->lookUpById($ticket->getOwner()->getOrgId())[0];
     if(!empty($org)){
-        $address = $org->getAddress() . " " . $org->getComplement() . "&#013;&#010;" . $org->getCP() . " " . $org->getCity();
+        $address = addslashes($org->getAddress() . " " . $org->getComplement() . "&#013;&#010;" . $org->getCP() . " " . $org->getCity());
         $phone = $org->getPhone();
         $orgName = $org->getName();
         $id = $org->getId();
@@ -312,9 +312,8 @@ if($ticket->isOverdue())
 
 ?>
 
-<div id="atelier" style="display:none" ng-init="init(<?php echo $ticket->getId() ?>)" ng-controller="atelierCtrl">
+<div id="atelier" style="display:none" ng-init="init(<?php echo $ticket->getId() ?>,'<?php echo $thisstaff->getName() ?>',<?php echo htmlspecialchars(json_encode($array)) ?>)" ng-controller="atelierCtrl">
 
-   <button ng-click="printRepa()">Imprimer</button>
     <div id="ifNoAtelier" class="col-md-12" ng-show="!showRepa && !showPrepa">
         <div id="ticketIsRepa" ng-click="setTicketAtelierType('repa')" class="col-md-6">
             <div class="col-md-12">
@@ -331,6 +330,7 @@ if($ticket->isOverdue())
     </div>
 
     <div id="ifRepa" class="col-md-12" ng-show="showRepa">
+        <button ng-click="printRepa()">Imprimer</button>
         <div id="newFicheSuivi" class="">
             <h4 ng-click="displayCard('#newFicheSuivi')">{{ficheSuiviText}}</h4>
             <span class='glyphicon glyphicon-plus' aria-hidden='true'></span>
@@ -347,7 +347,7 @@ if($ticket->isOverdue())
                 </div>
                 <div class="col-md-12 text-left">
                     <div class="inputField readOnly col-md-12">
-                        <textarea id="contact" ng-init="contact = {tel: '<?php echo $phone; ?>',address: '<?php echo $address ?>'}" readonly><?php echo $address ?>&#013;&#010;<?php echo $phone; ?></textarea>
+                        <textarea id="contact" ng-init="contact = {tel: '<?php echo $phone; ?>',address: '<?php echo $address ?>'}" readonly><?php echo stripslashes($address) ?>&#013;&#010;<?php echo $phone; ?></textarea>
                         <label for="contact">Adresse - Téléphone</label>
                     </div>
                 </div>
@@ -370,7 +370,7 @@ if($ticket->isOverdue())
                 <div class="col-md-12 text-left">
                     <div class="inputField col-md-6">
                         <p for="tech">Technicien</p>
-                        <select id="tech" ng-model="tech" ng-init="agents = <?php echo htmlspecialchars(json_encode($array)) ?>" ng-options="agent.name for agent in agents" required>
+                        <select id="tech" ng-model="tech" ng-options="agent.name for agent in agents" required>
                         </select>
                     </div>
                 </div>

@@ -457,7 +457,14 @@ app.factory('atelierFactory',['$http',function($http){
 app.controller("atelierCtrl",["$scope","atelierFactory", function($scope,atelierFactory){
     //Init
 
-    $scope.init = function(ticketID){
+    $scope.init = function(ticketID,staffName,agents){
+        $scope.agents = agents;
+
+        $.each(agents,function(key,value){
+           if(value.name === staffName)
+               $scope.tech = value;
+        });
+
         autosize($('.inputField textarea'));
         $scope.ticketID = ticketID;
         atelierFactory.getAtelier($scope.ticketID).then(function(atelier){
@@ -513,24 +520,24 @@ app.controller("atelierCtrl",["$scope","atelierFactory", function($scope,atelier
             var zip = new JSZip(content);
             var doc=new Docxtemplater().loadZip(zip)
             doc.setData({
-                tel:$scope.contact.tel
-                ,adresse:$scope.contact.address
-                ,organisation:$scope.org
-                ,name:$scope.names
-                ,openDate:$scope.dateOuverture
-                ,tech:$scope.tech.name
-                ,type:$scope.type
-                ,accessoire:$scope.accessoire
-                ,description:$scope.description
-                ,marque:$scope.marque
-                ,modele:$scope.model
-                ,sn:$scope.sn
-                ,vd:$scope.vd
-                ,os:$scope.os
-                ,mdp:$scope.motDePasse
-                ,login:$scope.login
-                ,office:$scope.office
-                ,autreSoft:$scope.autreSoft
+                tel:$scope.contact.tel || ""
+                ,adresse:$scope.contact.address || ""
+                ,organisation:$scope.org || ""
+                ,name:$scope.names || ""
+                ,openDate:$scope.dateOuverture || ""
+                ,tech:$scope.tech.name || ""
+                ,type:$scope.type || ""
+                ,accessoire:$scope.accessoire || ""
+                ,description:$scope.description || ""
+                ,marque:$scope.marque || ""
+                ,modele:$scope.model || ""
+                ,sn:$scope.sn || ""
+                ,vd:$scope.vd || ""
+                ,os:$scope.os || ""
+                ,mdp:$scope.motDePasse || ""
+                ,login:$scope.login || ""
+                ,office:$scope.office || ""
+                ,autreSoft:$scope.autreSoft || ""
             });
 
             try {

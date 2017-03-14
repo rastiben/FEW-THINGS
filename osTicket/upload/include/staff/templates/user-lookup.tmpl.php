@@ -1,3 +1,15 @@
+<?php
+
+require_once(INCLUDE_DIR . 'class.users.php');
+//MISE A JOUR DES UTILISATEURS
+$users = userCollection::getInstance();
+
+$users->majBaseUser();
+
+//$users->majBaseUser();
+
+?>
+
 <div id="the-lookup-form">
 <h3 class="drag-handle"><?php echo $info['title']; ?></h3>
 <b><a class="close" href="#"><i class="icon-remove-circle"></i></a></b>
@@ -9,10 +21,11 @@ if (!isset($info['lookup']) || $info['lookup'] !== false) { ?>
     ? __('Search existing users or add a new user.')
     : __('Search existing users.');
 ?></p></div>
-<div style="margin-bottom:10px;">
-    <input type="text" class="search-input" style="width:100%;"
+<div style="margin-bottom:10px;padding:0px" class="col-md-12">
+    <input type="text" class="search-input col-md-11"
     placeholder="<?php echo __('Search by email, phone or name'); ?>" id="user-search"
     autofocus autocorrect="off" autocomplete="off"/>
+    <button class="col-md-1"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
 </div>
 <?php
 }

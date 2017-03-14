@@ -42,25 +42,34 @@ class bdd_org{
     }
 
     /*
-    *Récupération des organisation
+    *Récupération des organisations
     */
     public function getOrgs($page){
-        /*Création de la requete*/
-        $fields = ["cbMarq","CT_Num","CT_Adresse","CT_Complement","CT_CodePostal","CT_Ville","CT_Telephone","CT_Site"];
-        $whereClauses = [["CT_Num","LIKE","'%411%'"]];
-        $orderBy = "CT_Num";
+        if(empty($page)){
+            $prepare = $this->DB->prepare("SELECT cbMarq,CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site FROM F_COMPTET WHERE CT_Num LIKE ? ORDER BY CT_Num");
+            $values = array("411%");
+            $this->DB->execute($prepare,$values);
+            return $prepare;
+        } else {
+            $fields = ["cbMarq","CT_Num","CT_Adresse","CT_Complement","CT_CodePostal","CT_Ville","CT_Telephone","CT_Site"];
+            $whereClauses = [["CT_Num","LIKE","'%411%'"]];
+            $orderBy = "CT_Num";
 
-        $range = $this->getRange($page);
+            $range = $this->getRange($page);
 
-        $request = $this->DB->selectBetween("F_COMPTET",$fields,$whereClauses,$orderBy,$range);
+            $request = $this->DB->selectBetween("F_COMPTET",$fields,$whereClauses,$orderBy,$range);
 
-        /*Préparation et execution de celle ci.*/
-        $prepare = $this->DB->prepare($request);
-        $values = array();
-        $this->DB->execute($prepare,$values);
-        return $prepare;
+            /*Préparation et execution de celle ci.*/
+            $prepare = $this->DB->prepare($request);
+            $values = array();
+            $this->DB->execute($prepare,$values);
+            return $prepare;
+        }
     }
 
+    /*
+    *Récupération des organisation par id
+    */
     public function getOrgWithId($id){
         /*Préparation et execution de celle ci.*/
         $prepare = $this->DB->prepare("SELECT cbMarq,CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site
@@ -72,6 +81,9 @@ class bdd_org{
         return $prepare;
     }
 
+    /*
+    *Récupération des organisation par nom
+    */
     public function getOrgWithName($name){
         /*Préparation et execution de celle ci.*/
         $prepare = $this->DB->prepare("SELECT cbMarq,CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site
@@ -83,7 +95,9 @@ class bdd_org{
         return $prepare;
     }
 
-
+    /*
+    *Récupération du nombre d'organisation
+    */
     public function nbOrg($search){
         /*Préparation et execution de celle ci.*/
         $prepare = $this->DB->prepare("SELECT COUNT(*) FROM F_COMPTET WHERE CT_Num LIKE ?");

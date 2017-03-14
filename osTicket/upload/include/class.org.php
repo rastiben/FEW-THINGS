@@ -91,13 +91,20 @@ class OrganisationCollection{
     *Récupération des Organisation
     */
     public function lookUp($offset=1){
-        $result = $this->bdd_org->getOrgs($offset);
+
+        if($offset == null)
+            $result = $this->bdd_org->getOrgs(null);
+        else
+            $result = $this->bdd_org->getOrgs($offset);
 
         while($myRow = odbc_fetch_array($result)){
             $this->addOrg($myRow);
         }
 
-        return $this->getCollectionPage($offset);
+        if($offset == null)
+            return $this->getCollectionPage($offset,null);
+        else
+            return $this->getCollectionPage($offset);
     }
 
     /*
