@@ -1,9 +1,8 @@
 <?php
 
-require('staff.inc.php');
-require INCLUDE_DIR . 'class.org.php';
-
-$org = OrganisationCollection::getInstance();
+require_once('staff.inc.php');
+require_once(INCLUDE_DIR . 'class.org.php');
+require_once(INCLUDE_DIR . 'class.users.php');
 
 //METHOD
 $method = $_SERVER['REQUEST_METHOD'];
@@ -15,13 +14,18 @@ $url = $_SERVER[REQUEST_URI];
 $url = substr($url,strpos($url,".php")+5);
 
 //Récupération des paramétre
+//A = Action sur un élément
+//V = variable
+//C = Action sur un ensemble d'élément
+
 $routes = array
 (
     // actual path => filter
-    'org'   => array('org', ':id'),
-    'orgV'   => array('org', ':id', ':variable'),
-    'orgA'   => array('org', ':action', ':id'),
-    'orgs'   => array('orgs', ':name'),
+    'org' => array('org', ':id'),
+    'orgV' => array('org', ':id', ':variable'),
+    'orgA' => array('org', ':action', ':id'),
+    'orgs' => array('orgs', ':name'),
+    'userC' => array('user',':action'),
     'userA' => array('user', ':action', ':id')
 );
 
@@ -67,6 +71,7 @@ function dispatcher($url, $routes)
 $url = dispatcher($url, $routes);
 
 if(strstr($url['path'],"org")){
+    $org = OrganisationCollection::getInstance();
     if($url['path'] == "orgs"){
         switch($method){
             case "GET":
@@ -90,10 +95,18 @@ if(strstr($url['path'],"org")){
         }
     }
 
-}  else if(strstr($url['path'],"userA")){
+}  else if(strstr($url['path'],"user")){
+    $users = userCollection::getInstance();
     if($action = isset($url['parameters']['action'])){
-        if($action == "setOrg"){
+        if($id = isset($url['parameters']['id'])){
 
+        } else {
+            if($action == "maj"){
+                $users->majBaseUser();
+            }
+            if($action == "setOrg"){
+
+            }
         }
     }
 }

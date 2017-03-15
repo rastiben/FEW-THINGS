@@ -350,7 +350,7 @@ class UserNav {
                     /*$navs['tickets']=array('desc'=>sprintf(__('Tickets (%d)'),$user->getNumTickets($user->canSeeOrgTickets())),
                                            'href'=>'tickets.php',
                                             'title'=>__('Show all tickets'));*/
-                    $navs['tickets']=array('desc'=>sprintf(__('Tickets (%d)'),TicketsInfos::getInstance()->numberOfOpenTicketsForOrg($user->getOrgId(),$user->getId())),
+                    $navs['tickets']=array('desc'=>sprintf(__('Tickets (%d)'),TicketsInfos::getInstance()->numberOfOpenTicketsForUser($user->getId())),
                                            'href'=>'tickets.php',
                                             'title'=>__('Show all tickets'));
                 } else {

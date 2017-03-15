@@ -73,7 +73,6 @@ class userCollection{
         //Recup org
         $orgs = OrganisationCollection::getInstance();
         $orgs = $orgs->lookUp(null);
-        echo count($orgs);
 
         //Recup user
         $users = $this->lookUp();
@@ -82,25 +81,10 @@ class userCollection{
         //par défaut : U-411-CLIENT
         //si non création
         $exist = false;
-        $nb = 0;
         foreach($orgs as $org){
-            foreach($users as $user){
-                $name = substr($user->getName(),1);
-                if($name == $org->getName()){
-                    $exist = true;
-                    break;
-                }
-            }
-            //création du user. et raz de exist
-            if($exist == false)
-                $nb += 1;
-            else
-                $exist = false;
+            //Création d'un requete multiple. TEST Temps
+            $this->bdd_user->addUser($org->getId(),'U'.$org->getName());//org_id,name
         }
-
-        echo "<br>".$nb;
-
-
     }
 
 }

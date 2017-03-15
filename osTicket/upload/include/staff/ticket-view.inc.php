@@ -330,7 +330,13 @@ if($ticket->isOverdue())
     </div>
 
     <div id="ifRepa" class="col-md-12" ng-show="showRepa">
-        <button ng-click="printRepa()">Imprimer</button>
+
+        <div class="bubble bubble-repa col-md-12">
+           <div class="rectangle rectangle-repa"><h2>REPA - {{etat}}</h2></div>
+           <div class="triangle-l triangle-l-repa"></div>
+           <div class="triangle-r triangle-r-repa"></div>
+        </div>
+
         <div id="newFicheSuivi" class="">
             <h4 ng-click="displayCard('#newFicheSuivi')">{{ficheSuiviText}}</h4>
             <span class='glyphicon glyphicon-plus' aria-hidden='true'></span>
@@ -434,9 +440,10 @@ if($ticket->isOverdue())
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 text-right">
-                <div class="col-md-12">
+            <div class="col-md-12 text-right" style="padding: 0px;">
+                <div class="col-md-12" style="padding: 0px;">
                     <button ng-click="addFicheSuivi('repa')" class="btn btn-success">{{buttonFicheSuivi}}</button>
+                    <button ng-click="printRepa()" class="btn btn-info"><span class="glyphicon glyphicon-print"></span></button>
                 </div>
             </div>
     </div>
@@ -446,15 +453,22 @@ if($ticket->isOverdue())
             <input id="nbPrepa" class="form-control" placeholder="Nombre de Prepa" ng-model="nbPrepa">
             <button class="btn btn-success" ng-click="addContenu('prepa')">Créer</button>
         </div>
-    </div>
-
-    <div if="ifRepaOrPrepa" ng-show="showRepa || showPrepa">
         <div ng-repeat="contenu in prepas" class="col-md-4 contenu" id="{{contenu.numContenue}}">
             <div class="prepa">
+                <div class="bubble bubble-prepa col-md-12">
+                   <div class="rectangle rectangle-prepa"><h4>{{contenu.etat}}</h4></div>
+                   <div class="triangle-l triangle-l-prepa"></div>
+                   <div class="triangle-r triangle-r-prepa"></div>
+                </div>
                 <img class="computer" src="../assets/default/images/computer.png">
                 <h2>{{contenu.contenuType == "prepa"  ? "VD"+contenu.id_VD : "REPA"}}</h2>
             </div>
         </div>
+        <!--<div class="bubbleRepa col-md-12">
+           <div class="rectangleRepa"><h2>REPA - {{etat}}</h2></div>
+           <div class="triangle-lRepa"></div>
+           <div class="triangle-rRepa"></div>
+        </div>-->
     </div>
 
 </div>
@@ -559,6 +573,7 @@ if($ticket->isOverdue())
                <th>Numero du rapport</th>
                <th>Date création rapport</th>
                <th>Intervenant</th>
+               <th>Situation</th>
                <th>Contrat</th>
                <th>Instal</th>
                <th>Impression</th>
@@ -566,10 +581,11 @@ if($ticket->isOverdue())
            <tbody>
             <tr ng_click="setRapportID($event,$index,rapport.id)" ng-repeat="rapport in rapports" ng-class="$first ? 'active' : ''" id="{{$index}}">
                 <td>{{rapport.id}}</td>
-                <td>{{rapport.date_rapport}}</td>
+                <td style="background:{{rapport.couleur}};color:white">{{rapport.date_rapport}}</td>
                 <td>{{rapport.firstname}} {{rapport.lastname}}</td>
+                <td>{{rapport.topic}}</td>
                 <td><i ng-class="rapport.contrat != '' ? 'fa fa-check' : ''"  aria-hidden="true"></i></td>
-                <td><i ng-class="rapport.instal != '' ? 'fa fa-check' : ''"  aria-hidden="true"></i></td>
+                <td><i ng-class="rapport.instal != 0 ? 'fa fa-check' : ''"  aria-hidden="true"></i></td>
                 <td><a class="no-pjax" target="_blank" ng-href="./tickets.php?id={{ticketID}}&a=printR&idR={{rapport.id}}"><i class="fa fa-print fa-2x" id="{{rapport.id}}" aria-hidden="true" style="color:black"></i></a></td>
             </tr>
         </tbody>
@@ -1041,6 +1057,12 @@ if ($errors['err'] && isset($_POST['a'])) {
 
 <div class="opening_info">
     <h2><?php echo $ticket->getStatus() ?></h2>
+    <?php
+        //Récupération de l'etat d'atelier
+        if($ticket->getHelpTopic() == "Atelier"){
+
+        }
+    ?>
     <span><?php echo Format::htmlchars($ticket->getHelpTopic()); ?></span><br>
     <span>Créé le <?php echo Format::datetime($ticket->getCreateDate()) ?></span>
     <!--<th class="col-md-6"><?php echo __('Department');?>:</th>
@@ -1508,22 +1530,21 @@ $(function() {
             if($(document).width() > 974){
                 $('.ticket_right').height($('.ticket_left').height());
 
-                /*PERCENTAGE*/
+                /*Pourcentage de descente de la sticky bar par rapport a la taille du flux du ticket*/
                 var st = $(this).scrollTop();
-                var wh = $('.ticket_right').height();
+                var wh = $('.fixed-right').height() + ($(document).height()-$('.ticket_left').height());
                 var perc = (st*100)/wh;
 
                 var st2 = $('.ticket_left').height();
                 var wh2 = $(document).height();
                 var perc2 = (st2*100)/wh2;
 
-                var perc3 = (perc*100)/perc2;
-
-                if(perc3 > 65){
+                if(perc >= perc2){
                     $('.fixed-right').css('position','absolute');
                     $('.fixed-right').css('bottom','0px');
                     $('.fixed-right').css('top','initial');
                     $('.fixed-right').css('width','100%');
+                    $('.fixed-right').css('height','auto');
                 } else if($(document).scrollTop() > 208){
                     $('.fixed-right').css('position','fixed');
                     $('.fixed-right').css('top','60px');
@@ -1592,7 +1613,7 @@ $(function() {
             if(orgInput.val().length > 0){
                 $.ajax({
                     method: "GET",
-                    url: "./ajax.org.php/orgs/"+orgInput.val()
+                    url: "./ajaxs.php/orgs/"+orgInput.val()
                 })
                 .success(function( data ) {
                     data = $.parseJSON(data);
@@ -1614,6 +1635,7 @@ $(function() {
 
     $(document).on('click','.orgsList p',function(){
         $(".user_org").val($(this).text());
+        //var org = $(this).attr('id');
         $.ajax({
                 method: "POST",
                 url: "./ajax.php/users/"+user+"/org",

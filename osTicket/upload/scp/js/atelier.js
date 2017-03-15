@@ -14,7 +14,7 @@ function Planche() {
             if($obj['org_id'] != "0"){
                 $.ajax({
                     type: "GET",
-                    url: "./ajax.org.php/org/"+$obj['org_id']+"/name",
+                    url: "./ajaxs.php/org/"+$obj['org_id']+"/name",
                     async: false
                 }).success(function(org_name){
                     self.contenu.push(new Contenu($obj['ticket_id'],
@@ -107,19 +107,19 @@ function Planche() {
     /*
     *Ajout d'un nouveau contenu sur une planche
     */
-    self.addContenu = function(id,type,planche=null){
+    /*self.addContenu = function(id,type,planche=null){
         var etat = (type == "prepa" ? "Planche" : "Entrées");
-        AtelierAjax.addContenu(id,type,planche,etat,function(data){
+        AtelierAjax.addContenu(id,type,planche,function(data){
             self.contenu.push(new Contenu(type,
                                         data,
                                         planche,
-                                        etat,
+                                        "",
                                         (type == "prepa" ?
             new Preparation() :
             new Reparation())));
             //callback(data);
         });
-    };
+    };*/
 
     /*
     *Mise a jour ou ajout du contenu d'une prepa
@@ -324,13 +324,12 @@ class AtelierAjax{
         this.doAjax(data,callback)
     }
 
-    static addContenu(id,type,planche,etat,callback){
+    static addContenu(id,type,planche,callback){
         var data = {
                 request:'addContenu',
                 ticket_id:id,
                 type:type,
-                planche:planche,
-                etat:etat
+                planche:planche
             };
         this.doAjax(data,callback);
     }
@@ -484,6 +483,7 @@ app.controller("atelierCtrl",["$scope","atelierFactory", function($scope,atelier
                     $scope.type = atelier[0].typeFiche;
                     $scope.accessoire = atelier[0].accessoireFiche;
 
+                    $scope.etat = atelier[0].etat;
                     $scope.marque = atelier[0].marque;
                     $scope.model = atelier[0].model;
                     $scope.sn = atelier[0].sn;
@@ -591,11 +591,10 @@ app.controller("atelierCtrl",["$scope","atelierFactory", function($scope,atelier
     }
 
     $scope.addContenu = function(type,callback){
-        var etat = type == "repa" ? "Entrées" : "Planche";
         var nb =  type == "repa" ? 1 : $scope.nbPrepa;
 
         for(var i=0;i<nb;i++){
-            AtelierAjax.addContenu($scope.ticketID,type,null,etat,function(data){
+            AtelierAjax.addContenu($scope.ticketID,type,null,function(data){
                 data = $.parseJSON(data);
 
                 if(type == "prepa"){

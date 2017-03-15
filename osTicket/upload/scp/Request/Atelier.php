@@ -30,18 +30,14 @@ class Atelier
         return self::$instance;
     }
 
-    public function add_contenu($ticket_id,$type,$planche,$etat){
-        $etat = strtr(utf8_decode($etat),
-        utf8_decode(
-        'ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ'),
-        'SOZsozYYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy');
+    public function add_contenu($ticket_id,$type,$planche){
 
         $res = $this->dbh->prepare("INSERT INTO ost_atelier_planche_contenu (ticket_id,type_id,planche_id,etat_id)
         VALUES (:ticket_id,
         (SELECT id FROM ost_atelier_contenu_type WHERE type = :type),
         (SELECT id FROM ost_atelier_planche WHERE planche = :planche),
-        (SELECT id FROM ost_atelier_contenu_etat WHERE etat = :etat))");
-        $res->execute(array(':ticket_id'=>$ticket_id,':type'=>$type,':planche'=>$planche,':etat'=>$etat));
+        (SELECT id FROM ost_atelier_contenu_etat WHERE etat = '1'))");
+        $res->execute(array(':ticket_id'=>$ticket_id,':type'=>$type,':planche'=>$planche));
 
         $lastContenuInsertedID = $this->dbh->lastInsertId();
 
@@ -178,6 +174,11 @@ class Atelier
     }
 
     public function changeState($id,$etat){
+        $etat = strtr(utf8_decode($etat),
+        utf8_decode(
+        'ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ'),
+        'SOZsozYYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy');
+        echo $etat;
         $res = $this->dbh->prepare("UPDATE ost_atelier_planche_contenu
         SET etat_id = (SELECT id FROM ost_atelier_contenu_etat WHERE etat = :etat)
         WHERE id = :id");
@@ -242,7 +243,7 @@ class Atelier
 
 if(isset($_REQUEST['request'])){
     if($_REQUEST['request'] == 'addContenu'){
-        echo json_encode(Atelier::getInstance()->add_contenu($_REQUEST['ticket_id'],$_REQUEST['type'],$_REQUEST['planche'],$_REQUEST['etat']));
+        echo json_encode(Atelier::getInstance()->add_contenu($_REQUEST['ticket_id'],$_REQUEST['type'],$_REQUEST['planche']));
     } else if($_REQUEST['request'] == 'addPrepaInfo'){
         Atelier::getInstance()->addPrepaInfo($_REQUEST['id_contenu'],
                                             $_REQUEST['modele'],

@@ -60,6 +60,28 @@ class bdd_user{
         $prepare = $this->prepare("SELECT id,name,org_id FROM ost_user");
         return $this->execute($prepare,array());
     }
+
+    public function addUser($org_id,$name){
+        $today = date('Y-m-d H:i:s');
+
+        /*REPLACE INTO `transcripts`
+            SET `ensembl_transcript_id` = ‘ENSORGT00000000001′,
+            `transcript_chrom_start` = 12345,
+            `transcript_chrom_end` = 12678;*/
+
+        $prepare = $this->prepare('INSERT INTO ost_user (org_id,name,created,updated)
+                                    SELECT :org_id,:name,:created,:updated FROM DUAL
+                                    WHERE NOT EXISTS (SELECT * FROM ost_user
+                                          WHERE org_id=:org_id)
+                                    LIMIT 1 ');
+        return $this->execute($prepare,array(":org_id"=>$org_id,":name"=>$name,":created"=>$today,":updated"=>$today));
+    }
+
+    public function updateUser($org_id,$name){
+        $today = date('Y-m-d H:i:s');
+        $prepare = $this->prepare("UPDATE ost_user SET org_id = :org_id,name = :name,updated = :updated");
+        return $this->execute($prepare,array(":org_id"=>$org_id,":name"=>$name,":updated"=>$today));
+    }
 }
 
 ?>

@@ -2,9 +2,7 @@
 
 require_once(INCLUDE_DIR . 'class.users.php');
 //MISE A JOUR DES UTILISATEURS
-$users = userCollection::getInstance();
 
-$users->majBaseUser();
 
 //$users->majBaseUser();
 
@@ -24,8 +22,8 @@ if (!isset($info['lookup']) || $info['lookup'] !== false) { ?>
 <div style="margin-bottom:10px;padding:0px" class="col-md-12">
     <input type="text" class="search-input col-md-11"
     placeholder="<?php echo __('Search by email, phone or name'); ?>" id="user-search"
-    autofocus autocorrect="off" autocomplete="off"/>
-    <button class="col-md-1"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+    autofocus autocorrect="off" autocomplete="off" style="height: 34px;"/>
+    <button class="btn btn-info col-md-1 majUser"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
 </div>
 <?php
 }
@@ -159,5 +157,26 @@ $(function() {
         $('div#selected-user-info').fadeIn({start: function(){ $('#user-search').focus(); }});
         return false;
      });
+
+    /*ROTATION PENDANT MISE A JOUR*/
+    var deg = 0;
+    var timer = null;
+
+    $('.majUser').click(function(){
+        timer = setInterval(rotate,50);
+        $.ajax({
+            type:"PATCH"
+            ,url:"./ajaxs.php/user/maj"
+        }).success(function(){
+            clearInterval(timer);
+        });
+    });
+
+    function rotate(){
+        $('.glyphicon-refresh').css('transform','rotate('+deg+'deg)');
+        deg += 10;
+    }
+
+
 });
 </script>

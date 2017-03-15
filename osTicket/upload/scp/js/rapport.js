@@ -133,7 +133,7 @@ app.controller("rapportCtrl",["$scope","rapportFactory", function($scope,rapport
                         instal:$scope.instal
                         });
         rapportFactory.addHR(data);
-        /*location.reload();*/
+        location.reload();
         //window.location = window.location.href;
     }
 

@@ -50,14 +50,8 @@ $orgsC = OrganisationCollection::getInstance();
 
   <!--http://localhost:8080/osTicket/upload/scp/tickets.php?a=open-->
    <div class="newContent col-md-12">
-        <div class="content col-md-4">
-            <a href="http://localhost:8080/osTicket/upload/scp/tickets.php?a=open" ><img src="../assets/atelier/newTicket.png"></a>
-        </div>
-        <div class="content col-md-4">
-            <img id="repair" src="../assets/atelier/computerRepair.png">
-        </div>
-        <div class="content col-md-4">
-            <img id="prepair" src="../assets/atelier/computerPrepair.png">
+        <div class="content col-md-12">
+            <a href="http://localhost:8080/osTicket/upload/scp/tickets.php?a=open" class="no-pjax"><img src="../assets/atelier/newTicket.png"></a>
         </div>
    </div>
 
@@ -88,7 +82,7 @@ $orgsC = OrganisationCollection::getInstance();
            var id = "";
            var type = "";
 
-           $(document).on('click','.content img',function(e){
+           /*$(document).on('click','.content img',function(e){
 
                if(!$(this).parent().is('a')){
                    if($(this).attr('id') == "prepair"){
@@ -127,7 +121,7 @@ $orgsC = OrganisationCollection::getInstance();
                    if(id != undefined)
                         $('.modal').modal('toggle');
                }
-           });
+           });*/
 
            $(document).on('click','.sendContenu',function(){
                $('.modal').modal('toggle');

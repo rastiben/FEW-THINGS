@@ -222,8 +222,8 @@ if ($closedTickets) {?>
     <?php
         //keywords
         $keywords = $_GET['keywords'];
-        $ticketsClose = TicketsInfos::getInstance()->ticket_close_org($thisclient->getOrgId(),$thisclient->getId());
-        $ticketsOpen = TicketsInfos::getInstance()->ticket_open_org($thisclient->getOrgId(),$thisclient->getId());
+        $ticketsClose = TicketsInfos::getInstance()->ticket_close_org($thisclient->getId());
+        $ticketsOpen = TicketsInfos::getInstance()->ticket_open_org($thisclient->getId());
         $iO = 0;
         foreach($ticketsOpen as $ticket){
             if(empty($keywords) ||

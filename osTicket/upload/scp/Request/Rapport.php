@@ -49,7 +49,7 @@ class Rapport
     }
 
     public function getRapports($ticketID){
-        $res = $this->dbh->prepare("SELECT id,date_rapport,date_inter,firstname,lastname,contrat,instal FROM ost_rapport,ost_staff WHERE ost_rapport.id_agent = ost_staff.staff_id AND id_ticket = :ticketID");
+        $res = $this->dbh->prepare("SELECT id,date_rapport,date_inter,firstname,lastname,contrat,instal,topic,couleur FROM ost_rapport,ost_staff,ost_help_topic WHERE ost_rapport.id_agent = ost_staff.staff_id AND ost_help_topic.topic_id = ost_rapport.topic_id AND id_ticket = :ticketID");
         $res->execute(array(':ticketID'=>$ticketID));
 
         return $res->fetchAll(PDO::FETCH_ASSOC);
