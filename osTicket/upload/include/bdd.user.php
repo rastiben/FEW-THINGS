@@ -61,20 +61,23 @@ class bdd_user{
         return $this->execute($prepare,array());
     }
 
-    public function addUser($org_id,$name){
+    public function addUser($org_id,$name,$org_name){
         $today = date('Y-m-d H:i:s');
 
-        /*REPLACE INTO `transcripts`
-            SET `ensembl_transcript_id` = ‘ENSORGT00000000001′,
-            `transcript_chrom_start` = 12345,
-            `transcript_chrom_end` = 12678;*/
-
-        $prepare = $this->prepare('INSERT INTO ost_user (org_id,name,created,updated)
-                                    SELECT :org_id,:name,:created,:updated FROM DUAL
+        /*INSERT INTO ost_user (org_id,name,org_name,created,updated)
+                                    SELECT :org_id,:name,:org_name,:created,:updated FROM DUAL
                                     WHERE NOT EXISTS (SELECT * FROM ost_user
                                           WHERE org_id=:org_id)
-                                    LIMIT 1 ');
-        return $this->execute($prepare,array(":org_id"=>$org_id,":name"=>$name,":created"=>$today,":updated"=>$today));
+                                    LIMIT 1 */
+
+        $prepare = $this->prepare('INSERT INTO ost_user (org_id,name,org_name,created,updated)
+                                   VALUES (:org_id,:name,:org_name,:created,:updated)');
+        return $this->execute($prepare,array(":org_id"=>$org_id,":name"=>$name,":org_name"=>$org_name,":created"=>$today,":updated"=>$today));
+    }
+
+    public function setOrgName($org_id,$name){
+        $prepare = $this->prepare('UPDATE ost_user SET org_name = :name WHERE org_name IS NULL AND org_id = :org_id');
+        return $this->execute($prepare,array(":org_id"=>$org_id,":name"=>$name));
     }
 
     public function updateUser($org_id,$name){

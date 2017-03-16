@@ -418,6 +418,12 @@ class UsersAjaxAPI extends AjaxController {
         $info['onselect'] = 'ajax.php/users/'.$user->getId().'/org';
 
         if ($_POST) {
+            if ($_POST['orgId']){
+                //Changement d'id de l'organisation
+                $user->setOrgId($_POST['orgId'],$_POST['orgName']);
+                Http::response(201);
+                return null;
+            }
             if ($_POST['orgid']) { //Existing org.
                 if (!($org = Organization::lookup($_POST['orgid'])))
                     $info['error'] = __('Unknown organization selected');

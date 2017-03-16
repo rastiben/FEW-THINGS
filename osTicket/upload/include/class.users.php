@@ -74,16 +74,26 @@ class userCollection{
         $orgs = OrganisationCollection::getInstance();
         $orgs = $orgs->lookUp(null);
 
+        foreach($orgs as $org){
+            //Création d'un requete multiple. TEST Temps
+            $this->bdd_user->addUser($org->getId(),'U'.$org->getName(),$org->getName());//org_id,name
+        }
+    }
+
+    /*
+    *Mettre à jour la base user pour créer une utilisateur lambda pour chaque organisation
+    */
+    public function setOrgName(){
         //Recup user
         $users = $this->lookUp();
 
         //test de présence dans la base
         //par défaut : U-411-CLIENT
         //si non création
-        $exist = false;
-        foreach($orgs as $org){
+        foreach($users as $user){
             //Création d'un requete multiple. TEST Temps
-            $this->bdd_user->addUser($org->getId(),'U'.$org->getName());//org_id,name
+            //print_r($user->getName());
+            $this->bdd_user->setOrgName($user->getOrgId(),strstr(1,$user->getName()));//org_id,name
         }
     }
 

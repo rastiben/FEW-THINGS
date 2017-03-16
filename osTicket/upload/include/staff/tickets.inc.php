@@ -640,7 +640,7 @@ return false;">
                             .$T['collab_count'].'"><i class="icon-group"></i></span>';
                     ?><span class="truncate" style="max-width:<?php
                         echo $T['collab_count'] ? '150px' : '170px'; ?>"><?php
-                        echo '<a href="./orgs.php?id='. TicketsInfos::getInstance()->ticket_org_id($T['ticket_id']) .'#users">'. TicketsInfos::getInstance()->ticket_org_name($T['ticket_id']) .'</a>';
+                        echo '<a href="./orgs.php?id='. $T['org_id'] .'#users">'. $T['org_name'] .'</a>';
                     ?></span></div></td>
                 <?php
                 if($search && !$status){

@@ -148,6 +148,17 @@ class UserModel extends VerySimpleModel {
         return true;
     }
 
+    function setOrgId($orgId, $orgName , $save=true) {
+
+        $this->set('org_id', $orgId);
+        $this->set('org_name',$orgName);
+
+        if ($save)
+            $this->save();
+
+        return true;
+    }
+
     protected function hasStatus($flag) {
         return $this->get('status') & $flag !== 0;
     }

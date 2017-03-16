@@ -1622,7 +1622,7 @@ $(function() {
                     $(".orgsList").css('left',left);
                     $(".orgsList").css('width','auto');
                     $(data).each(function(number,obj){
-                        $(".orgsList").append('<p id="'+obj.data[0]+'">'+obj.data[1]+'</p>')
+                        $(".orgsList").append('<p data-org-name="" id="'+obj.data[0]+'">'+obj.data[1]+'</p>')
                     });
                     $(".orgsList").css('display','block');
                 });
@@ -1640,7 +1640,8 @@ $(function() {
                 method: "POST",
                 url: "./ajax.php/users/"+user+"/org",
                 data: {
-                    orgid:$(this).attr('id')
+                    orgId:$(this).attr('id'),
+                    orgName:$(this).text()
                 }
         }).success(function( data ) {
 
