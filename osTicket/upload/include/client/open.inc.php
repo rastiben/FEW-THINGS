@@ -33,13 +33,10 @@ if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
 ?>
 <div id="openNewTicket">
 <form id="ticketForm" method="post" action="open.php" enctype="multipart/form-data">
-<p><font class="error">*&nbsp;</font>Les tickets ajoutés sont visible par l'ensemble des utilisateurs d'osticket de votre organisation </p>
-
-<hr>
 
  <img id="iconNewTicket" src="./assets/default/images/ticket.png">
   <?php csrf_token(); ?>
-  <input type="hidden" name="a" value="open">
+  <!--<input type="hidden" name="a" value="open">
 <?php
         if (!$thisclient) {
             $uform = UserForm::getUserForm()->getForm($_POST);
@@ -52,12 +49,12 @@ if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
         <p><?php echo __('Client'); ?>:    <?php
             echo Format::htmlchars($thisclient->getName()); ?></p>
         <?php } ?>
-        <hr>
-        <div class="form-header" style="margin-bottom:0.5em">
+        <hr>-->
+        <!--<div class="form-header" style="margin-bottom:0.5em">
         <b><?php echo __('Help Topic'); ?></b>
-        </div>
+        </div>-->
 
-            <select id="topicId" name="topicId" onchange="javascript:
+            <select style="display:none" id="topicId" name="topicId" onchange="javascript:
                     var data = $(':input[name]', '#dynamic-form').serialize();
                     $.ajax(
                       'ajax.php/form/help-topic/' + this.value,
@@ -69,7 +66,7 @@ if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
                           $(document.head).append(json.media);
                         }
                       });">
-                <option value="" selected="selected">&mdash; <?php echo __('Select a Help Topic');?> &mdash;</option>
+                <option value="">&mdash; <?php echo __('Select a Help Topic');?> &mdash;</option>
                 <?php
                 if($topics=Topic::getPublicHelpTopics()) {
                     foreach($topics as $id =>$name) {
@@ -77,13 +74,13 @@ if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
                                 $id, ($info['topicId']==$id)?'selected="selected"':'', $name);
                     }
                 } else { ?>
-                    <option value="0" ><?php echo __('General Inquiry');?></option>
+                    <option value="0" selected="selected"><?php echo __('General Inquiry');?></option>
                 <?php
                 } ?>
             </select>
-            <font class="error">*&nbsp;<?php echo $errors['topicId']; ?></font>
+            <!--<font class="error">*&nbsp;<?php echo $errors['topicId']; ?></font>-->
         <br>
-    <div id="dynamic-form">
+    <div id="dynamic-form" style="margin-top: -30px;">
         <?php foreach ($forms as $form) {
             include(CLIENTINC_DIR . 'templates/dynamic-form.tmpl.php');
         } ?>

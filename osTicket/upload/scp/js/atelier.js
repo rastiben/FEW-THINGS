@@ -1,4 +1,4 @@
-function Planche() {
+function Planche(callback=null) {
 
     /*
     *CONSTRUCTEUR
@@ -6,31 +6,25 @@ function Planche() {
     var self = this;
     AtelierAjax.getPlanches(function (data) {
         var data = $.parseJSON(data);
-        console.log(data);
         self.contenu = [];
         $(data).each(function ($number, $obj) {
 
             //Récupération de l'organisation
             if($obj['org_id'] != "0"){
-                $.ajax({
-                    type: "GET",
-                    url: "./ajaxs.php/org/"+$obj['org_id']+"/name",
-                    async: false
-                }).success(function(org_name){
-                    self.contenu.push(new Contenu($obj['ticket_id'],
+                self.contenu.push(new Contenu($obj['ticket_id'],
                                               $obj['number'],
-                                              org_name,
+                                              $obj['org_name'],
                                               $obj['contenuType'],
                                               $obj['numContenue'],
                                               $obj['planche'],
                                               $obj['etat'],
                                               ($obj['contenuType'] == "prepa" ?
-                    new Preparation(new VD($obj['id'],$obj['client'],$obj['type'],$obj['numeroSerie'],$obj['versionWindows'],$obj['numLicenceW'],$obj['versionOffice'],$obj['numLicenceO'],$obj['garantie'],$obj['debutGarantie'],$obj['mail'],$obj['mdp']), $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],$obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
-                    new Reparation($obj['marque'],$obj['model'],$obj['sn'],$obj['vd'],$obj['os'],$obj['motDePasse'],$obj['login'],$obj['office'],$obj['autreSoft']))));
-                });
+                new Preparation(new VD($obj['id'],$obj['client'],$obj['type'],$obj['numeroSerie'],$obj['versionWindows'],$obj['numLicenceW'],$obj['versionOffice'],$obj['numLicenceO'],$obj['garantie'],$obj['debutGarantie'],$obj['mail'],$obj['mdp']), $obj['acrobat'], $obj['activation'], $obj['autre'], $obj['dossierSAV'],$obj['type'], $obj['etiquetage'], $obj['flash'], $obj['id_contenu'], $obj['java'], $obj['maj'], $obj['mdp'], $obj['modele'], $obj['pdf'], $obj['register'], $obj['septZip'], $obj['uninstall'], $obj['userAccount'], $obj['verifActivation'], $obj['divers']) :
+                new Reparation($obj['marque'],$obj['model'],$obj['sn'],$obj['vd'],$obj['os'],$obj['motDePasse'],$obj['login'],$obj['office'],$obj['autreSoft'])),$obj['priority'],$obj['org_id']));
             }
         });
-
+        if(callback != null)
+            callback(self.contenu);
 
     });
 
@@ -197,7 +191,7 @@ function Planche() {
 
 
 
-function Contenu(ticket_id, number, org_name, type, id, planche, etat, contenu) {
+function Contenu(ticket_id, number, org_name, type, id, planche, etat, contenu, priority, org_id) {
 
     var self = this;
     self.ticket_id = ticket_id;
@@ -208,6 +202,8 @@ function Contenu(ticket_id, number, org_name, type, id, planche, etat, contenu) 
     self.planche = planche;
     self.contenu = contenu;
     self.etat = etat;
+    self.priority = priority;
+    self.org_id = org_id;
 
     self.getType = function () {
         return self.type;

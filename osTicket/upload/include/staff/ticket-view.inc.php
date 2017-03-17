@@ -100,11 +100,11 @@ if($ticket->isOverdue())
             <?php
             // Transfer
             if ($role->hasPerm(TicketModel::PERM_TRANSFER)) {?>
-            <span class="action-button">
+            <!--<span class="action-button">
             <a class="ticket-action" id="ticket-transfer" data-placement="bottom" data-toggle="tooltip" title="<?php echo __('Transfer'); ?>"
                 data-redirect="tickets.php"
                 href="#tickets/<?php echo $ticket->getId(); ?>/transfer"><i class="icon-share"></i></a>
-            </span>
+            </span>-->
             <?php
             } ?>
 
@@ -338,8 +338,7 @@ if($ticket->isOverdue())
         </div>
 
         <div id="newFicheSuivi" class="">
-            <h4 ng-click="displayCard('#newFicheSuivi')">{{ficheSuiviText}}</h4>
-            <span class='glyphicon glyphicon-plus' aria-hidden='true'></span>
+            <h4>{{ficheSuiviText}}</h4>
             <div class="col-md-12" style="background: white;padding-top:15px;padding-bottom:15px;">
                 <div class="col-md-12 text-left">
                     <div class="inputField readOnly col-md-6">
@@ -389,8 +388,7 @@ if($ticket->isOverdue())
             </div>
         </div>
             <div id="ficheDuPoste">
-                <h4 ng-click="displayCard('#ficheDuPoste')">Fiche du poste</h4>
-                <span class='glyphicon glyphicon-plus' aria-hidden='true'></span>
+                <h4>Fiche du poste</h4>
                <div class="col-md-12" style="background: white;padding-top:15px;padding-bottom:15px;">
                     <div class="col-md-12 text-left">
                         <div class="inputField col-md-6 ">
@@ -1548,9 +1546,9 @@ $(function() {
                 } else if($(document).scrollTop() > 208){
                     $('.fixed-right').css('position','fixed');
                     $('.fixed-right').css('top','60px');
-                    $('.fixed-right').css('bottom','0px');
+                    /*$('.fixed-right').css('bottom','0px');*/
                     $('.fixed-right').css('width','20%');
-                    $('.fixed-right').css('height',$(window).height()-60);
+                    $('.fixed-right').css('height','auto');
                 } else {
                     $('.fixed-right').css('position','relative');
                     $('.fixed-right').css('top','initial');

@@ -68,7 +68,8 @@
                        <div class="col-md-12">
                         <table class="list atelierT" border="0" cellspacing="1" cellpadding="2" width="100%">
                             <thead>
-                                <th>ID du Ticket</th>
+                                <th>Ticket</th>
+                                <th>Organisation</th>
                                 <th>Type</th>
                                 <th>Etat</th>
                                 <th>Affecter</th>
@@ -418,31 +419,60 @@
             });
 
             $(document).on('click','.contenu .finish img',function(){
+                var img = $(this);
+                var parent = img.parent();
 
-                $(this).parent().css({
-                        'border': '1px solid #28B463',
-                        'border-right': '0px',
-                        'border-radius': '20px 0px 0px 20px'
-                });
-                $(this).parent().animate({
-                    width: '130px'
-                },{
-                    duration:300,
-                    queue:false
-                });
+                if(parent.width() != 45){
+                    parent.animate({
+                        width: '45px'
+                    },{
+                        duration:300,
+                        queue:false,
+                        complete: function(){
+                            parent.css({
+                                'border': 'none'
+                            });
+                        }
+                    });
 
-                $(this).animate({
-                    left:'0px'
-                },{
-                    duration:300,
-                    queue:false
-                });
-                $('.prepa .finish h3').animate({
-                    right:'12px'
-                },{
-                    duration:350,
-                    queue:false
-                });
+                    img.animate({
+                        left:'0px'
+                    },{
+                        duration:300,
+                        queue:false
+                    });
+                    img.siblings().animate({
+                        right:'-82px'
+                    },{
+                        duration:250,
+                        queue:false
+                    });
+                } else {
+                    parent.css({
+                            'border': '1px solid #28B463',
+                            'border-right': '0px',
+                            'border-radius': '20px 0px 0px 20px'
+                    });
+                    parent.animate({
+                        width: '130px'
+                    },{
+                        duration:300,
+                        queue:false
+                    });
+
+                    img.animate({
+                        left:'0px'
+                    },{
+                        duration:300,
+                        queue:false
+                    });
+                    img.siblings().animate({
+                        right:'12px'
+                    },{
+                        duration:350,
+                        queue:false
+                    });
+                }
             });
 
             $(document).on('click','.contenu .finish h3',function(){
@@ -801,7 +831,7 @@
             }
 
             var addContenuInListe = function(obj){
-                $('.list.atelierT tbody').append('<tr><td>'+obj.getId()+'</td><td>'+obj.getType()+'</td><td>'+obj.getEtat()+'</td><td><button class="btn btn-success addContenu" id="'+ obj.getId() +'" >Affecter</button></td><td><button class="btn btn-danger removeContenu" id="'+ obj.getId() +'" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></td></tr>');
+                $('.list.atelierT tbody').append('<tr><td>'+obj.number+'</td><td>'+obj.org_name+'</td><td>'+obj.getType()+'</td><td>'+obj.getEtat()+'</td><td><button class="btn btn-success addContenu" id="'+ obj.getId() +'" >Affecter</button></td><td><button class="btn btn-danger removeContenu" id="'+ obj.getId() +'" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></td></tr>');
             }
 
 

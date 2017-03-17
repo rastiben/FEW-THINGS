@@ -2632,7 +2632,7 @@ td.indented {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 6;
+  z-index: 1000;
   width: 100%;
   background-color: white;
   background-color: rgba(255,255,255,0.95);
@@ -3961,11 +3961,16 @@ input[type="radio"]{
     text-align: center;
     border-right: 2px solid lightgray;
     line-height: 50px;
+    cursor: pointer;
 }
 
 .filter ul li p{
     color: white;
     margin: 0px;
+}
+
+.filter ul li p.active{
+    color: lightseagreen;
 }
 
 .filter ul li:last-child{
@@ -3985,7 +3990,7 @@ table.atelierT{
 }
 
 table.atelierT td{
-    line-height: 34px;
+    line-height: 30px;
 }
 
 /*PLAN*/
@@ -4190,30 +4195,15 @@ table.atelierT td{
     right: 15px;
 }
 
-/*
-margin-top: 0px;
-    height: 30px;
-    width: 30px;
-    position: absolute;
-    left: 0px;
-*/
-
 .prepa .finish h3{
     position: absolute;
     top: 2px;
-    right: -74px;
+    right: -82px;
     padding: 0px;
     margin: 0px;
     color: #28B463;
     /*display: none;*/
 }
-/*
-position: absolute;
-    top: 3px;
-    right: 12px;
-    padding: 0px;
-    margin: 0px;
-*/
 
 .prepa img.remove{
     position: absolute;
@@ -4325,11 +4315,18 @@ position: absolute;
 
 
 /*Fiche de suivi*/
-#newFicheSuivi,
+#newFicheSuivi{
+    text-align: center;
+    height: auto;
+    overflow: hidden;
+    position: relative;
+    border-left: 5px solid lightskyblue;
+    border-right: 5px solid lightskyblue;
+}
+
 #ficheDuPoste{
     text-align: center;
     margin-bottom: 30px;
-    margin-top: 15px;
     height: auto;
     overflow: hidden;
     position: relative;

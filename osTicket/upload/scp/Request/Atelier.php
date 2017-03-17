@@ -36,7 +36,7 @@ class Atelier
         VALUES (:ticket_id,
         (SELECT id FROM ost_atelier_contenu_type WHERE type = :type),
         (SELECT id FROM ost_atelier_planche WHERE planche = :planche),
-        (SELECT id FROM ost_atelier_contenu_etat WHERE etat = '1'))");
+        1)");
         $res->execute(array(':ticket_id'=>$ticket_id,':type'=>$type,':planche'=>$planche));
 
         $lastContenuInsertedID = $this->dbh->lastInsertId();
@@ -143,7 +143,7 @@ class Atelier
     }
 
     public function getPlanches(){
-        $res = $this->dbh->prepare("SELECT ost_atelier_contenu_type.type as contenuType,ost_atelier_planche.planche,ost_atelier_contenu_etat.etat,ost_atelier_planche_contenu.id as numContenue, ost_atelier_planche_contenu.ticket_id, ost_ticket.number, ost_user.org_id, ost_atelier_preparation.*,ost_atelier_reparation.*,ost_atelier_preparation_vd.*
+        $res = $this->dbh->prepare("SELECT ost_atelier_contenu_type.type as contenuType,ost_atelier_planche.planche,ost_atelier_contenu_etat.etat,ost_atelier_planche_contenu.id as numContenue,ost_ticket_priority.priority_desc as priority, ost_atelier_planche_contenu.ticket_id, ost_ticket.number, ost_user.org_id,ost_user.org_name, ost_atelier_preparation.*,ost_atelier_reparation.*,ost_atelier_preparation_vd.*
         FROM ost_atelier_planche_contenu
         INNER JOIN ost_atelier_contenu_type
         ON ost_atelier_contenu_type.id = ost_atelier_planche_contenu.type_id
@@ -151,6 +151,10 @@ class Atelier
         ON ost_atelier_planche_contenu.ticket_id = ost_ticket.ticket_id
         INNER JOIN ost_user
         ON ost_user.id = ost_ticket.user_id
+        INNER JOIN ost_ticket__cdata
+        ON ost_ticket__cdata.ticket_id = ost_ticket.ticket_id
+        INNER JOIN ost_ticket_priority
+        ON ost_ticket__cdata.priority = ost_ticket_priority.priority_id
         INNER JOIN ost_atelier_contenu_etat
         ON ost_atelier_contenu_etat.id = ost_atelier_planche_contenu.etat_id
         LEFT JOIN ost_atelier_planche
