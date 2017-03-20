@@ -61,6 +61,11 @@ class bdd_user{
         return $this->execute($prepare,array());
     }
 
+    public function getUserById($id){
+        $prepare = $this->prepare("SELECT id,name,org_id,org_name FROM ost_user WHERE id = :id");
+        return $this->execute($prepare,array(":id"=>$id));
+    }
+
     public function addUser($org_id,$name,$org_name){
         $today = date('Y-m-d H:i:s');
 

@@ -2,12 +2,12 @@
 if(!defined('OSTSCPINC') || !$thisstaff || !is_object($user)) die('Invalid path');
 
 require_once(SCP_DIR."Request/Tickets.php");
+require_once(INCLUDE_DIR."class.users.php");
 
 $account = $user->getAccount();
 //$org = $user->getOrganization();
-
-$orgsC = OrganisationCollection::getInstance();
-$org = $orgsC->lookUpById($user->getOrgId())[0];
+$usersC = userCollection::getInstance();
+$userC = $usersC->lookUpById($user->getId())[0];
 
 $tickets = TicketsInfos::getInstance()->ticket_user($user->getId());
 
@@ -117,9 +117,9 @@ if ($thisstaff->hasPerm(User::PERM_EDIT)) { ?>
                     <td>
                         <span id="user-<?php echo $user->getId(); ?>-org">
                         <?php
-                            if ($org)
-                                echo sprintf('<a href="#users/%d/org" class="user-action">%s</a>',
-                                        $user->getId(), $org->getName());
+                            if ($userC->getOrgId() != 0)
+                                echo sprintf('<a href="./orgs.php?id=%d" class="no-pjax">%s</a>',
+                                        $userC->getOrgId(), $userC->getOrgName());
                             elseif ($thisstaff->hasPerm(User::PERM_EDIT)) {
                                 echo sprintf(
                                     '<a href="#users/%d/org" class="user-action">%s</a>',

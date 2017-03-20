@@ -296,7 +296,7 @@ if($ticket->isOverdue())
         $address = addslashes($org->getAddress() . " " . $org->getComplement() . "&#013;&#010;" . $org->getCP() . " " . $org->getCity());
         $phone = $org->getPhone();
         $orgName = $org->getName();
-        $id = $org->getId();
+        $orgId = $org->getId();
     }
 
     /*
@@ -1089,7 +1089,7 @@ if ($errors['err'] && isset($_POST['a'])) {
     <div class="mail icon">
         <?php if(!empty($org)) { ?>
             <img width="20" src="../assets/default/images/company.png">
-            <a href="./orgs.php?id=<?php echo Format::htmlchars($id) ?>#users"><span><?php echo Format::htmlchars($orgName) ?></span></a>
+            <a href="./orgs.php?id=<?php echo Format::htmlchars($orgId) ?>#users"><span><?php echo Format::htmlchars($orgName) ?></span></a>
         <?php } else { ?>
             <img width="20" src="../assets/default/images/company.png">
             <input class="user_org" type="text">

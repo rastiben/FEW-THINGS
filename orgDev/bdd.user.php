@@ -53,12 +53,22 @@ class bdd_user{
         return $prepare->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+
     /*
     *Récupération des users
     */
     public function getUsers($page){
         $prepare = $this->prepare("SELECT * FROM ost_user");
         return $this->execute($prepare,array());
+    }
+
+    /*
+    *Récupération user by id
+    */
+    public function getUserById($id){
+        $prepare = $this->prepare("SELECT * FROM ost_user WHERE id = :id");
+        return $this->execute($prepare,array(":id"=>$id));
     }
 }
 

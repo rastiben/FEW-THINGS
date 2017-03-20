@@ -53,6 +53,20 @@ class userCollection{
     }
 
     /*
+    *Récupération d'un user
+    */
+    public function lookUpById($id,$offset=1){
+        echo "toto";
+        $result = $this->bdd_user->getUserById($id);
+
+        foreach($result as $key=>$user){
+             $this->addUser($user);
+        }
+
+        return $this->getCollectionPage($offset);
+    }
+
+    /*
     *Ajout d'un élément dans la collection
     */
     private function addUser($data){
@@ -122,6 +136,13 @@ class UserC{
     */
     public function getOrgId(){
         return $this->data[2];
+    }
+
+    /*
+    *Récupération de l'adresse de l'organisation
+    */
+    public function getOrgName(){
+        return $this->data[5];
     }
 
 }
