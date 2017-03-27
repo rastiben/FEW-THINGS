@@ -291,12 +291,13 @@ if($ticket->isOverdue())
     *Récupération du premier message ( dans notre cas la problématique pour une repa ).
     */
     $orgsC = OrganisationCollection::getInstance();
-    $org = $orgsC->lookUpById($ticket->getOwner()->getOrgId())[0];
+    //$org = $orgsC->lookUpByName($ticket->getOwner()->getOrgId())[0]
+    $org = $orgsC->lookUpByName('411VDOC')[0];
     if(!empty($org)){
         $address = addslashes($org->getAddress() . " " . $org->getComplement() . "&#013;&#010;" . $org->getCP() . " " . $org->getCity());
         $phone = $org->getPhone();
         $orgName = $org->getName();
-        $orgId = $org->getId();
+        $orgId = '411VDOC';
     }
 
     /*
@@ -551,6 +552,7 @@ if($ticket->isOverdue())
     echo $attrs; ?>><?php echo $_POST ? $info['response'] : $draft;
                     ?></textarea>
         <br>
+        <button ng-click="getStock('<?php echo $thisstaff->getFirstName() ?>')" class="pending getStock">Récupérer le stock</button>
         <button class="cancel pending newRapport" type="cancel" style="float:right">Annuler</button>
         <input ng-click="addRapport()" class="horaire add save pending pull-right" type="submit" name="addRapport">
         </div>
@@ -631,6 +633,11 @@ if($ticket->isOverdue())
             <input ng-click="insertOrUpdateHoraire()" class="horaire add save pending" type="submit" name="addRapport" style="float:right">
         </div>
         <div ng-repeat="rapport in rapports" class="eachRapport col-md-12 col-lg-12 col-xs-12" ng-class="$first ? 'active' : ''" id="{{$index}}">
+
+           <div class="rapport">
+               <div class="identity"></div>
+           </div>
+
             <div class="col-md-12 col-xs-12 rapport">
                <div class="col-lg-4 col-md-12 col-xs-12" id="borderIdentity">
                 <div class="identity" id="{{rapport.id}}">
@@ -1045,6 +1052,27 @@ if ($errors['err'] && isset($_POST['a'])) {
 </div>
 </div>
 <div class="ticket_right col-md-3">
+<div class="ballss" style="display:none">
+    <div class="ball"></div>
+    <div class="ball1"></div>
+</div>
+
+<div class="stock" ng-controller="stockCtrl" style="display:none">
+    {{rapports}}
+    <table>
+        <thead>
+            <th>Référence</th>
+            <th>Quantité</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="article in stock">
+                <td>{{article.reference}}</td>
+                <td>{{article.quantite}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
 <div class="col-md-2 fixed-right">
 <!--<div class="clear tixTitle has_bottom_border">
     <h3>
@@ -1525,7 +1553,8 @@ $(function() {
 
         $(window).scroll(function() {
             //console.log($(document).scrollTop());
-            if($(document).width() > 974){
+
+            if($('.fixed-right').css('display') != 'none' && $(document).width() > 974){
                 $('.ticket_right').height($('.ticket_left').height());
 
                 /*Pourcentage de descente de la sticky bar par rapport a la taille du flux du ticket*/

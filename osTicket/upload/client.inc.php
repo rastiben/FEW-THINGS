@@ -16,11 +16,14 @@
 if(!strcasecmp(basename($_SERVER['SCRIPT_NAME']),basename(__FILE__))) die('kwaheri rafiki!');
 
 $thisdir=str_replace('\\', '/', dirname(__FILE__)).'/';
+
+
 if(!file_exists($thisdir.'main.inc.php')) die('Fatal Error.');
 
 require_once($thisdir.'main.inc.php');
 
 if(!defined('INCLUDE_DIR')) die('Fatal error');
+
 
 /*Some more include defines specific to client only */
 define('CLIENTINC_DIR',INCLUDE_DIR.'client/');

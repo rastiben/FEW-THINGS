@@ -1,16 +1,18 @@
 <?php
-require_once(SCP_DIR.'Request/Contrat.php');
+
+/*require_once(SCP_DIR.'Request/Contrat.php');*/
 require_once(SCP_DIR.'Request/Tickets.php');
+require_once(INCLUDE_DIR.'class.contrat.php');
 
 if(!defined('OSTSCPINC') || !$thisstaff || !isset($_REQUEST['id'])) die('Invalid path');
 
 $orgsC = OrganisationCollection::getInstance();
 
-$org = $orgsC->lookUpById($_REQUEST['id'])[0];
+$org = $orgsC->lookUpByName('411VDOC')[0];
 
 $apiKey = "AIzaSyB4pINEbEV_CczgRAhMhIza1OAEzSJV6JA";
 
-$tickets = TicketsInfos::getInstance()->ticket_org($org->getId());
+$tickets = TicketsInfos::getInstance()->ticket_org('3314');
 
 ?>
 <h3>Profile : <?php echo $org->getName(); ?></h3>
@@ -82,14 +84,18 @@ $tickets = TicketsInfos::getInstance()->ticket_org($org->getId());
     class="icon-pushpin"></i>&nbsp;<?php echo __('Notes'); ?></a></li>
     <li><a href="#contrat">&nbsp;<?php echo __('Contrat'); ?></a></li>
 </ul>
-<div id="orgtabs_container">
+<div id="orgtabs_container">-->
 
 
 
 <div class="tab_content" id="contrat" style="display:none">
 
 <?php
-    $contrat = Contrat::getInstance()->getContrat($org->getId());
+
+    //$contrat = Contrat::getInstance()->getContrat($org->getId());
+    $contratC = contratCollection::getInstance();
+    $contrat = $contratC->lookUpById($org->getId());
+    print_r($contrat);
 
     if(empty($contrat) === FALSE){
 
@@ -249,7 +255,7 @@ $tickets = TicketsInfos::getInstance()->ticket_org($org->getId());
 
 ?>
 <script>
-    /*var data = {
+    var data = {
         labels: ["Hotline","Atelier-Sur site","Régie","Téléphonie"],
         datasets: [{
             label: "Temps passé" ,
@@ -297,7 +303,7 @@ $tickets = TicketsInfos::getInstance()->ticket_org($org->getId());
         , }
     , });
 
-    $('#insertOrUpdate').click(function(){
+    /*$('#insertOrUpdate').click(function(){
         var types = '';
         var id = $('.contrat.table.table-striped').attr('id');
         var id_org = $('.contrat.table.table-striped').attr('data_org_id');
@@ -342,7 +348,7 @@ $create_note_url = 'orgs/'.$org->getId().'/note';
 include STAFFINC_DIR . 'templates/notes.tmpl.php';*/
 ?>
 </div>
-</div>-->
+</div>
 
 <script type="text/javascript">
 

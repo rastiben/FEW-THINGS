@@ -5,11 +5,11 @@ class BDD{
     /*
     *Constante : Nom d'utilisateur de la BDD
     */
-    const USERNAME = 'sa';
+    const USERNAME = '';
     /*
     *Constante : Mot de passe de la BDD
     */
-    const PASSWORD = 'sage';
+    const PASSWORD = '';
     /*
     *Instance de la classe BDD
     */
@@ -17,15 +17,18 @@ class BDD{
     /*
     *Instance de la base de données
     */
-    private $BDD = null;
+    public $ODBC = null;
 
+    /*SWITCH ENTRE DEUX LIENS ODBC (Moins de dev)
+    Pouvoir récupérer l'id de l'organisation (A favoriser en prog)
+    Ou alors se servir du nom de l'organisation ??'*/
 
     /*
     *CONSTRUCTEUR
     */
     private function __construct(){
         try{
-            $this->BDD = odbc_connect("sage", self::USERNAME, self::PASSWORD);
+            $this->ODBC = odbc_connect('DSN=srvsage;server=srvsage;uid=;pwd=;', '', '');
         }catch(PDOException $e){
             die($e);
         }
@@ -54,7 +57,7 @@ class BDD{
     *Préparation d'une requete
     */
     public function prepare($query){
-        return odbc_prepare($this->BDD,$query);
+        return odbc_prepare($this->ODBC,$query);
     }
 
     /*

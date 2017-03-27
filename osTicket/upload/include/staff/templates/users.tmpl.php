@@ -5,7 +5,7 @@ $select = 'SELECT user.*, email.address as email ';
 $from = 'FROM '.USER_TABLE.' user '
       . 'LEFT JOIN '.USER_EMAIL_TABLE.' email ON (user.id = email.user_id) ';
 
-$where = ' WHERE user.org_id='.db_input($org->getId());
+$where = ' WHERE user.org_id='.db_input('3314');
 
 $sortOptions = array('name' => 'user.name',
                      'email' => 'email.address',
@@ -65,13 +65,13 @@ else
 </div>
 
 <div class="col-md-10 listOrg">
-<form action="orgs.php?id=<?php echo $org->getId(); ?>" method="POST" name="users" >
+<form action="orgs.php?id=<?php /*echo $org->getId();*/ ?>" method="POST" name="users" >
 
 <div class="clear"></div>
 
  <?php csrf_token(); ?>
  <input type="hidden" name="do" value="mass_process" >
- <input type="hidden" id="id" name="id" value="<?php echo $org->getId(); ?>" >
+ <input type="hidden" id="id" name="id" value="<?php /*echo $org->getId();*/ ?>" >
  <input type="hidden" id="action" name="a" value="" >
  <table class="table table-striped" border="0" style="margin:0px;" cellspacing="1" cellpadding="0" width="100%">
     <thead>
@@ -145,7 +145,7 @@ else
 </div>
 
 <script type="text/javascript">
-$(function() {
+/*$(function() {
     $(document).on('click', 'a.add-user', function(e) {
         e.preventDefault();
         $.userLookup('ajax.php/' + $(this).attr('href').substr(1), function (user) {
@@ -156,6 +156,6 @@ $(function() {
         });
         return false;
      });
-});
+});*/
 </script>
 

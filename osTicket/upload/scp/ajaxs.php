@@ -3,6 +3,9 @@
 require_once('staff.inc.php');
 require_once(INCLUDE_DIR . 'class.org.php');
 require_once(INCLUDE_DIR . 'class.users.php');
+require_once(INCLUDE_DIR . 'class.stats.php');
+require_once(INCLUDE_DIR . 'class.contrat.php');
+require_once(INCLUDE_DIR . 'class.stock.php');
 
 //METHOD
 $method = $_SERVER['REQUEST_METHOD'];
@@ -26,7 +29,10 @@ $routes = array
     'orgA' => array('org', ':action', ':id'),
     'orgs' => array('orgs', ':name'),
     'userC' => array('user',':action'),
-    'userA' => array('user', ':action', ':id')
+    'userA' => array('user', ':action', ':id'),
+    'stats' => array('stats',':objet',':id'),
+    'contrat' => array('contrat',':orgId'),
+    'stock' => array('stock',':agent')
 );
 
 function dispatcher($url, $routes)
@@ -70,6 +76,11 @@ function dispatcher($url, $routes)
 
 $url = dispatcher($url, $routes);
 
+/*if(strstr($url['path'],"toto")){
+    $org = OrganisationCollection::getInstance();
+    $org->toto();
+}*/
+/*REQUETES ORGANISATION*/
 if(strstr($url['path'],"org")){
     $org = OrganisationCollection::getInstance();
     if($url['path'] == "orgs"){
@@ -94,7 +105,7 @@ if(strstr($url['path'],"org")){
             }
         }
     }
-
+/*REQUETES USERS*/
 }  else if(strstr($url['path'],"user")){
     $users = userCollection::getInstance();
     if($action = isset($url['parameters']['action'])){
@@ -109,6 +120,38 @@ if(strstr($url['path'],"org")){
             }
         }
     }
-}
+/*REQUETES STATISTIQUE*/
+} else if(strstr($url['path'],"stats")){
+    $stats = new stats();
+    if(isset($url['parameters']['objet'])){
+        $objet = $url['parameters']['objet'];
+        if($objet == "org"){
+            $id = $url['parameters']['id'];
+            $date1 = $_POST['sDate'];
+            $date2 = $_POST['eDate'];
+            echo $stats->statsTicketFromOrg($id,$date1,$date2);
+        } else if($objet == "agent"){
+            $id = $url['parameters']['id'];
+            $date1 = $_POST['sDate'];
+            $date2 = $_POST['eDate'];
+            echo $stats->statsTicketForAgent($id,$date1,$date2);
+        }
+    }
+/*REQUETES CONTRAT*/
+} else if(strstr($url['path'],"contrat")){
+    $contrat = contratCollection::getInstance();
+    if($action = isset($url['parameters']['action'])){
 
+    } else if($id = isset($url['parameters']['orgId'])){
+        echo json_encode($contrat->lookUpById($id));
+    }
+/*REQUETES STOCKS*/
+} else if(strstr($url['path'],"stock")){
+    if(isset($url['parameters']['agent'])){
+        $agent = $url['parameters']['agent'];
+        $stock = new stock($agent);
+        echo json_encode($stock->articles);
+    }
+    //orgid
+}
 ?>

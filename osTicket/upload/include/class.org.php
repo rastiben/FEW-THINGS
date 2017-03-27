@@ -87,6 +87,20 @@ class OrganisationCollection{
         return self::$instance;
     }
 
+    public function toto(){
+        $result = $this->bdd_org->toto();
+        echo "<table style='text-align:left'><thread><th>Référence</th><th>Quantité</th></thead><tbody>";
+        while($myRow = odbc_fetch_array($result)){
+            echo "<tr>";
+            foreach($myRow as $column){
+                echo "<td>".$column."</td>";
+            }
+            echo "</tr>";
+        }
+        echo "</tbody></table>";
+    }
+
+
     /*
     *Récupération des Organisation
     */
@@ -192,57 +206,57 @@ class Organisation{
     /*
     *Récupération de l'id
     */
-    public function getId(){
+    /*public function getId(){
         return $this->data[0];
-    }
+    }*/
 
     /*
     *Récupération du nom de l'organisation
     */
     public function getName(){
-        return $this->data[1];
+        return $this->data[0];
     }
 
     /*
     *Récupération de l'adresse de l'organisation
     */
     public function getAddress(){
-        return $this->data[2];
+        return $this->data[1];
     }
 
     /*
     *Récupération de l'adresse de l'organisation
     */
     public function getComplement(){
-        return $this->data[3];
+        return $this->data[2];
     }
 
     /*
     *Récupération du Code Postal
     */
     public function getCP(){
-        return $this->data[4];
+        return $this->data[3];
     }
 
     /*
     *Récupération de la Ville
     */
     public function getCity(){
-        return $this->data[5];
+        return $this->data[4];
     }
 
     /*
     *Récupération du numéro de téléphone
     */
     public function getPhone(){
-        return $this->data[6];
+        return $this->data[5];
     }
 
     /*
     *Récupération du site web
     */
     public function getWebSite(){
-        return $this->data[7];
+        return $this->data[6];
     }
 
 }

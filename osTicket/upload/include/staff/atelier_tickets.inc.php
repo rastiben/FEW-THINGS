@@ -161,7 +161,7 @@ $queue_columns = array(
             });
         });
         var addContenuInListe = function(obj){
-            $('.list.atelierT tbody').append('<tr class="'+obj.etat+'"><td><a class="Icon Ticket" href="./tickets.php?id='+obj.ticket_id+'">'+obj.number+'</a></td><td><a href="./orgs.php?id='+obj.org_id+'">'+obj.org_name+'</a></td><td>'+obj.getType()+'</td><td>'+obj.priority+'</td></tr>');
+            $('.list.atelierT tbody').append('<tr class="'+obj.etat+'"><td><a class="Icon Ticket no-pjax" href="./tickets.php?id='+obj.ticket_id+'">'+obj.number+'</a></td><td><a class="no-pjax" href="./orgs.php?id='+obj.org_id+'">'+obj.org_name+'</a></td><td>'+obj.getType()+'</td><td>'+obj.priority+'</td></tr>');
         }
     });
 

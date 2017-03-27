@@ -30,7 +30,7 @@ if(OSTINSTALLED!=TRUE){
 }
 
 # Encrypt/Decrypt secret key - randomly generated during installation.
-define('SECRET_SALT','KMB_gSD5O=bQO0uCogj5V_qOiEAy3Fyb');
+define('SECRET_SALT','47bk84NSrKWP8Lv_Gp8B6oLc_ZVcPrBG');
 
 #Default admin email. Used only on db connection issues and related alerts.
 define('ADMIN_EMAIL','brastier@viennedoc.com');
@@ -40,7 +40,7 @@ define('ADMIN_EMAIL','brastier@viennedoc.com');
 # Mysql Login info
 define('DBTYPE','mysql');
 define('DBHOST','localhost');
-define('DBNAME','osTicket');
+define('DBNAME','osicket');
 define('DBUSER','Admin');
 define('DBPASS','AdminDeLaBase86@');
 

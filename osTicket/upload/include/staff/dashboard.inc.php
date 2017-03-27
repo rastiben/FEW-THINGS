@@ -2,6 +2,13 @@
 $report = new OverviewReport($_POST['start'], $_POST['period']);
 $plots = $report->getPlotData();
 
+$agents = Staff::objects()
+        ->annotate(array(
+            'teams_count'=>SqlAggregate::COUNT('teams', true),
+        ))
+        ->select_related('dept', 'group');
+
+
 ?>
     <script type="text/javascript" src="js/raphael-min.js?901e5ea"></script>
     <script type="text/javascript" src="js/g.raphael.js?901e5ea"></script>
@@ -60,7 +67,10 @@ $plots = $report->getPlotData();
         <p>Affichage du nombre de tickets ouverts et fermées pour une organisation sur une période donnée</p>
         <!--CHART.JS-->
         <label>Organisation : </label>
-        <select class="selectpicker1"> </select>
+        <input class="user_org selectpicker1"> </input>
+        <div class="orgsList" style="display:none">
+
+        </div>
         <label>De : </label>
         <input type="text" id="sDate">
         <label>À : </label>
@@ -69,7 +79,13 @@ $plots = $report->getPlotData();
         <p>Affichage du nombre de tickets ouverts et fermées par un agent sur une période donnée</p>
         <!--CHART.JS-->
         <label>Agent : </label>
-        <select class="selectpicker2"> </select>
+        <select class="selectpicker2">
+        <?php foreach ($agents as $agent) { ?>
+
+            <option id="<?php echo $agent->getId() ?>"><?php echo $agent->getFirstName().' '.$agent->getLastName()?></option>
+
+        <?php } ?>
+        </select>
         <label>De : </label>
         <input type="text" id="saDate">
         <label>À : </label>
@@ -109,89 +125,50 @@ $plots = $report->getPlotData();
                 , autoclose: true
                 , orientation: "bottom auto"
             , });
-            //REQUETE OBTENTION DES ORGANISATIONS
-            $.ajax({
-                type: "POST"
-                , data: {
-                    GetOrg: ""
-                }
-                , url: "./Request/stats.php"
-                , dataType: "html"
-                , async: false
-                , success: function (data) {
-                    var json = JSON.parse(data);
-                    var org = json[0][0];
-                    //console.log(client);
-                    $.each(json, function ($number, $obj) {
-                        $('.selectpicker1').append("<option id='" + $obj[0] + "'>" + $obj[1] + "</option>");
-                    });
-                }
-            });
-            //REQUETE OBTENTION DES AGENTS
-            $.ajax({
-                type: "POST"
-                , data: {
-                    GetAgent: ""
-                }
-                , url: "./Request/stats.php"
-                , dataType: "html"
-                , async: false
-                , success: function (data) {
-                    var json = JSON.parse(data);
-                    var org = json[0][0];
-                    //console.log(client);
-                    $.each(json, function ($number, $obj) {
-                        $('.selectpicker2').append("<option id='" + $obj[0] + "'>" + $obj[1] + "</option>");
-                    });
-                }
-            });
-            //CHANGEMENT D'ORGANISATION
-            $('.selectpicker1').change(function () {
-                if($('#sDate').val() != '' && $('#eDate').val() != '')
-                    updateChart($("option:selected",this).attr("id"));
-            });
+
+            var org_id;
+            var staff_id = <?php echo $agents[0]->getId(); ?>;
+
             //CHANGEMENT DE DATE POUR ORGANISATION
             $('#sDate').change(function () {
                 if($('#sDate').val() != '' && $('#eDate').val() != '')
-                    updateChart($(".selectpicker1 option:selected").attr("id"));
+                    updateChart();
             });
             //CHANGEMENT DE DATE POUR ORGANISATION
             $('#eDate').change(function () {
                 if($('#sDate').val() != '' && $('#eDate').val() != '')
-                    updateChart($(".selectpicker1 option:selected").attr("id"));
+                    updateChart();
             });
             //CHANGEMENT D'AGENT
             $('.selectpicker2').change(function () {
+                staff_id = $(this).attr('id');
                 if($('#saDate').val() != '' && $('#eaDate').val() != '')
-                    updateChartAgent($("option:selected",this).attr("id"));
+                    updateChartAgent();
             });
             //CHANGEMENT DE DATE POUR AGENT
             $('#saDate').change(function () {
                 if($('#saDate').val() != '' && $('#eaDate').val() != '')
-                    updateChartAgent($(".selectpicker2 option:selected").attr("id"));
+                    updateChartAgent();
             });
             //CHANGEMENT DE DATE POUR AGENT
             $('#eaDate').change(function () {
                 if($('#saDate').val() != '' && $('#eaDate').val() != '')
-                    updateChartAgent($(".selectpicker2 option:selected").attr("id"));
+                    updateChartAgent();
             });
 
             //OBTENTION DES DONNEES TICKETS & MISE A JOUR DU GRAPHIQUE
-            function updateChart(org) {
+            function updateChart() {
                 $.ajax({
                     type: "POST"
                     , data: {
-                        GetTicketForClient: ""
-                        , org: org
-                        , sDate: $('#sDate').val()
+                        sDate: $('#sDate').val()
                         , eDate: $('#eDate').val()
                     }
-                    , url: "./Request/stats.php"
+                    , url: "./ajaxs.php/stats/org/"+org_id
                     , dataType: "html"
                     , async: false
                     , success: function (data) {
                         var json = JSON.parse(data);
-                        console.log(json);
                         var arrayObj1 = [];
                         var arrayObj2 = [];
                         var labels = [];
@@ -200,7 +177,6 @@ $plots = $report->getPlotData();
                             arrayObj1[i] = parseInt(json['2'][i]);
                             arrayObj2[i] = parseInt(json['3'][i]);
                         }
-                        console.log(labels);
                         var data = {
                             labels: labels
                             , datasets: [{
@@ -246,16 +222,13 @@ $plots = $report->getPlotData();
 
             //OBTENTION DES DONNEES TICKETS PAR AGENT & MISE A JOUR DU GRAPHIQUE
             function updateChartAgent(agent) {
-                console.log(agent);
                 $.ajax({
                     type: "POST"
                     , data: {
-                        GetTicketForAgent: ""
-                        , agent: agent
-                        , sDate: $('#saDate').val()
+                        sDate: $('#saDate').val()
                         , eDate: $('#eaDate').val()
                     }
-                    , url: "./Request/stats.php"
+                    , url: "./ajaxs.php/stats/agent/"+staff_id
                     , dataType: "html"
                     , async: false
                     , success: function (data) {
@@ -304,6 +277,86 @@ $plots = $report->getPlotData();
                     }
                 });
             }
+
+
+
+            /**/
+            var clicky;
+
+            $(document).mousedown(function(e) {
+                // The latest element clicked
+                clicky = $(e.target);
+            });
+
+            $(document).on('focusout','.user_org',function(e){
+                if(!$(clicky).is('p')){
+                    $(".orgsList").css('display','none');
+                    //$("tr td:contains('Organisation:')").siblings().find('input').focus();
+                } else {
+                    $(".user_org").focus();
+                }
+            });
+
+            $(document).on('focusin','.user_org',function(e){
+                if($('.user_org').val().length > 0){
+                    var orgInput = $(this);
+                    var pos = orgInput.position();
+                    var top = pos.top + 27;
+                    var left = pos.left;
+                    $(".orgsList").css('top',top);
+                    $(".orgsList").css('left',left);
+                    $(".orgsList").css('width','auto');
+                    $(".orgsList").css('display','block');
+                }
+            });
+
+            (function ($) {
+                $.fn.delayKeyup = function(callback, ms){
+                    var timer = 0;
+                    $(this).keyup(function(){
+                        clearTimeout (timer);
+                        timer = setTimeout(callback, ms);
+                    });
+                    return $(this);
+                };
+            })(jQuery);
+
+            $('.user_org').delayKeyup(function(){
+                //alert("5 secondes passed from the last event keyup.");
+                    var orgInput = $('.user_org');
+                    var pos = orgInput.position();
+                    var top = pos.top + 27;
+                    var left = pos.left;
+
+                    if(orgInput.val().length > 0){
+                        $.ajax({
+                            method: "GET",
+                            url: "./ajaxs.php/orgs/"+orgInput.val()
+                        })
+                        .success(function( data ) {
+                            data = $.parseJSON(data);
+                            $(".orgsList").empty();
+                            $(".orgsList").css('top',top);
+                            $(".orgsList").css('left',left);
+                            $(".orgsList").css('width','auto');
+                            $(data).each(function(number,obj){
+                                $(".orgsList").append('<p data-org-name="" id="3314">'+obj.data[0]+'</p>')
+                            });
+                            $(".orgsList").css('display','block');
+                        });
+                    } else {
+                        $(".orgsList").css('display','none');
+                    }
+            }, 500);
+
+            //temporisation
+
+            $(document).on('click','.orgsList p',function(){
+                $(".user_org").val($(this).text());
+                org_id = $(this).attr('id');
+            });
+
+
         </script>
         <h2><?php echo __('Statistics'); ?>&nbsp;<i class="help-tip icon-question-sign" href="#statistics"></i></h2>
         <p>

@@ -1,11 +1,4 @@
 <?php
-
-require_once('../../main.inc.php');
-require_once('../../include/class.staff.php');
-//require_once('../include/class.csrf.php');
-
-$thisstaff = StaffAuthenticationBackend::getUser();
-
 /*
 *Classe Statistique.
 *Une fonction pour chaque statistique.
@@ -37,7 +30,7 @@ class stats{
     *Obtention du nombres de ticket ouverts & fermées pour une organisation données.
     *Retour du tableau en json.
     */
-    function getTicketFromOrg($org,$date1,$date2){
+    function statsTicketFromOrg($org,$date1,$date2){
         $result = array();
 
         /*MOIS*/
@@ -115,9 +108,8 @@ class stats{
     *Obtention du nombres de ticket ouverts & fermées pour une organisation données.
     *Retour du tableau en json.
     */
-    function getTicketForAgent($agent,$date1,$date2){
+    function statsTicketForAgent($agent,$date1,$date2){
         $result = array();
-
         /*MOIS*/
         $mois = ["01"=>"Janvier",
                  "02"=>"Février",
@@ -222,7 +214,7 @@ class stats{
     *getTicketOpenFromOrg
     */
     function getTicketOpenFromOrg($org,$date1,$date2){
-        $res = $this->dbh->prepare("SELECT COUNT(*) FROM ost_ticket,ost_user,ost_organization WHERE ost_ticket.user_id = ost_user.id AND ost_user.org_id = ost_organization.id AND ost_organization.id = :orgId AND ost_ticket.created >= :sDate AND ost_ticket.created <= :eDate");
+        $res = $this->dbh->prepare("SELECT COUNT(*) FROM ost_ticket,ost_user WHERE ost_ticket.user_id = ost_user.id AND ost_user.org_id = :orgId AND ost_ticket.created >= :sDate AND ost_ticket.created <= :eDate");
         $res->execute(array(':orgId' => $org, ':sDate' => $date1, ':eDate' => $date2));
         return $res->fetchAll()[0]['COUNT(*)'];
     }
@@ -231,7 +223,7 @@ class stats{
     *getTicketClosedFromOrg
     */
     function getTicketClosedFromOrg($org,$date1,$date2){
-        $res = $this->dbh->prepare("SELECT COUNT(*) FROM ost_ticket,ost_user,ost_organization WHERE ost_ticket.user_id = ost_user.id AND ost_user.org_id = ost_organization.id AND ost_organization.id = :orgId AND ost_ticket.created >= :date1 AND ost_ticket.created <= :date2 AND ost_ticket.closed IS NOT NULL");
+        $res = $this->dbh->prepare("SELECT COUNT(*) FROM ost_ticket,ost_user WHERE ost_ticket.user_id = ost_user.id AND ost_user.org_id = :orgId AND ost_ticket.created >= :date1 AND ost_ticket.created <= :date2 AND ost_ticket.closed IS NOT NULL");
         $res->execute(array(':orgId' => $org, ':date1' => $date1, ':date2' => $date2));
         return $res->fetchAll()[0]['COUNT(*)'];
     }
@@ -247,37 +239,5 @@ class stats{
 
 
 }
-
-/*
-*Si un membre du staff est connecté, une redirection est effectué vers la bonne fonction.
-*/
-if (!$thisstaff || !$thisstaff->getId() || !$thisstaff->isValid()) {
-    return "error";
-}
-else{
-    if(isset($_POST['GetTicketForClient'])){
-        $tickets = new stats();
-        $result = $tickets->getTicketFromOrg($_POST['org'],$_POST['sDate'],$_POST['eDate']);
-        echo $result;
-    }
-    else if(isset($_POST['GetOrg'])){
-        $tickets = new stats();
-        $result = $tickets->getOrg();
-        echo $result;
-    }
-    else if(isset($_POST['GetAgent'])){
-        $tickets = new stats();
-        $result = $tickets->getAgent();
-        echo $result;
-    }
-    else if(isset($_POST['GetTicketForAgent'])){
-        $tickets = new stats();
-        $result = $tickets->getTicketForAgent($_POST['agent'],$_POST['sDate'],$_POST['eDate']);
-        echo $result;
-    }
-}
-
-//GetTicketForAgent
-//echo "toto";
 
 ?>

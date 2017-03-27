@@ -1,5 +1,25 @@
 moment.locale('fr');
 
+
+app.factory('stockFactory',['$http','$rootScope',function($http,$rootScope){
+    var stock;
+    return {
+        query : function(agent) {
+             return $http({method: 'POST',
+                    url: './ajaxs.php/stock/'+agent,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                })
+                .then(function(data){
+                    stock = data;
+                })
+         },
+         getStock: function() {
+             return stock;
+         }
+    }
+}]);
+
+
 //récupération des informations (Rapports et horaires) + Ajout d'un rapport ou maj d'un horaires
 app.factory('rapportFactory',['$http',function($http){
    return{
@@ -41,7 +61,7 @@ app.factory('rapportFactory',['$http',function($http){
    };
 }]);
 
-app.controller("rapportCtrl",["$scope","rapportFactory", function($scope,rapportFactory){
+app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootScope", function($scope,rapportFactory,stockFactory,$rootScope){
     //Init
     $scope.init = function(ticketID,staffID,TopicID){
         $scope.ticketID = ticketID;
@@ -191,6 +211,26 @@ app.controller("rapportCtrl",["$scope","rapportFactory", function($scope,rapport
         $scope.alreadyEditingHoraire = false;
     }
 
+    /*STOCK*/
+    $scope.getStock = function(agent){
+        $scope.agent = agent;
+        //display balls
+        $('.ballss').css('display','block');
+        $('.fixed-right').css('display','none');
+
+        stockFactory.query('nicolas').then(function(){
+            $scope.stock = stockFactory.getStock().data;
+            $rootScope.$broadcast('STOCK', $scope.stock);
+            $('.ballss').css('display','none');
+            $('.stock').css('display','block');
+        });
+        /*stockFactory.getStock('nicolas').then(function(stock){
+            $('.ballss').css('display','none');
+            $('.stock').css('display','block');
+            //console.log($scope.stock);
+        });*/
+    }
+
 }]);
 
 //filtre de capitalization.
@@ -212,6 +252,22 @@ app.filter('pastTimes', function() {
       return (!!input) ? $scope.tempsPasse(input) : '';
     }
 });
+
+app.controller("stockCtrl",["$scope","stockFactory","$rootScope", function($scope,stockFactory,$rootScope){
+    $scope.$on('STOCK', function(response,stock) {
+          $scope.stock = stock;
+    })
+}]);
+
+
+
+
+
+
+
+
+
+
 
 
 
