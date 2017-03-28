@@ -27,7 +27,22 @@ class stock{
         array_push($this->articles,new Article($data));
     }
 
+    /*
+    *Récupération des numéros de series
+    */
+    public static function getSN($reference,$agent){
+        $bdd_stock = bdd_stock::getInstance();
+        $stock = 'STOCK VOITURE ' . strtoupper($agent);
 
+        $sn = $bdd_stock->getSN($reference,$stock);
+
+        $serialNumbers = [];
+        while($myRow = odbc_fetch_array($sn)){
+            array_push($serialNumbers,$myRow['LS_NOSERIE']);
+        }
+
+        return $serialNumbers;
+    }
 }
 
 ?>

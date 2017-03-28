@@ -1059,15 +1059,31 @@ if ($errors['err'] && isset($_POST['a'])) {
 
 <div class="stock" ng-controller="stockCtrl" style="display:none">
     {{rapports}}
-    <table>
+    <table style="margin: 0 auto;">
         <thead>
             <th>Référence</th>
             <th>Quantité</th>
+            <th>Sortie</th>
         </thead>
         <tbody>
             <tr ng-repeat="article in stock">
                 <td>{{article.reference}}</td>
-                <td>{{article.quantite}}</td>
+                <td style="text-align:center">{{article.quantite}}</td>
+                <td>
+                    <div class="row">
+                        <div class="">
+                            <div class="input-group number-spinner">
+                                <span class="input-group-btn data-dwn">
+                                    <button class="btn btn-default btn-info" style="width:5px" ng-click="manageStock(article.reference,'dwn',article.quantite,$event)" data-dir="dwn"><span class="glyphicon glyphicon-minus" style="margin-left: -6px;font-size: 10px;"></span></button>
+                                </span>
+                                <input type="text" class="form-control text-center" value="0" min="0" max="{{article.quantite}}">
+                                <span class="input-group-btn data-up">
+                                    <button class="btn btn-default btn-info" style="width:5px" ng-click="manageStock(article.reference,'up',article.quantite,$event)" data-dir="up"><span class="glyphicon glyphicon-plus" style="margin-left: -6px;font-size: 10px;"></span></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -1673,6 +1689,25 @@ $(function() {
         }).success(function( data ) {
 
         });
+    });
+
+
+
+    //GESTION DU SNIPPER
+    $(document).on('click','.number-spinner button',function () {
+        btn = $(this);
+        input = btn.closest('.number-spinner').find('input');
+        btn.closest('.number-spinner').find('button').prop("disabled", false);
+
+        if (btn.attr('data-dir') == 'up') {
+            if ( input.attr('max') == undefined || parseInt(input.val()) < parseInt(input.attr('max')) ) {
+                input.val(parseInt(input.val())+1);
+            }
+        } else {
+            if ( input.attr('min') == undefined || parseInt(input.val()) > parseInt(input.attr('min')) ) {
+                    input.val(parseInt(input.val())-1);
+            }
+        }
     });
 
 });

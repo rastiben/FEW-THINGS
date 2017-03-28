@@ -13,6 +13,12 @@ app.factory('stockFactory',['$http','$rootScope',function($http,$rootScope){
                     stock = data;
                 })
          },
+         getSN : function(reference,agent){
+             return $http({method: 'POST',
+                    url: './ajaxs.php/stock/sn/'+reference+'/'+agent,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                });
+         },
          getStock: function() {
              return stock;
          }
@@ -217,6 +223,7 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
         //display balls
         $('.ballss').css('display','block');
         $('.fixed-right').css('display','none');
+        $('.ticket_right').css('height','auto');
 
         stockFactory.query('nicolas').then(function(){
             $scope.stock = stockFactory.getStock().data;
@@ -253,10 +260,71 @@ app.filter('pastTimes', function() {
     }
 });
 
-app.controller("stockCtrl",["$scope","stockFactory","$rootScope", function($scope,stockFactory,$rootScope){
+app.controller("stockCtrl",["$scope","stockFactory","$rootScope","$compile", function($scope,stockFactory,$rootScope,$compile){
     $scope.$on('STOCK', function(response,stock) {
-          $scope.stock = stock;
+        $scope.stock = stock;
+        console.log(stock);
+        $scope.stockOut = JSON.parse(JSON.stringify($scope.stock));
+        $.each($scope.stockOut,function(key,value){
+             value.quantite = 0;
+        });
     })
+
+    $scope.manageStock = function(reference,dir,max,$event){
+        //VARIABLES
+        var obj = $scope.stockOut.filter(function(e) { return e.reference == reference; })[0];
+        var button = $event.currentTarget;
+
+        if (dir == 'up') {
+            if (obj.quantite < max) {
+                //TEST SI L'ARTICLE EST SERIALISE.
+                $scope.serialClicked = reference;
+                if (obj.suiviStock == 1){
+                    //Récupération des numero de serie lié à cet article.
+                    var tr = $(button).closest('tr');
+                    tr.children().hide();
+                    $('.ballss').css('display','block');
+                    stockFactory.getSN(reference,'NICOLAS').then(function(SN){
+                        var serialNumbers = SN.data;
+
+                        //affichage du numero de serie
+                        $('.ballss').css('display','none');
+                        tr.append('<td><select></select></td>');
+                        var select = tr.find('select');
+                        $.each(serialNumbers,function(key,value){
+                            select.append('<option>'+value+'</option>');
+                        });
+                        tr.append($compile('<td><button class="btn btn-sucess" ng-click="validSN($event)">Valider</button></td>')($scope));
+                        //$compile(tr)($scope);
+                    });
+                }
+                //Augmentation de la quantité souhaité.
+                //obj.quantite += 1;
+            }
+        } else {
+            if (obj.quantite > 0) {
+                obj.quantite -= 1;
+            }
+        }
+
+    }
+
+    $scope.validSN = function($event){
+        var obj = $scope.stockOut.filter(function(e) { return e.reference == $scope.serialClicked; })[0];
+        obj.quantite += 1;
+        //get selected serial number
+        var button = $event.currentTarget;
+        var sn = $(button).parent().prev().children('select').val();
+
+        //ajout du serial number
+        obj.sn.push(sn);
+
+        //MAJ VISUEL
+        var tr = $(button).closest('tr');
+        tr.children().slice(-2).remove();
+        tr.children().show();
+    }
+
 }]);
 
 

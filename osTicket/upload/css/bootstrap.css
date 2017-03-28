@@ -268,7 +268,7 @@ th {
 }
 .glyphicon {
   position: relative;
-  top: 1px;
+  /*top: 1px;*/
   display: inline-block;
   font-family: 'Glyphicons Halflings';
   font-style: normal;
@@ -3831,6 +3831,7 @@ tbody.collapse.in {
   float: left;
   width: 100%;
   margin-bottom: 0;
+  max-width: 50px;
 }
 .input-group .form-control:focus {
   z-index: 3;

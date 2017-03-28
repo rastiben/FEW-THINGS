@@ -1,12 +1,13 @@
 <?php
 
+
+
 require_once('staff.inc.php');
 require_once(INCLUDE_DIR . 'class.org.php');
 require_once(INCLUDE_DIR . 'class.users.php');
 require_once(INCLUDE_DIR . 'class.stats.php');
 require_once(INCLUDE_DIR . 'class.contrat.php');
 require_once(INCLUDE_DIR . 'class.stock.php');
-
 //METHOD
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -32,7 +33,8 @@ $routes = array
     'userA' => array('user', ':action', ':id'),
     'stats' => array('stats',':objet',':id'),
     'contrat' => array('contrat',':orgId'),
-    'stock' => array('stock',':agent')
+    'stock' => array('stock',':agent'),
+    'stockSN' => array('stock','sn',':reference',':agent')
 );
 
 function dispatcher($url, $routes)
@@ -75,6 +77,7 @@ function dispatcher($url, $routes)
 }
 
 $url = dispatcher($url, $routes);
+
 
 /*if(strstr($url['path'],"toto")){
     $org = OrganisationCollection::getInstance();
@@ -147,7 +150,12 @@ if(strstr($url['path'],"org")){
     }
 /*REQUETES STOCKS*/
 } else if(strstr($url['path'],"stock")){
-    if(isset($url['parameters']['agent'])){
+    if($url['path'] == 'stockSN'){
+        $reference = $url['parameters']['reference'];
+        $agent = $url['parameters']['agent'];
+        $stock = stock::getSN($reference,$agent);
+        echo json_encode($stock);
+    }else if(isset($url['parameters']['agent'])){
         $agent = $url['parameters']['agent'];
         $stock = new stock($agent);
         echo json_encode($stock->articles);
