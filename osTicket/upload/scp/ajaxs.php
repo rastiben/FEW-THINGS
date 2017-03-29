@@ -8,6 +8,7 @@ require_once(INCLUDE_DIR . 'class.users.php');
 require_once(INCLUDE_DIR . 'class.stats.php');
 require_once(INCLUDE_DIR . 'class.contrat.php');
 require_once(INCLUDE_DIR . 'class.stock.php');
+require_once(INCLUDE_DIR . 'class.docSage.php');
 //METHOD
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -34,7 +35,9 @@ $routes = array
     'stats' => array('stats',':objet',':id'),
     'contrat' => array('contrat',':orgId'),
     'stock' => array('stock',':agent'),
-    'stockSN' => array('stock','sn',':reference',':agent')
+    'stockSN' => array('stock','sn',':reference',':agent'),
+    'docSageE' => array('docSage',':toCreate',':tiers',':stock'),
+    'docSageL' => array('docSage',':toCreate')
 );
 
 function dispatcher($url, $routes)
@@ -77,8 +80,6 @@ function dispatcher($url, $routes)
 }
 
 $url = dispatcher($url, $routes);
-
-
 /*if(strstr($url['path'],"toto")){
     $org = OrganisationCollection::getInstance();
     $org->toto();
@@ -161,5 +162,19 @@ if(strstr($url['path'],"org")){
         echo json_encode($stock->articles);
     }
     //orgid
+} else if(strstr($url['path'],"docSage")){
+    if(isset($url['parameters']['toCreate'])){
+        if($url['parameters']['toCreate'] == 'entete'){
+            $tiers = $url['parameters']['tiers'];
+            $stock = $url['parameters']['stock'];
+            docSage::createDocEntete($tiers,$stock);
+        } else if($url['parameters']['toCreate'] == 'lines') {
+            $angular_http_params = (array)json_decode(trim(file_get_contents('php://input')));
+            $org = $angular_http_params['org'];
+            $stock = $angular_http_params['stock'];
+            $lines = $angular_http_params['lines'];
+            docSage::createDocLines($org,$stock,$lines);
+        }
+    }
 }
 ?>

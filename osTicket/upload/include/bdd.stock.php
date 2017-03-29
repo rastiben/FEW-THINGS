@@ -34,7 +34,7 @@ class bdd_stock{
     }
 
     public function getStock($stock){
-        $prepare = $this->DB->prepare("SELECT F_ARTSTOCK.AR_Ref,AS_QteSto,F_ARTICLE.AR_SuiviStock,F_ARTSTOCK.DE_No
+        $prepare = $this->DB->prepare("SELECT F_ARTSTOCK.AR_Ref,AS_QteSto,F_ARTICLE.AR_SuiviStock,F_ARTSTOCK.DE_No,AR_Design,AR_PrixVen
         FROM F_ARTSTOCK,F_DEPOT,F_ARTICLE
         WHERE  F_DEPOT.DE_No = F_ARTSTOCK.DE_No
         AND F_ARTICLE.AR_Ref = F_ARTSTOCK.AR_Ref

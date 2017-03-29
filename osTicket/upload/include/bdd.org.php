@@ -94,6 +94,9 @@ class bdd_org{
     */
     public function getOrgWithName($name){
         /*Préparation et execution de celle ci.*/
+        $name = '411VDOC';
+        if(substr( $name, 0, 3 ) === "411") $name = substr( $name, 3);
+
         $prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site
                                         FROM F_COMPTET
                                         WHERE CT_Num LIKE ?

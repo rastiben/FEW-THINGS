@@ -134,6 +134,10 @@ class UserModel extends VerySimpleModel {
          return $this->get('org_id');
     }
 
+    function getOrgName() {
+         return $this->get('org_name');
+    }
+
     function getOrganization() {
         return $this->org;
     }

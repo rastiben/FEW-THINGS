@@ -288,19 +288,6 @@ if($ticket->isOverdue())
     $threads = $ticket->getThreadEntries(array('M','R','N'));
 
     /*
-    *Récupération du premier message ( dans notre cas la problématique pour une repa ).
-    */
-    $orgsC = OrganisationCollection::getInstance();
-    //$org = $orgsC->lookUpByName($ticket->getOwner()->getOrgId())[0]
-    $org = $orgsC->lookUpByName('411VDOC')[0];
-    if(!empty($org)){
-        $address = addslashes($org->getAddress() . " " . $org->getComplement() . "&#013;&#010;" . $org->getCP() . " " . $org->getCity());
-        $phone = $org->getPhone();
-        $orgName = $org->getName();
-        $orgId = '411VDOC';
-    }
-
-    /*
     *Récupération du prénom de l'utilisateur
     */
     $userInfo = $ticket->getOwner();
@@ -308,6 +295,21 @@ if($ticket->isOverdue())
         if($field->answer->_field->answer->_field->ht['label'] == "Prénom"){
             $prenom = $field->answer->_field->answer->ht['value'];
         }
+    }
+
+    /*
+    *Récupération du premier message ( dans notre cas la problématique pour une repa ).
+    */
+    $orgsC = OrganisationCollection::getInstance();
+    //$org = $orgsC->lookUpByName($ticket->getOwner()->getOrgId())[0]
+    $org_name = $userInfo->getOrgName();
+    $org = $orgsC->searchByName($org_name)[0];
+
+    if(!empty($org)){
+        $address = addslashes($org->getAddress() . " " . $org->getComplement() . "&#013;&#010;" . $org->getCP() . " " . $org->getCity());
+        $phone = $org->getPhone();
+        $orgName = $org->getName();
+        $orgId = '411VDOC';
     }
 
 
@@ -1087,6 +1089,7 @@ if ($errors['err'] && isset($_POST['a'])) {
             </tr>
         </tbody>
     </table>
+    <button ng-click="createLines('<?php echo $org_name; ?>')">Valider</button>
 </div>
 
 <div class="col-md-2 fixed-right">

@@ -18,6 +18,7 @@ class stock{
         while($myRow = odbc_fetch_array($result)){
             $this->addArticle($myRow);
         }
+
     }
 
     /*

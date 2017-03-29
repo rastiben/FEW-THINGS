@@ -1,7 +1,20 @@
 moment.locale('fr');
 
+/*CONFIG*/
+var serialize = function(obj, prefix) {
+  var str = [];
+  for(var p in obj) {
+    if (obj.hasOwnProperty(p)) {
+      var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+      str.push(typeof v == "object" ?
+        serialize(v, k) :
+        encodeURIComponent(k) + "=" + encodeURIComponent(v));
+    }
+  }
+  return str.join("&");
+};
 
-app.factory('stockFactory',['$http','$rootScope',function($http,$rootScope){
+app.factory('stockFactory',['$http','$rootScope','$httpParamSerializerJQLike',function($http,$rootScope,$httpParamSerializerJQLike){
     var stock;
     return {
         query : function(agent) {
@@ -17,6 +30,21 @@ app.factory('stockFactory',['$http','$rootScope',function($http,$rootScope){
              return $http({method: 'POST',
                     url: './ajaxs.php/stock/sn/'+reference+'/'+agent,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                });
+         },
+         createDocEntete : function(org,stock){
+             return $http({method: 'POST',
+                    url: './ajaxs.php/docSage/entete/'+org+'/'+stock,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                });
+         },
+         createDocLines : function(org,stock,lines){
+             return $http({method: 'POST',
+                    url: './ajaxs.php/docSage/lines',
+                    data: {org:org,
+                           stock:stock,
+                           lines:lines},
+                    headers: {'Content-Type': 'application/json'}
                 });
          },
          getStock: function() {
@@ -230,6 +258,12 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
             $rootScope.$broadcast('STOCK', $scope.stock);
             $('.ballss').css('display','none');
             $('.stock').css('display','block');
+
+
+            //creation de l'entete du BL
+            /*stockFactory.createDocEntete(org,$scope.stock[0].stock).then(function(){
+                //DO SOMETHING
+            });*/
         });
         /*stockFactory.getStock('nicolas').then(function(stock){
             $('.ballss').css('display','none');
@@ -263,7 +297,6 @@ app.filter('pastTimes', function() {
 app.controller("stockCtrl",["$scope","stockFactory","$rootScope","$compile", function($scope,stockFactory,$rootScope,$compile){
     $scope.$on('STOCK', function(response,stock) {
         $scope.stock = stock;
-        console.log(stock);
         $scope.stockOut = JSON.parse(JSON.stringify($scope.stock));
         $.each($scope.stockOut,function(key,value){
              value.quantite = 0;
@@ -297,6 +330,8 @@ app.controller("stockCtrl",["$scope","stockFactory","$rootScope","$compile", fun
                         tr.append($compile('<td><button class="btn btn-sucess" ng-click="validSN($event)">Valider</button></td>')($scope));
                         //$compile(tr)($scope);
                     });
+                } else {
+                   obj.quantite += 1;
                 }
                 //Augmentation de la quantité souhaité.
                 //obj.quantite += 1;
@@ -323,6 +358,14 @@ app.controller("stockCtrl",["$scope","stockFactory","$rootScope","$compile", fun
         var tr = $(button).closest('tr');
         tr.children().slice(-2).remove();
         tr.children().show();
+    }
+
+    $scope.createLines = function(org){
+        var obj = $scope.stockOut.filter(function(e) { return e.quantite > 0});
+        //console.log(obj);
+        stockFactory.createDocLines(org,$scope.stock[0].stock,JSON.stringify(obj)).then(function(){
+
+        });
     }
 
 }]);

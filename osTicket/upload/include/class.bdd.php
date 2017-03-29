@@ -61,6 +61,13 @@ class BDD{
     }
 
     /*
+    *Get last error
+    */
+    public function lastError(){
+        return odbc_error();
+    }
+
+    /*
     *Création d'une requete select
     */
     public function selectBetween($table,$fields,$clauses="",$orderBy="",$range){
