@@ -38,9 +38,9 @@ app.factory('stockFactory',['$http','$rootScope','$httpParamSerializerJQLike',fu
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 });
          },
-         createDocLines : function(org,stock,lines){
+         createDocument : function(org,stock,lines){
              return $http({method: 'POST',
-                    url: './ajaxs.php/docSage/lines',
+                    url: './ajaxs.php/docSage/createDoc',
                     data: {org:org,
                            stock:stock,
                            lines:lines},
@@ -248,29 +248,26 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
     /*STOCK*/
     $scope.getStock = function(agent){
         $scope.agent = agent;
+
         //display balls
-        $('.ballss').css('display','block');
         $('.fixed-right').css('display','none');
         $('.ticket_right').css('height','auto');
+        $('.balls').css('display','block');
 
         stockFactory.query('nicolas').then(function(){
             $scope.stock = stockFactory.getStock().data;
             $rootScope.$broadcast('STOCK', $scope.stock);
-            $('.ballss').css('display','none');
+            $('.balls').css('display','none');
             $('.stock').css('display','block');
 
-
-            //creation de l'entete du BL
-            /*stockFactory.createDocEntete(org,$scope.stock[0].stock).then(function(){
-                //DO SOMETHING
-            });*/
         });
-        /*stockFactory.getStock('nicolas').then(function(stock){
-            $('.ballss').css('display','none');
-            $('.stock').css('display','block');
-            //console.log($scope.stock);
-        });*/
     }
+
+    $scope.$on('STOCKOUT', function(response,stockOut) {
+        $scope.$apply(function() {
+            $scope.stockOut = stockOut;
+        });
+    })
 
 }]);
 
@@ -298,61 +295,81 @@ app.controller("stockCtrl",["$scope","stockFactory","$rootScope","$compile", fun
     $scope.$on('STOCK', function(response,stock) {
         $scope.stock = stock;
         $scope.stockOut = JSON.parse(JSON.stringify($scope.stock));
+        $scope.displayStock = JSON.parse(JSON.stringify($scope.stock));
         $.each($scope.stockOut,function(key,value){
              value.quantite = 0;
         });
     })
 
-    $scope.manageStock = function(reference,dir,max,$event){
+    $scope.manageStock = function(index,reference,dir,$event){
+        var max = $scope.stock[index].quantite;
         //VARIABLES
-        var obj = $scope.stockOut.filter(function(e) { return e.reference == reference; })[0];
+        var obj = $scope.stockOut[index];
         var button = $event.currentTarget;
 
         if (dir == 'up') {
             if (obj.quantite < max) {
                 //TEST SI L'ARTICLE EST SERIALISE.
-                $scope.serialClicked = reference;
                 if (obj.suiviStock == 1){
                     //Récupération des numero de serie lié à cet article.
                     var tr = $(button).closest('tr');
                     tr.children().hide();
-                    $('.ballss').css('display','block');
+                    tr.append('<td colspan="3"><div class="loadingSN"><div class="ball"></div><div class="ball1"></div></div></td>');
                     stockFactory.getSN(reference,'NICOLAS').then(function(SN){
-                        var serialNumbers = SN.data;
+                        //Trier les sn par rapport a ceux deja selectionner
+                        var serialNumbers = SN.data.filter(function(e) { return obj.sn.indexOf(e) == -1; });
 
                         //affichage du numero de serie
-                        $('.ballss').css('display','none');
-                        tr.append('<td><select></select></td>');
+                        $('.loadingSN',tr).parent().remove();
+                        tr.append('<td colspan="2"><select></select></td>');
                         var select = tr.find('select');
                         $.each(serialNumbers,function(key,value){
                             select.append('<option>'+value+'</option>');
                         });
-                        tr.append($compile('<td><button class="btn btn-sucess" ng-click="validSN($event)">Valider</button></td>')($scope));
-                        //$compile(tr)($scope);
+                        tr.append($compile("<td><button class='btn btn-sucess' ng-click=\"manageSN($event,'"+index+"','up')\">Valider</button></td>")($scope));
                     });
                 } else {
                    obj.quantite += 1;
+                   $scope.displayStock[index].quantite = parseInt($scope.displayStock[index].quantite) - 1;
                 }
-                //Augmentation de la quantité souhaité.
-                //obj.quantite += 1;
             }
         } else {
             if (obj.quantite > 0) {
-                obj.quantite -= 1;
+                if (obj.suiviStock == 1){
+                    //Récupération des numero de serie lié à cet article.
+                    var tr = $(button).closest('tr');
+                    tr.children().hide();
+
+                    //affichage du numero de serie
+                    $('.loadingSN',tr).parent().remove();
+                    tr.append('<td colspan="2"><select></select></td>');
+                    var select = tr.find('select');
+                    $.each(obj.sn,function(key,value){
+                        select.append('<option>'+value+'</option>');
+                    });
+                    tr.append($compile("<td><button class='btn btn-sucess' ng-click=\"manageSN($event,'"+index+"','dwn')\">Valider</button></td>")($scope));
+                    /*obj.quantite -= 1;*/
+                } else {
+                    obj.quantite -= 1;
+                    $scope.displayStock[index].quantite = parseInt($scope.displayStock[index].quantite) + 1;
+                }
             }
         }
 
     }
 
-    $scope.validSN = function($event){
-        var obj = $scope.stockOut.filter(function(e) { return e.reference == $scope.serialClicked; })[0];
-        obj.quantite += 1;
+    $scope.manageSN = function($event,index,dir){
+        //décompte en temps réel
+        dir == 'up' ? $scope.stock[index].quantite += 1 : $scope.stock[index].quantite -= 1;
+
+        var obj = $scope.stockOut[index];
+        dir == 'up' ? obj.quantite += 1 : obj.quantite -= 1;
         //get selected serial number
         var button = $event.currentTarget;
         var sn = $(button).parent().prev().children('select').val();
 
         //ajout du serial number
-        obj.sn.push(sn);
+        dir == 'up' ? obj.sn.push(sn) : obj.sn.splice(obj.sn.indexOf(sn),1);
 
         //MAJ VISUEL
         var tr = $(button).closest('tr');
@@ -360,10 +377,28 @@ app.controller("stockCtrl",["$scope","stockFactory","$rootScope","$compile", fun
         tr.children().show();
     }
 
-    $scope.createLines = function(org){
+    $scope.createDocument = function(org){
         var obj = $scope.stockOut.filter(function(e) { return e.quantite > 0});
         //console.log(obj);
-        stockFactory.createDocLines(org,$scope.stock[0].stock,JSON.stringify(obj)).then(function(){
+
+        $('.balls').css('display','block');
+        stockFactory.createDocument(org,$scope.stock[0].stock,JSON.stringify(obj)).then(function(){
+            $('.balls').css('display','none');
+            $('.ticket_right').prepend('<div class="order-success svg"> \
+              <svg xmlns="http://www.w3.org/2000/svg" width="72px" height="72px"> \
+                <g fill="none" stroke="#8EC343" stroke-width="2"> \
+                  <circle cx="36" cy="36" r="35" style="stroke-dasharray:240px, 240px; stroke-dashoffset: 480px;"></circle> \
+                  <path d="M17.417,37.778l9.93,9.909l25.444-25.393" style="stroke-dasharray:50px, 50px; stroke-dashoffset: 0px;"></path> \
+                </g> \
+              </svg> \
+            <script id="jsbin-source-css" type="text/css"></div>');
+
+            setTimeout( function(){
+                $('.order-success').remove();
+                $('.stock').css('display','none');
+                $('.fixed-right').css('display','block');
+                $rootScope.$broadcast('STOCKOUT', obj);
+            }  , 1500 );
 
         });
     }

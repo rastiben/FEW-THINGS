@@ -554,6 +554,12 @@ if($ticket->isOverdue())
     echo $attrs; ?>><?php echo $_POST ? $info['response'] : $draft;
                     ?></textarea>
         <br>
+
+        <div>
+            <h2>Sortie de stock :</h2>
+            <div class="articleSortie" ng-repeat="article in stockOut">{{article.reference}}</div>
+        </div>
+
         <button ng-click="getStock('<?php echo $thisstaff->getFirstName() ?>')" class="pending getStock">Récupérer le stock</button>
         <button class="cancel pending newRapport" type="cancel" style="float:right">Annuler</button>
         <input ng-click="addRapport()" class="horaire add save pending pull-right" type="submit" name="addRapport">
@@ -1054,7 +1060,7 @@ if ($errors['err'] && isset($_POST['a'])) {
 </div>
 </div>
 <div class="ticket_right col-md-3">
-<div class="ballss" style="display:none">
+<div class="balls" style="display:none">
     <div class="ball"></div>
     <div class="ball1"></div>
 </div>
@@ -1068,7 +1074,7 @@ if ($errors['err'] && isset($_POST['a'])) {
             <th>Sortie</th>
         </thead>
         <tbody>
-            <tr ng-repeat="article in stock">
+            <tr ng-repeat="article in displayStock">
                 <td>{{article.reference}}</td>
                 <td style="text-align:center">{{article.quantite}}</td>
                 <td>
@@ -1076,11 +1082,11 @@ if ($errors['err'] && isset($_POST['a'])) {
                         <div class="">
                             <div class="input-group number-spinner">
                                 <span class="input-group-btn data-dwn">
-                                    <button class="btn btn-default btn-info" style="width:5px" ng-click="manageStock(article.reference,'dwn',article.quantite,$event)" data-dir="dwn"><span class="glyphicon glyphicon-minus" style="margin-left: -6px;font-size: 10px;"></span></button>
+                                    <button class="btn btn-default btn-info" style="width:5px" ng-click="manageStock($index,article.reference,'dwn',$event)" data-dir="dwn"><span class="glyphicon glyphicon-minus" style="margin-left: -6px;font-size: 10px;"></span></button>
                                 </span>
-                                <input type="text" class="form-control text-center" value="0" min="0" max="{{article.quantite}}">
+                                <input type="text" class="form-control text-center" value="0" min="0" max="{{::article.quantite}}">
                                 <span class="input-group-btn data-up">
-                                    <button class="btn btn-default btn-info" style="width:5px" ng-click="manageStock(article.reference,'up',article.quantite,$event)" data-dir="up"><span class="glyphicon glyphicon-plus" style="margin-left: -6px;font-size: 10px;"></span></button>
+                                    <button class="btn btn-default btn-info" style="width:5px" ng-click="manageStock($index,article.reference,'up',$event)" data-dir="up"><span class="glyphicon glyphicon-plus" style="margin-left: -6px;font-size: 10px;"></span></button>
                                 </span>
                             </div>
                         </div>
@@ -1088,8 +1094,14 @@ if ($errors['err'] && isset($_POST['a'])) {
                 </td>
             </tr>
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="text-align: right;padding-top: 10px;background: white;">
+                    <button ng-click="createDocument('<?php echo $org_name; ?>')">Valider</button>
+                </td>
+            </tr>
+        </tfoot>
     </table>
-    <button ng-click="createLines('<?php echo $org_name; ?>')">Valider</button>
 </div>
 
 <div class="col-md-2 fixed-right">

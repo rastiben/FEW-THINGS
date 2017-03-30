@@ -36,8 +36,7 @@ $routes = array
     'contrat' => array('contrat',':orgId'),
     'stock' => array('stock',':agent'),
     'stockSN' => array('stock','sn',':reference',':agent'),
-    'docSageE' => array('docSage',':toCreate',':tiers',':stock'),
-    'docSageL' => array('docSage',':toCreate')
+    'docSage' => array('docSage',':action')
 );
 
 function dispatcher($url, $routes)
@@ -163,17 +162,13 @@ if(strstr($url['path'],"org")){
     }
     //orgid
 } else if(strstr($url['path'],"docSage")){
-    if(isset($url['parameters']['toCreate'])){
-        if($url['parameters']['toCreate'] == 'entete'){
-            $tiers = $url['parameters']['tiers'];
-            $stock = $url['parameters']['stock'];
-            docSage::createDocEntete($tiers,$stock);
-        } else if($url['parameters']['toCreate'] == 'lines') {
+    if(isset($url['parameters']['action'])){
+        if($url['parameters']['action'] == 'createDoc') {
             $angular_http_params = (array)json_decode(trim(file_get_contents('php://input')));
             $org = $angular_http_params['org'];
             $stock = $angular_http_params['stock'];
             $lines = $angular_http_params['lines'];
-            docSage::createDocLines($org,$stock,$lines);
+            docSage::createDocument($org,$stock,$lines);
         }
     }
 }

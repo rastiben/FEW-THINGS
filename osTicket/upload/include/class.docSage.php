@@ -9,39 +9,36 @@ class docSage{
         return $BDD;
     }
 
-    public static function createDocEntete($tiers,$stock){
-        //Lien vers la base de données.
-        $BDD = self::getBDD();
+    public static function createDocument($org,$stock,$lines){
+        //Pour chaque ligne
+        /*$BDD = self::getBDD();
 
         //Récupération du lieu de livraison
-        $LI_NO = $BDD->getLi_NO($tiers);
+        $LI_NO = $BDD->getLi_NO($org);
         $LI_NO = odbc_fetch_array($LI_NO)['LI_NO'];
 
+        //Création de l'entete
         do{
             $DO_PIECE = self::getDoPiece($BDD);
-            $ENTETE = $BDD->createDocEntete($tiers,$stock,$LI_NO,$DO_PIECE);
+            $ENTETE = $BDD->createDocEntete($org,$stock,$LI_NO,$DO_PIECE);
         } while ($ENTETE === false);
-    }
-
-    public static function createDocLines($org,$stock,$lines){
-        //Pour chaque ligne
-        $BDD = self::getBDD();
 
         $lines = json_decode($lines);
         $ligne = 1000;
 
+        //Ajout des lignes choisi
         foreach($lines as $key=>$line){
             if($line->suiviStock == 1){
                  //Pour chaque numéro de série
                  foreach($line->sn as $key=>$sn){
-                     $BDD->createDocLineSN($org,$ligne,$line->reference,$line->stock,$line->designation,$line->prix,$sn);
+                     $BDD->createDocLineSN($org,$DO_PIECE,$ligne,$line->reference,$line->stock,$line->designation,$line->prix,$sn);
                      $ligne += 1000;
                  }
             } else {
-                $BDD->createDocLineCMUP($org,$ligne,$line->reference,$line->stock,$line->designation,$line->prix);
+                $BDD->createDocLineCMUP($org,$DO_PIECE,$ligne,$line->reference,$line->quantite,$line->stock,$line->designation,$line->prix);
                 $ligne += 1000;
             }
-        }
+        }*/
         //$BDD = self::getBDD();
         //$BDD->createDocLine();
     }

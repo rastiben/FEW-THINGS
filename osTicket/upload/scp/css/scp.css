@@ -3607,6 +3607,7 @@ input[type="radio"]{
 
 .ticket_right{
     padding: 0px;
+    min-height: 100px;
 }
 
 .fixed-right{
@@ -3646,6 +3647,7 @@ input[type="radio"]{
 
 #rapport{
     margin-bottom: 30px;
+    margin-top: 30px;
 }
 
 .borderShadow{
@@ -4690,6 +4692,46 @@ table.atelierT td{
     margin-top: 75px;
 }
 
+.loadingSN{
+    z-index: 5000;
+    height: 30px;
+    position: relative;
+}
+
+.loadingSN .ball{
+    background-color: whitesmoke;
+    border: 5px solid rgba(0,183,229,0.9);
+    opacity: .9;
+    border-top: 5px solid rgba(0,0,0,0);
+    border-left: 5px solid rgba(0,0,0,0);
+    border-radius: 50px;
+    box-shadow: 0 0 35px #2187e7;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    -moz-animation: spin .5s infinite linear;
+    -webkit-animation: spin .5s infinite linear;
+}
+
+.loadingSN .ball1{
+    background-color: rgba(0,0,0,0);
+    border: 5px solid rgba(0,183,229,0.9);
+    opacity: .9;
+    border-top: 5px solid rgba(0,0,0,0);
+    border-left: 5px solid rgba(0,0,0,0);
+    border-radius: 50px;
+    box-shadow: 0 0 15px #2187e7;
+    width: 15px;
+    height: 15px;
+    -moz-animation: spinoff .5s infinite linear;
+    -webkit-animation: spinoff .5s infinite linear;
+    position: absolute;
+    left: 50%;
+    margin-left: -8px;
+    top: 50%;
+    margin-top: -8px;
+}
+
 @-moz-keyframes spin {
     0% {
         -moz-transform: rotate(0deg);
@@ -4728,4 +4770,122 @@ table.atelierT td{
     100% {
         -webkit-transform: rotate(-360deg);
     };
+}
+
+
+/*GESTION DU STOCK*/
+.stock{
+    background: white;
+    border-radius: 5px;
+    padding: 10px;
+    overflow-x: scroll;
+}
+
+.articleSortie{
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    background: skyblue;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* animations */
+
+@-webkit-keyframes checkmark {
+    0% {
+        stroke-dashoffset: 50px
+    }
+
+    100% {
+        stroke-dashoffset: 0
+    }
+}
+
+@-ms-keyframes checkmark {
+    0% {
+        stroke-dashoffset: 50px
+    }
+
+    100% {
+        stroke-dashoffset: 0
+    }
+}
+
+@keyframes checkmark {
+    0% {
+        stroke-dashoffset: 50px
+    }
+
+    100% {
+        stroke-dashoffset: 0
+    }
+}
+
+@-webkit-keyframes checkmark-circle {
+    0% {
+        stroke-dashoffset: 240px
+    }
+
+    100% {
+        stroke-dashoffset: 480px
+    }
+}
+
+@-ms-keyframes checkmark-circle {
+    0% {
+        stroke-dashoffset: 240px
+    }
+
+    100% {
+        stroke-dashoffset: 480px
+    }
+}
+
+@keyframes checkmark-circle {
+    0% {
+        stroke-dashoffset: 240px
+    }
+
+    100% {
+        stroke-dashoffset: 480px
+    }
+}
+
+/* other styles */
+/* .svg svg {
+    display: none
+}
+ */
+.inlinesvg .svg svg {
+    display: inline
+}
+
+/* .svg img {
+    display: none
+} */
+.order-success{
+    height: 100%;
+    width: 100%;
+    background: rgba(255,255,255,0.7);
+    z-index: 5000;
+    position: absolute;
+}
+
+.order-success svg{
+    position: absolute;
+    left: 50%;
+    margin-left: -36px;
+    top: 50%;
+    margin-top: -36px;
+}
+
+.order-success svg path {
+    -webkit-animation: checkmark 0.25s ease-in-out 0.7s backwards;
+    animation: checkmark 0.25s ease-in-out 0.7s backwards
+}
+
+.order-success svg circle {
+    -webkit-animation: checkmark-circle 0.6s ease-in-out backwards;
+    animation: checkmark-circle 0.6s ease-in-out backwards
 }
