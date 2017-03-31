@@ -81,20 +81,19 @@ class bdd_org{
         return $prepare;
     }
 
-    public function toto(){
-        /*ENTETE*/
+    /*public function toto(){
         $prepare = $this->DB->prepare("SELECT AR_Ref,AS_QteSto FROM F_ARTSTOCK WHERE F_ARTSTOCK.DE_No = 7 AND F_ARTSTOCK.AS_QteSto > 0");
         $values = array();
         $this->DB->execute($prepare,$values);
         return $prepare;
-    }
+    }*/
 
     /*
     *Récupération des organisation par nom
     */
     public function getOrgWithName($name){
         /*Préparation et execution de celle ci.*/
-        $name = '411VDOC';
+        //$name = '411VDOC';
         if(substr( $name, 0, 3 ) === "411") $name = substr( $name, 3);
 
         $prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site

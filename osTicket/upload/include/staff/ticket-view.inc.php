@@ -557,7 +557,7 @@ if($ticket->isOverdue())
 
         <div>
             <h2>Sortie de stock :</h2>
-            <div class="articleSortie" ng-repeat="article in stockOut">{{article.reference}}</div>
+            <div class="articleSortie" ng-repeat="article in stockOut">{{article.reference}} ({{article.quantite}})</div>
         </div>
 
         <button ng-click="getStock('<?php echo $thisstaff->getFirstName() ?>')" class="pending getStock">Récupérer le stock</button>
@@ -575,6 +575,7 @@ if($ticket->isOverdue())
          <div class="titling"></div>
           <img class="imgRapport" src="../assets/default/images/report.png"/>
           <h4>Liste des rapports</h4>
+          <a class="no-pjax printRapport" target="_blank" ng-href="./tickets.php?id={{ticketID}}&a=printR&idR={{rapportID}}"><i class="fa fa-print fa-2x" id="{{rapport.id}}" aria-hidden="true" style="color:black"></i></a>
       </div>
        <table width="100%" style="table-layout:fixed">
            <thead>
@@ -584,17 +585,15 @@ if($ticket->isOverdue())
                <th>Situation</th>
                <th>Contrat</th>
                <th>Instal</th>
-               <th>Impression</th>
            </thead>
            <tbody>
             <tr ng_click="setRapportID($event,$index,rapport.id)" ng-repeat="rapport in rapports" ng-class="$first ? 'active' : ''" id="{{$index}}">
-                <td>{{rapport.id}}</td>
+                <td>{{rapport.id}}  <span ng-show="rapport.stock.length" class="glyphicon glyphicon-shopping-cart"></span></td>
                 <td style="background:{{rapport.couleur}};color:white">{{rapport.date_rapport}}</td>
                 <td>{{rapport.firstname}} {{rapport.lastname}}</td>
                 <td>{{rapport.topic}}</td>
                 <td><i ng-class="rapport.contrat != '' ? 'fa fa-check' : ''"  aria-hidden="true"></i></td>
                 <td><i ng-class="rapport.instal != 0 ? 'fa fa-check' : ''"  aria-hidden="true"></i></td>
-                <td><a class="no-pjax" target="_blank" ng-href="./tickets.php?id={{ticketID}}&a=printR&idR={{rapport.id}}"><i class="fa fa-print fa-2x" id="{{rapport.id}}" aria-hidden="true" style="color:black"></i></a></td>
             </tr>
         </tbody>
         </table>
@@ -641,10 +640,6 @@ if($ticket->isOverdue())
             <input ng-click="insertOrUpdateHoraire()" class="horaire add save pending" type="submit" name="addRapport" style="float:right">
         </div>
         <div ng-repeat="rapport in rapports" class="eachRapport col-md-12 col-lg-12 col-xs-12" ng-class="$first ? 'active' : ''" id="{{$index}}">
-
-           <div class="rapport">
-               <div class="identity"></div>
-           </div>
 
             <div class="col-md-12 col-xs-12 rapport">
                <div class="col-lg-4 col-md-12 col-xs-12" id="borderIdentity">
@@ -693,14 +688,17 @@ if($ticket->isOverdue())
                   <div class="content">
                     <div ng-repeat="horaire in rapport.horaires">
                          <div class="comment">
-                         <div class="titleComment">
-                            <div class="green"></div>
-                            <img class="modifyInter" src="../assets/default/images/edit.png" ng_click="showUpdate($index,$parent.$index,horaire.id)" id="{{horaire.id}}"/>
-                             <div class="commentTitle"><p>Intervention du {{horaire.arrive_inter | mFormat:'dddd DD MMMM YYYY' | capitalize}}</p></div>
-                         </div>
-                         <span class="commentContent" ng-bind-html="horaire.comment">
-
-                          </span>
+                             <div class="titleComment">
+                                <div class="green"></div>
+                                <img class="modifyInter" src="../assets/default/images/edit.png" ng_click="showUpdate($index,$parent.$index,horaire.id)" id="{{horaire.id}}"/>
+                                 <div class="commentTitle"><p>Intervention du {{horaire.arrive_inter | mFormat:'dddd DD MMMM YYYY' | capitalize}}</p></div>
+                             </div>
+                             <div class="commentContent">
+                                 <span ng-bind-html="horaire.comment"></span>
+                                 <hr style="margin-top: 10px;margin-bottom: 10px;">
+                                 <!--SORTIE DE STOCK-->
+                                 <div class="articleSortie" style="margin-bottom:0px" ng-repeat="article in rapport.stock">{{article.reference}} ({{article.quantite}})</div>
+                             </div>
                           </div>
                      </div>
                   </div>

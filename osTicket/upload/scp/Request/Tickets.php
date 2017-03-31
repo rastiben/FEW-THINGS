@@ -59,7 +59,7 @@ class TicketsInfos
         WHERE ost_ticket.user_id = ost_user.id
         AND ost_user.id = ost_user__cdata.user_id
         AND ost_ticket.ticket_id = ost_ticket__cdata.ticket_id
-        AND ost_user.org_id = :org
+        AND ost_user.org_name = :org
         AND ( ost_ticket.status_id = '1' OR ost_ticket.status_id = '6')");
         $res->execute(array(':org'=>$org));
         return $res->fetchAll();

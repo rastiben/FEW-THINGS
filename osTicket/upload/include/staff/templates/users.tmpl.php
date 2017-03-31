@@ -5,7 +5,7 @@ $select = 'SELECT user.*, email.address as email ';
 $from = 'FROM '.USER_TABLE.' user '
       . 'LEFT JOIN '.USER_EMAIL_TABLE.' email ON (user.id = email.user_id) ';
 
-$where = ' WHERE user.org_id='.db_input('3314');
+$where = ' WHERE user.org_name='.db_input($name);
 
 $sortOptions = array('name' => 'user.name',
                      'email' => 'email.address',

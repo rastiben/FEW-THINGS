@@ -6,13 +6,15 @@ require_once(INCLUDE_DIR.'class.contrat.php');
 
 if(!defined('OSTSCPINC') || !$thisstaff || !isset($_REQUEST['id'])) die('Invalid path');
 
+$name = $_GET['id'];
+
 $orgsC = OrganisationCollection::getInstance();
 
-$org = $orgsC->lookUpByName('411VDOC')[0];
+$org = $orgsC->lookUpByName($name)[0];
 
 $apiKey = "AIzaSyB4pINEbEV_CczgRAhMhIza1OAEzSJV6JA";
 
-$tickets = TicketsInfos::getInstance()->ticket_org('3314');
+$tickets = TicketsInfos::getInstance()->ticket_org($name);
 
 ?>
 <h3>Profile : <?php echo $org->getName(); ?></h3>
@@ -67,25 +69,13 @@ $tickets = TicketsInfos::getInstance()->ticket_org('3314');
 
 <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=<?php echo $apiKey; ?>">
-    </script>
+</script>
 
 <!--MAP-->
 <div style="height:400px;width:800px;margin:auto" id="map"></div>
 
 <br>
 <div class="clear"></div>
-
-<!--<ul class="clean tabs" id="orgtabs">
-    <li class="active"><a href="#users"><i
-    class="icon-user"></i>&nbsp;<?php echo __('Users'); ?></a></li>
-    <li><a href="#tickets"><i
-    class="icon-list-alt"></i>&nbsp;<?php echo __('Tickets'); ?></a></li>
-    <li><a href="#notes"><i
-    class="icon-pushpin"></i>&nbsp;<?php echo __('Notes'); ?></a></li>
-    <li><a href="#contrat">&nbsp;<?php echo __('Contrat'); ?></a></li>
-</ul>
-<div id="orgtabs_container">-->
-
 
 
 <div class="tab_content" id="contrat" style="display:none">
@@ -227,32 +217,6 @@ $tickets = TicketsInfos::getInstance()->ticket_org('3314');
 
 <?php
 
-    /*function sumHours($array){
-        if(empty($array)){
-            return 0;
-        } else {
-            $totalHours = 0;
-            foreach($array as $horaire){
-                $time1 = new DateTime($horaire['arrive_inter']);
-                $time2 = new DateTime($horaire['depart_inter']);
-                $interval = $time1->diff($time2);
-
-                $totalHours += $time2->getTimestamp() - $time1->getTimestamp();
-            }
-            return intval($totalHours / 3600);
-        }
-    }
-
-    $arrayHotline = Contrat::getInstance()->getTempsPasseContratType($org->getId(),"1;");
-    $arrayAtelierSurSite = Contrat::getInstance()->getTempsPasseContratType($org->getId(),"2;");
-    $arrayRegie = Contrat::getInstance()->getTempsPasseContratType($org->getId(),"3;");
-    $arrayTelephonie = Contrat::getInstance()->getTempsPasseContratType($org->getId(),"4;");
-
-    $tempsPasseHotline = sumHours($arrayHotline);
-    $tempsPasseAtelierSurSite = sumHours($arrayAtelierSurSite);
-    $tempsPasseRegie = sumHours($arrayRegie);
-    $tempsPasseTelephonie = sumHours($arrayTelephonie);*/
-
 ?>
 <script>
     var data = {
@@ -303,40 +267,6 @@ $tickets = TicketsInfos::getInstance()->ticket_org('3314');
         , }
     , });
 
-    /*$('#insertOrUpdate').click(function(){
-        var types = '';
-        var id = $('.contrat.table.table-striped').attr('id');
-        var id_org = $('.contrat.table.table-striped').attr('data_org_id');
-        var depart = $('#1.datepicker').val();
-        var fin = $('#2.datepicker').val();
-        var commentaire = $('#commentaire').val();
-
-        var i = 1;
-        $.each($('.contrat.table.table-striped tbody tr td'),function(){
-            if($('input',this).is(':checked')){
-                types = types + i + ";";
-            }
-            i += 1;
-        });
-
-        $.ajax({
-           url : './Request/Contrat.php',
-           type : 'POST',
-           data:{
-               insertOrUpdate:'',
-               id: id,
-               id_org: id_org,
-               depart: depart,
-               fin: fin,
-               types:types,
-               commentaire:commentaire
-           },
-           success : function(code_html, statut){ // code_html contient le HTML renvoyé
-                location.reload();
-           }
-        });
-    });*/
-
 </script>
 
 </div>
@@ -370,7 +300,7 @@ include STAFFINC_DIR . 'templates/notes.tmpl.php';*/
 
     var map = null;
     var address = "<?php echo str_replace(" ","+",$org->getComplement() . " " . $org->getAddress() . " " . $org->getCP()) ?>";
-
+    console.log(address);
     $.ajax({
         method:"GET",
         url:"https://maps.googleapis.com/maps/api/geocode/json?address="+address+"&key=<?php echo $apiKey; ?>",

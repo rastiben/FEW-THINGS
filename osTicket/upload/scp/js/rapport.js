@@ -85,6 +85,20 @@ app.factory('rapportFactory',['$http',function($http){
                             return result.data;
                         });
         },
+       getStock: function(rapportID) {
+             //return the promise.
+             return $http({method: 'POST',
+                            url: './Request/Rapport.php',
+                            data: $.param({request: 'getRapportStock',
+                                           rapportID:rapportID
+                                          }),
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                        })
+                       .then(function(result) {
+                            //resolve the promise as the data
+                            return result.data;
+                        });
+        },
        addHR: function(data){
            return $http({method: 'POST',
                             url: './Request/Rapport.php',
@@ -123,6 +137,9 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
                         value.totalHours.add(temp._data.hours,'h');
                         value.totalHours.add(temp._data.minutes,'m');
                     });
+                });
+                rapportFactory.getStock(value.id).then(function(stock){
+                    value.stock = stock;
                 });
             });
             }
@@ -184,7 +201,8 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
                         depart_inter:$scope.depart_new_inter,
                         symptomesObservations:comments,
                         contrat:$scope.contrat,
-                        instal:$scope.instal
+                        instal:$scope.instal,
+                        sortieStock:JSON.stringify($scope.stockOut)
                         });
         rapportFactory.addHR(data);
         location.reload();

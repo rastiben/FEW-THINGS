@@ -48,6 +48,13 @@ class Rapport
         return $res->fetchAll();
     }
 
+    public function getRapportStock($RapportID){
+        $res = $this->dbh->prepare("SELECT * FROM ost_rapport_stock WHERE id_rapport = :rapport_id");
+        $res->execute(array(':rapport_id'=>$RapportID));
+
+        return $res->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getRapports($ticketID){
         $res = $this->dbh->prepare("SELECT id,date_rapport,date_inter,firstname,lastname,contrat,instal,topic,couleur FROM ost_rapport,ost_staff,ost_help_topic WHERE ost_rapport.id_agent = ost_staff.staff_id AND ost_help_topic.topic_id = ost_rapport.topic_id AND id_ticket = :ticketID");
         $res->execute(array(':ticketID'=>$ticketID));
@@ -61,7 +68,7 @@ class Rapport
         return $res->fetchAll();
     }
 
-    public function addHoraires($ticketId,$agentId,$rapportID,$topic_id,$dateInter,$arriveInter,$departInter,$symptomesObservations,$contrat,$instal)
+    public function addHoraires($ticketId,$agentId,$rapportID,$topic_id,$dateInter,$arriveInter,$departInter,$symptomesObservations,$contrat,$instal,$sortieStock)
     {
         $date = DateTime::createFromFormat('d/m/Y', $dateInter);
 
@@ -79,6 +86,14 @@ class Rapport
             $res->execute(array(':ticket_id'=>$ticketId,':id_agent'=>$agentId,':date_rapport'=>$date_rapport,':date_inter'=>$date->format('Y-m-d'),':topic_id'=>$topic_id,':contrat'=>$contrat,':instal'=>$instal));
 
             $rapportID = $this->dbh->lastInsertId();
+        }
+
+        //Ajout des sorties de stock
+        $sortieStock = json_decode($sortieStock);
+        foreach($sortieStock as $key=>$article){
+            $res = $this->dbh->prepare("INSERT INTO ost_rapport_stock (id_rapport,reference,quantite,prix) VALUES (:id_rapport,:reference,:quantite,:prix)");
+
+            $res->execute(array(':id_rapport'=>$rapportID,':reference'=>$article->reference,':quantite'=>$article->quantite,':prix'=>$article->prix));
         }
 
         $res = $this->dbh->prepare("INSERT INTO ost_rapport_horaires (id_rapport,arrive_inter,depart_inter,comment) VALUES (:rapport_id,:arrive_inter,:depart_inter,:comment)");
@@ -102,13 +117,15 @@ class Rapport
 
 if(isset($_POST['request'])){
     if($_POST['request'] == 'addHoraires'){
-        Rapport::getInstance()->addHoraires($_POST['ticket_id'],$_POST['agent_id'],$_POST['rapport_id'],$_POST['topic_id'],$_POST['date_inter'],$_POST['arrive_inter'],$_POST['depart_inter'],$_POST['symptomesObservations'],$_POST['contrat'],$_POST['instal']);
+        Rapport::getInstance()->addHoraires($_POST['ticket_id'],$_POST['agent_id'],$_POST['rapport_id'],$_POST['topic_id'],$_POST['date_inter'],$_POST['arrive_inter'],$_POST['depart_inter'],$_POST['symptomesObservations'],$_POST['contrat'],$_POST['instal'],$_POST['sortieStock']);
     } else if($_POST['request'] == 'updateHoraire'){
         Rapport::getInstance()->updateHoraire($_POST['horaire_id'],$_POST['date_inter'],$_POST['arrive_inter'],$_POST['depart_inter'],$_POST['symptomesObservations']);
     } else if ($_POST['request'] == 'getRapports'){
         echo json_encode(Rapport::getInstance()->getRapports($_POST['ticketID']));
     } else if($_POST['request'] == 'getRapportsHoraires'){
         echo json_encode(Rapport::getInstance()->getRapportsHoraires($_POST['rapportID']));
+    } else if($_POST['request'] == 'getRapportStock'){
+        echo json_encode(Rapport::getInstance()->getRapportStock($_POST['rapportID']));
     }
 }
 

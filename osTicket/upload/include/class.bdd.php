@@ -28,7 +28,7 @@ class BDD{
     */
     private function __construct(){
         try{
-            $this->ODBC = odbc_connect('DSN=srvsage;server=srvsage;uid=;pwd=;', '', '');
+            $this->ODBC = odbc_connect('DSN=srvsage;server=srvsage;', '', '');
         }catch(PDOException $e){
             die($e);
         }

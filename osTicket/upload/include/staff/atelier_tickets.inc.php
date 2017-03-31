@@ -146,6 +146,7 @@ $queue_columns = array(
         <thead>
             <th>Ticket</th>
             <th>Organisation</th>
+            <th>VD</th>
             <th>Type</th>
             <th>Priorité</th>
         </thead>
@@ -155,14 +156,30 @@ $queue_columns = array(
 
 <script>
     $(document).ready(function(){
+        var added = [];
         var planches = new Planche(function(contenues){
             $(contenues).each(function(number,obj){
                 addContenuInListe(obj);
             });
         });
         var addContenuInListe = function(obj){
-            $('.list.atelierT tbody').append('<tr class="'+obj.etat+'"><td><a class="Icon Ticket no-pjax" href="./tickets.php?id='+obj.ticket_id+'">'+obj.number+'</a></td><td><a class="no-pjax" href="./orgs.php?id='+obj.org_id+'">'+obj.org_name+'</a></td><td>'+obj.getType()+'</td><td>'+obj.priority+'</td></tr>');
+            if(added.indexOf(obj.ticket_id) == -1){
+                $('.list.atelierT tbody').append('<tr id="'+obj.ticket_id+'" class="'+obj.etat+'"><td>'+(obj.getType() == "prepa" ? '<span class="glyphicon glyphicon-collapse-down"></span>' : '') +'<a class="Icon Ticket no-pjax" href="./tickets.php?id='+obj.ticket_id+'">'+obj.number+'</a></td><td><a class="no-pjax" href="./orgs.php?id='+obj.org_name+'">'+obj.org_name+'</a></td><td></td><td>'+obj.getType()+'</td><td>'+obj.priority+'</td></tr>');
+                added.push(obj.ticket_id);
+            }
+            $('.list.atelierT tbody').append('<tr style="display:none" id="'+obj.ticket_id+'" class="child '+obj.etat+'"><td></td><td><a class="no-pjax" href="./orgs.php?id='+obj.org_name+'">'+obj.org_name+'</a></td><td>'+ (obj.getType() == "prepa" ? 'VD' + obj.contenu.VD.id : "") +'</td><td>'+obj.getType()+'</td><td>'+obj.priority+'</td></tr>');
         }
+    });
+
+    $(document).on('click','.glyphicon.glyphicon-collapse-down',function(){
+        var id = $(this).closest('tr').attr('id');
+        $('tr#'+id+'.child').show();
+        $(this).replaceWith('<span class="glyphicon glyphicon-collapse-up"></span>')
+    });
+    $(document).on('click','.glyphicon.glyphicon-collapse-up',function(){
+        var id = $(this).closest('tr').attr('id');
+        $('tr#'+id+'.child').hide();
+        $(this).replaceWith('<span class="glyphicon glyphicon-collapse-down"></span>')
     });
 
     $('.filter li').click(function(){

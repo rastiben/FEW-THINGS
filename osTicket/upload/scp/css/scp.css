@@ -3164,6 +3164,12 @@ span.avatar{
     /*font-family: 'Montserrat', sans-serif;*/
 }
 
+.printRapport{
+    float: right;
+    margin-top: 12px;
+    margin-right: 12px;
+}
+
 /*Rapports*/
 .rapports{
     margin-bottom: 30px;
@@ -3740,6 +3746,15 @@ input[type="radio"]{
 }
 
 /*Atelier*/
+
+/*expand*/
+.glyphicon.glyphicon-collapse-down,
+.glyphicon.glyphicon-collapse-up{
+    margin-right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
 .atelier{
     /*background: url(../../assets/atelier/atelier.png) center no-repeat;
     background-size: contain;
