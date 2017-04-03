@@ -59,6 +59,16 @@ if($ticket->isOverdue())
 ?>
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+<script src="./js/moment.js"></script>
+<script src="./js/rapport.js"></script>
+<script src="./js/atelier.js"></script>
+<script src="../js/autosize.js"></script>
+<script src="./js/docxtemplater.js"></script>
+<script type="text/javascript" src="./js/jszip.js"></script>
+<script type="text/javascript" src="./js/jszip-utils.js"></script>
+<script type="text/javascript" src="./js/file-saver.min.js"></script>
+
 <div>
     <div class="sticky bar col-md-12" data_ticket_id="<?php echo $ticket->getId(); ?>"
       data_agent_id="<?php echo $thisstaff->getId(); ?>">
@@ -263,14 +273,6 @@ if($ticket->isOverdue())
     //$prepas = Atelier::getInstance()->get_prepa($ticket->getId());
     //print_r($prepas);
 ?>
-
-
-<script src="./js/atelier.js"></script>
-<script src="../js/autosize.js"></script>
-<script src="./js/docxtemplater.js"></script>
-<script type="text/javascript" src="./js/jszip.js"></script>
-<script type="text/javascript" src="./js/jszip-utils.js"></script>
-<script type="text/javascript" src="./js/file-saver.min.js"></script>
 
 <?php
 
@@ -570,12 +572,30 @@ if($ticket->isOverdue())
     </div>
 
     <!--RAPPORTS-->
+    <div class="modal fade" id="signature" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Signature</h4>
+          </div>
+          <div class="modal-body">
+            <canvas id="signature-pad"></canvas>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+            <button type="button" ng-click="printRapport()" class="btn btn-primary">Valider</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
     <div class="col-md-12 rapports">
       <div class="title">
          <div class="titling"></div>
           <img class="imgRapport" src="../assets/default/images/report.png"/>
           <h4>Liste des rapports</h4>
-          <a class="no-pjax printRapport" target="_blank" ng-href="./tickets.php?id={{ticketID}}&a=printR&idR={{rapportID}}"><i class="fa fa-print fa-2x" id="{{rapport.id}}" aria-hidden="true" style="color:black"></i></a>
+          <!--<a class="no-pjax printRapport" target="_blank" ng-href="./tickets.php?id={{ticketID}}&a=printR&idR={{rapportID}}"><i class="fa fa-print fa-2x" id="{{rapport.id}}" aria-hidden="true" style="color:black"></i></a>-->
+          <a class="no-pjax printRapport" target="_blank"><i class="fa fa-print fa-2x" aria-hidden="true" style="color:black"></i></a>
       </div>
        <table width="100%" style="table-layout:fixed">
            <thead>
@@ -1527,9 +1547,6 @@ $(function() {
 </script>
 
 
-<script src="./js/moment.js"></script>
-<script src="./js/rapport.js"></script>
-
 <script>
 
     $(document).ready(function(){
@@ -1705,6 +1722,38 @@ $(function() {
     });
 
 
+    //SIGNATURE
+    //printRapport
+    var signaturePad = undefined;
+
+    $('.printRapport').click(function(){
+        if(signaturePad !== undefined) signaturePad.clear();
+        $('#signature').modal('toggle');
+    });
+
+    $('#signature').on('shown.bs.modal', function() {
+        var canvas = document.querySelector("#signature-pad");
+        canvas.width = $('.modal-body').width();
+        canvas.height = $('.modal-body').height();
+
+        if(signaturePad === undefined){
+            signaturePad = new SignaturePad(canvas, {
+              backgroundColor: 'rgba(255, 255, 255, 0)',
+              penColor: 'rgb(0, 0, 0)',
+              minWidth: 1,
+              maxWidth: 1,
+              dotSize: 1,
+              throttle: 50
+            });
+        }
+    });
+
+    //Valid signature
+    /*$('.modal-body button.printR').click(function(){
+       $.ajax({
+           url:''
+       })
+    });*/
 
     //GESTION DU SNIPPER
     $(document).on('click','.number-spinner button',function () {

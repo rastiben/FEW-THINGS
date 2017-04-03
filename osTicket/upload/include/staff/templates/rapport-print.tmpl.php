@@ -38,6 +38,12 @@
 
     $rapport = Rapport::getInstance()->getRapport($_GET['idR']);
     $horaires = Rapport::getInstance()->getRapportsHoraires($_GET['idR']);
+
+    //SIGNATURE
+    $data = (array)json_decode(trim(file_get_contents('php://input')));
+    $img = $data['img'];
+    //$img = (array)json_decode(trim(file_get_contents('php://input')))['img'];
+
 ?>
 
 <!--<htmlpageheader name="def" style="display:none">
@@ -176,6 +182,7 @@
        <?php } ?>
 <div class="signature">
     <h5>Cachet et signature du client le</h5>
+    <img src="<?php echo $img ?>"></img>
 </div>
 </body>
 </html>

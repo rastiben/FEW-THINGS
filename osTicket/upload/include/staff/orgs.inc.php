@@ -7,7 +7,6 @@ if(!defined('OSTSCPINC') || !$thisstaff) die('Access Denied');
 $orgsC = OrganisationCollection::getInstance();
 
 $page = isset($_REQUEST['p']) ? $_REQUEST['p'] : 1;
-
 /*
 *Récupération de la page des organisation
 */
@@ -20,7 +19,6 @@ if(isset($_REQUEST['query']) && !empty($_REQUEST['query'])){
 } */ else {
     $orgs = $orgsC->lookUp($page);
 }
-
 /*
 *Récupération du nombre d'organisation
 */
@@ -62,7 +60,7 @@ $pagination = $pages->paginate($page);
             <td nowrap align="center">
                 <input type="checkbox" class="ckb mass nowarn"/>
             </td>
-            <td>&nbsp;  <a href="orgs.php?id=<?php echo $org->getId(); ?>"><?php echo $org->getName(); ?></td>
+            <td>&nbsp;  <a href="orgs.php?id=<?php echo $org->getName(); ?>"><?php echo $org->getName(); ?></td>
         </tr>
 
         <?php

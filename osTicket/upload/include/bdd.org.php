@@ -45,12 +45,12 @@ class bdd_org{
     *Récupération des organisations
     */
     public function getOrgs($page){
-        if(empty($page)){
-            $prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site FROM F_COMPTET WHERE CT_Num LIKE ? ORDER BY CT_Num");
-            $values = array("411%");
-            $this->DB->execute($prepare,$values);
-            return $prepare;
-        } else {
+        //if(empty($page)){
+        $prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site FROM F_COMPTET WHERE CT_Num LIKE '411%' ORDER BY CT_Num");
+        $values = array();
+        $this->DB->execute($prepare,$values);
+        return $prepare;
+        /*} else {
             $fields = ["CT_Num","CT_Adresse","CT_Complement","CT_CodePostal","CT_Ville","CT_Telephone","CT_Site"];
             $whereClauses = [["CT_Num","LIKE","'%411%'"]];
             $orderBy = "CT_Num";
@@ -59,12 +59,11 @@ class bdd_org{
 
             $request = $this->DB->selectBetween("F_COMPTET",$fields,$whereClauses,$orderBy,$range);
 
-            /*Préparation et execution de celle ci.*/
             $prepare = $this->DB->prepare($request);
             $values = array();
             $this->DB->execute($prepare,$values);
             return $prepare;
-        }
+        }*/
     }
 
     /*

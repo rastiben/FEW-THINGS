@@ -135,14 +135,14 @@ $queue_columns = array(
 
    <div class="filter">
        <ul class="col-md-12">
-            <li class="col-md-5"><p class="active">Liste completes</p></li>
-            <li class="col-md-5"><p>Entrées</p></li>
-            <li class="col-md-5"><p>Planche</p></li>
-            <li class="col-md-5"><p>Sorties</p></li>
-            <li class="col-md-5"><p>RMA</p></li>
+            <li class="col-md-5"><p id=" " class="active">Liste completes</p></li>
+            <li class="col-md-5"><p id="Entrée">Entrées</p></li>
+            <li class="col-md-5"><p id="Planche">Planche</p></li>
+            <li class="col-md-5"><p id="Sortie">Sorties</p></li>
+            <li class="col-md-5"><p id="RMA">RMA</p></li>
        </ul>
    </div>
-    <table class="list atelierT" border="0" cellspacing="1" cellpadding="2" width="100%">
+    <table class="atelierT" border="0" cellspacing="1" cellpadding="2" width="100%">
         <thead>
             <th>Ticket</th>
             <th>Organisation</th>
@@ -164,18 +164,24 @@ $queue_columns = array(
         });
         var addContenuInListe = function(obj){
             if(added.indexOf(obj.ticket_id) == -1){
-                $('.list.atelierT tbody').append('<tr id="'+obj.ticket_id+'" class="'+obj.etat+'"><td>'+(obj.getType() == "prepa" ? '<span class="glyphicon glyphicon-collapse-down"></span>' : '') +'<a class="Icon Ticket no-pjax" href="./tickets.php?id='+obj.ticket_id+'">'+obj.number+'</a></td><td><a class="no-pjax" href="./orgs.php?id='+obj.org_name+'">'+obj.org_name+'</a></td><td></td><td>'+obj.getType()+'</td><td>'+obj.priority+'</td></tr>');
+                $('.atelierT tbody').append('<tr id="'+obj.ticket_id+'" class="parent '+obj.etat +'"><td>'+(obj.getType() == "prepa" ? '<span class="glyphicon glyphicon-collapse-down"></span>' : '') +'<a style="'+(obj.getType() == "repa" ? 'margin-left: 40px;' : '')+'" class="no-pjax" href="./tickets.php?id='+obj.ticket_id+'">'+obj.number+'</a></td><td><a class="no-pjax" href="./orgs.php?id='+obj.org_name+'">'+obj.org_name+'</a></td><td></td><td>'+obj.getType()+'</td><td>'+obj.priority+'</td></tr>');
                 added.push(obj.ticket_id);
             }
-            $('.list.atelierT tbody').append('<tr style="display:none" id="'+obj.ticket_id+'" class="child '+obj.etat+'"><td></td><td><a class="no-pjax" href="./orgs.php?id='+obj.org_name+'">'+obj.org_name+'</a></td><td>'+ (obj.getType() == "prepa" ? 'VD' + obj.contenu.VD.id : "") +'</td><td>'+obj.getType()+'</td><td>'+obj.priority+'</td></tr>');
+
+            if(obj.getType() == "prepa"){
+                $('.atelierT tbody').append('<tr style="display:none" id="'+obj.ticket_id+'" class="child '+obj.etat+'"><td></td><td><a class="no-pjax" href="./orgs.php?id='+obj.org_name+'">'+obj.org_name+'</a></td><td>'+ (obj.getType() == "prepa" ? 'VD' + obj.contenu.VD.id : "") +'</td><td>'+obj.getType()+'</td><td>'+obj.priority+'</td></tr>');
+            }
         }
     });
 
+    //Afficher les prepa correspondant au type selectionner apres clique sur down.
     $(document).on('click','.glyphicon.glyphicon-collapse-down',function(){
         var id = $(this).closest('tr').attr('id');
-        $('tr#'+id+'.child').show();
+        var filter = $('.filter p.active').attr('id') != " " ? '.' + $('.filter p.active').attr('id') : "";
+        $('tr#'+id+'.child'+filter).show();
         $(this).replaceWith('<span class="glyphicon glyphicon-collapse-up"></span>')
     });
+    //Afficher les prepa correspondant au type selectionner apres clique sur up.
     $(document).on('click','.glyphicon.glyphicon-collapse-up',function(){
         var id = $(this).closest('tr').attr('id');
         $('tr#'+id+'.child').hide();
@@ -183,27 +189,38 @@ $queue_columns = array(
     });
 
     $('.filter li').click(function(){
+        //Tout cacher
+        $('tr.child').hide();
+        $('tr.parent .glyphicon.glyphicon-collapse-up').replaceWith('<span class="glyphicon glyphicon-collapse-down"></span>');
+
         $('p',$(this).siblings()).removeClass('active');
         $('p',$(this)).addClass('active');
-        //n'afficher que les tr
-        $('.list.atelierT tbody tr').css('display','none');
-        switch($('p',$(this)).text()){
-            case 'Entrées':
-                $('.list.atelierT tbody tr.Entrée').css('display','table-row');
-                break;
-            case 'Planche':
-                $('.list.atelierT tbody tr.Planche').css('display','table-row');
-                break;
-            case 'Sorties':
-                $('.list.atelierT tbody tr.Sortie').css('display','table-row');
-                break;
-            case 'RMA':
-                $('.list.atelierT tbody tr.RMA').css('display','table-row');
-                break;
-            default:
-                $('.list.atelierT tbody tr').css('display','table-row');
-                break;
-        }
+
+        var filter = $('p',$(this)).attr('id') != " " ? '.' + $('p',$(this)).attr('id') : "";
+
+        //Cacher les pere si il n'y a pas de fils.
+        $.each($('tr.parent'),function(key,obj){
+            var id = $(obj).attr('id');
+
+            var toShow = $('tr#'+id+'.child'+filter);
+
+            //Affficher si liste completes demandé.
+            if(filter == ""){
+                $('tr#'+id+'.parent').show()
+            }
+            //Affficher repa si filtre ok.
+            else if($('tr#'+id+'.child').length == 0 && $('tr#'+id+'.parent').hasClass(filter.substr(1))){
+                $('tr#'+id+'.parent').show();
+            }
+            //Ne pas afficher les prepa si aucun filtre n'est ok.
+            else if(toShow.length == 0){
+                $('tr#'+id).hide();
+            }
+            //Afficher les prepa si filtre ok.
+            else {
+                $('tr#'+id+'.parent').show();
+            }
+        });
     });
 
 </script>

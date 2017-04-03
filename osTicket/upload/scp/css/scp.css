@@ -3753,6 +3753,8 @@ input[type="radio"]{
     margin-right: 10px;
     font-size: 20px;
     cursor: pointer;
+    color: black;
+    margin-left: 10px;
 }
 
 .atelier{
@@ -4004,11 +4006,29 @@ input[type="radio"]{
 table.atelierT{
     margin-top:0px;
     font-size: 14px;
+    border: 1px solid #1A5276;
 }
 
 table.atelierT td{
     line-height: 30px;
 }
+
+table.atelierT tr{
+    height: 40px;
+}
+
+table.atelierT .parent td{
+    background: white;
+}
+
+table.atelierT .parent{
+    border-bottom: 1px solid #1A5276;
+}
+
+table.atelierT thead tr{
+    border-bottom: 1px solid #1A5276;
+}
+
 
 /*PLAN*/
 
@@ -4903,4 +4923,12 @@ table.atelierT td{
 .order-success svg circle {
     -webkit-animation: checkmark-circle 0.6s ease-in-out backwards;
     animation: checkmark-circle 0.6s ease-in-out backwards
+}
+
+
+/*Signature*/
+
+
+#signature .modal-body{
+    min-height: 300px;
 }

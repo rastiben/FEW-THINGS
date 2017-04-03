@@ -2708,15 +2708,18 @@ implements RestrictedAccess, Threadable {
         }
         if($rapport){
             $pdf = new Ticket2PDF($this, $psize, $notes,true);
+            $output = $pdf->Output($name, 'S');
+            $pdfBase64 = base64_encode($output);
+            echo 'data:application/pdf;base64,' . $pdfBase64;
         }
         else{
             $pdf = new Ticket2PDF($this, $psize, $notes);
+                $name = 'Ticket-'.$this->getNumber().'.pdf';
+            Http::download($name, 'application/pdf', $pdf->Output($name, 'S'));
+            //Remember what the user selected - for autoselect on the next print.
+            $_SESSION['PAPER_SIZE'] = $psize;
         }
 
-        $name = 'Ticket-'.$this->getNumber().'.pdf';
-        Http::download($name, 'application/pdf', $pdf->Output($name, 'S'));
-        //Remember what the user selected - for autoselect on the next print.
-        $_SESSION['PAPER_SIZE'] = $psize;
         exit;
     }
 

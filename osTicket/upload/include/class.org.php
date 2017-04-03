@@ -106,19 +106,20 @@ class OrganisationCollection{
     */
     public function lookUp($offset=1){
 
-        if($offset == null)
+        /*if($offset == null)
             $result = $this->bdd_org->getOrgs(null);
-        else
-            $result = $this->bdd_org->getOrgs($offset);
+        else*/
+
+        $result = $this->bdd_org->getOrgs($offset);
 
         while($myRow = odbc_fetch_array($result)){
             $this->addOrg($myRow);
         }
 
-        if($offset == null)
+        /*if($offset == null)
             return $this->getCollectionPage($offset,null);
-        else
-            return $this->getCollectionPage($offset);
+        else*/
+        return $this->getCollectionPage($offset,1);
     }
 
     /*

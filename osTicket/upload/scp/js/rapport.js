@@ -55,7 +55,7 @@ app.factory('stockFactory',['$http','$rootScope','$httpParamSerializerJQLike',fu
 
 
 //récupération des informations (Rapports et horaires) + Ajout d'un rapport ou maj d'un horaires
-app.factory('rapportFactory',['$http',function($http){
+app.factory('rapportFactory',['$http','$window',function($http,$window){
    return{
        getRapports: function(ticketID) {
              //return the promise.
@@ -105,6 +105,18 @@ app.factory('rapportFactory',['$http',function($http){
                             data: data,
                             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                         });
+       },
+       printRapport : function(ticketID,rapportID,img){
+            $http({method: 'POST',
+                url: './tickets.php?id='+ticketID+'&a=printR&idR='+rapportID,
+                data: {img:img},
+                headers: {'Content-Type': 'application/json'}
+            })
+            .then(function(data){
+                var win = $window.open(data.data, 'Download');
+                //$window.location.assign(data.data);
+                //$window.open(data.data);
+            });
        }
    };
 }]);
@@ -287,6 +299,13 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
         });
     })
 
+    $scope.printRapport = function(){
+        var img = document.getElementById("signature-pad").toDataURL();
+        //console.log(jpegUrl);
+        //$('body').append('<img src="'+jpegUrl+'"></img>');
+        rapportFactory.printRapport($scope.ticketID,$scope.rapportID,img);
+    }
+
 }]);
 
 //filtre de capitalization.
@@ -458,7 +477,7 @@ app.controller("stockCtrl",["$scope","stockFactory","$rootScope","$compile", fun
 
 
 
-function Rapports(ticketID){
+/*function Rapports(ticketID){
     var self = this;
 
     RapportAjax.getRapports(ticketID,function(report){
@@ -587,4 +606,4 @@ class RapportAjax{
         };
         this.doAjax(data,callback);
     }
-}
+}*/

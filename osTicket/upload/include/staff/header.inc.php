@@ -66,6 +66,7 @@ if ($lang) {
     <script>
         var app = angular.module('myApp',['ngSanitize']);
     </script>
+
 </head>
 <body ng-app="myApp">
 <div id="container">
