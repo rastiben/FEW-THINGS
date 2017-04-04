@@ -552,8 +552,15 @@ return false;">
         /*CREATION D'UN RAPPORT*/
         $status = $_GET['status'];
         $search = $_GET['search'];
+        $type = $_GET['type'];
 
-        if(!empty($search)){
+        if($status == 'assigned' || ($status == null && $type == null)){
+            $tickets = TicketsInfos::getInstance()->tickets_assigned($thisstaff->getId());
+        } else if($type != null){
+            $tickets = TicketsInfos::getInstance()->ticketsByType($type);
+        }
+
+        /*if(!empty($search)){
             $tickets = TicketsInfos::getInstance()->search_tickets($search);
         } else {
             if($status == 'assigned'){
@@ -564,9 +571,21 @@ return false;">
                 else
                     $tickets = TicketsInfos::getInstance()->tickets();
             }
-        }
+        }*/
 
-         //print_r($tickets);
+        //TRIER LE TABLEAU
+        if(isset($_GET['sort'])){
+            $sort = $_GET['sort'];
+            if($_GET['dir'] == 0){
+                usort($tickets, function($a, $b) {
+                    return $a['{$sort}'] - $b['{$sort}'];
+                });
+            } else {
+                rsort($tickets, function($a, $b) {
+                    return $a['{$sort}'] - $b['{$sort}'];
+                });
+            }
+        }
 
         foreach ($tickets as $T) {
             $total += 1;

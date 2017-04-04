@@ -142,13 +142,14 @@ $queue_columns = array(
             <li class="col-md-5"><p id="RMA">RMA</p></li>
        </ul>
    </div>
-    <table class="atelierT" border="0" cellspacing="1" cellpadding="2" width="100%">
+    <table class="list atelierT" border="0" cellspacing="1" cellpadding="2" width="100%">
         <thead>
-            <th>Ticket</th>
-            <th>Organisation</th>
-            <th>VD</th>
-            <th>Type</th>
-            <th>Priorité</th>
+            <th width="15%" style="padding-left: 45px;">Ticket</th>
+            <th width="25%">Organisation</th>
+            <th width="15%">VD</th>
+            <th width="15%">Type</th>
+            <th width="15%">Priorité</th>
+            <th width="15%">Status</th>
         </thead>
         <tbody> </tbody>
         <tfoot> </tfoot>
@@ -156,6 +157,8 @@ $queue_columns = array(
 
 <script>
     $(document).ready(function(){
+        var status = ['Entrée','Planche','Sortie','RMA'];
+
         var added = [];
         var planches = new Planche(function(contenues){
             $(contenues).each(function(number,obj){
@@ -163,16 +166,40 @@ $queue_columns = array(
             });
         });
         var addContenuInListe = function(obj){
+            var type = obj.getType() == "prepa" ? "Préparation" : "Réparation";
+
+            var selectStatus = '<select class="changeState" id="'+obj.id+'">';
+            $.each(status,function(key,value){
+                selectStatus += "<option "+(obj.etat == value ? 'selected':'')+">"+value+"</option>";
+            });
+            selectStatus += '</select>';
+
             if(added.indexOf(obj.ticket_id) == -1){
-                $('.atelierT tbody').append('<tr id="'+obj.ticket_id+'" class="parent '+obj.etat +'"><td>'+(obj.getType() == "prepa" ? '<span class="glyphicon glyphicon-collapse-down"></span>' : '') +'<a style="'+(obj.getType() == "repa" ? 'margin-left: 40px;' : '')+'" class="no-pjax" href="./tickets.php?id='+obj.ticket_id+'">'+obj.number+'</a></td><td><a class="no-pjax" href="./orgs.php?id='+obj.org_name+'">'+obj.org_name+'</a></td><td></td><td>'+obj.getType()+'</td><td>'+obj.priority+'</td></tr>');
+                $('.atelierT tbody').append('<tr id="'+obj.ticket_id+'" class="parent '+obj.etat +'"><td>'+(obj.getType() == "prepa" ? '<span class="glyphicon glyphicon-collapse-down"></span>' : '') +'<a style="'+(obj.getType() == "repa" ? 'margin-left: 40px;' : '')+'" class="no-pjax" href="./tickets.php?id='+obj.ticket_id+'">'+obj.number+'</a></td><td><a class="no-pjax" href="./orgs.php?id='+obj.org_name+'">'+obj.org_name+'</a></td><td></td><td>'+type+'</td><td>'+obj.priority+'</td><td></td></tr>');
                 added.push(obj.ticket_id);
             }
 
             if(obj.getType() == "prepa"){
-                $('.atelierT tbody').append('<tr style="display:none" id="'+obj.ticket_id+'" class="child '+obj.etat+'"><td></td><td><a class="no-pjax" href="./orgs.php?id='+obj.org_name+'">'+obj.org_name+'</a></td><td>'+ (obj.getType() == "prepa" ? 'VD' + obj.contenu.VD.id : "") +'</td><td>'+obj.getType()+'</td><td>'+obj.priority+'</td></tr>');
+                $('.atelierT tbody').append('<tr style="display:none" id="'+obj.ticket_id+'" class="child '+obj.etat+'"><td><div class="childLine"></div></td><td><a class="no-pjax" href="./orgs.php?id='+obj.org_name+'">'+obj.org_name+'</a></td><td>'+ (obj.getType() == "prepa" ? 'VD' + obj.contenu.VD.id : "") +'</td><td>'+type+'</td><td>'+obj.priority+'</td><td>'+selectStatus+'</td></tr>');
             }
         }
     });
+
+    $(document).on('change','.changeState',function(){
+        var id = $(this).attr('id');
+        var etat = $(this).val();
+        var tr = $(this).closest('tr');
+
+        AtelierAjax.changeState(id,etat,function(){
+            tr.hide();
+            tr.removeClass();
+            tr.addClass('child ' + etat);
+
+            var filter = $('.filter li p.active').attr('id') != " " ? '.' + $('.filter li p.active').attr('id') : "";
+            majTicketList(filter);
+        });
+    });
+
 
     //Afficher les prepa correspondant au type selectionner apres clique sur down.
     $(document).on('click','.glyphicon.glyphicon-collapse-down',function(){
@@ -198,6 +225,10 @@ $queue_columns = array(
 
         var filter = $('p',$(this)).attr('id') != " " ? '.' + $('p',$(this)).attr('id') : "";
 
+        majTicketList(filter);
+    });
+
+    function majTicketList(filter){
         //Cacher les pere si il n'y a pas de fils.
         $.each($('tr.parent'),function(key,obj){
             var id = $(obj).attr('id');
@@ -221,7 +252,7 @@ $queue_columns = array(
                 $('tr#'+id+'.parent').show();
             }
         });
-    });
+    }
 
 </script>
 

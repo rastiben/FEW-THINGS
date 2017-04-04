@@ -165,7 +165,7 @@ class Atelier
         ON ost_atelier_preparation.id_VD = ost_atelier_preparation_vd.id
         LEFT JOIN ost_atelier_reparation
         ON ost_atelier_planche_contenu.id = ost_atelier_reparation.id_contenu
-        ORDER BY ticket_id");
+        ORDER BY ticket_id,id_VD");
         $res->execute(array());
         /*print_r($res->fetchAll());*/
         return $res->fetchAll(PDO::FETCH_ASSOC);

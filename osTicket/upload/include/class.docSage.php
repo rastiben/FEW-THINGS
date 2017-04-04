@@ -11,7 +11,7 @@ class docSage{
 
     public static function createDocument($org,$stock,$lines){
         //Pour chaque ligne
-        /*$BDD = self::getBDD();
+        $BDD = self::getBDD();
 
         //Récupération du lieu de livraison
         $LI_NO = $BDD->getLi_NO($org);
@@ -38,7 +38,7 @@ class docSage{
                 $BDD->createDocLineCMUP($org,$DO_PIECE,$ligne,$line->reference,$line->quantite,$line->stock,$line->designation,$line->prix);
                 $ligne += 1000;
             }
-        }*/
+        }
         //$BDD = self::getBDD();
         //$BDD->createDocLine();
     }

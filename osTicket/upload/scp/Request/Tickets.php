@@ -205,6 +205,21 @@ class TicketsInfos
         return $res->fetchAll();
     }
 
+    public function ticketsByType($type){
+        $res = $this->dbh->prepare("SELECT ost_ticket.ticket_id,ost_ticket_status.name as status_name,ost_ticket.status_id,number,lastupdate,closed,subject,source,ost_user.name,ost_user.org_id,ost_user.org_name,ost_user__cdata.firsname,priority_desc
+        FROM ost_ticket,ost_ticket_status,ost_ticket__cdata,ost_user,ost_user__cdata,ost_ticket_priority,ost_help_topic
+        WHERE ost_ticket.ticket_id = ost_ticket__cdata.ticket_id
+        AND ost_ticket.status_id = ost_ticket_status.id
+        AND ost_ticket.user_id = ost_user.id
+        AND ost_user.id = ost_user__cdata.user_id
+        AND ost_ticket__cdata.priority = ost_ticket_priority.priority_id
+        AND ost_help_topic.topic_id = ost_ticket.topic_id
+        AND ost_help_topic.topic = :type
+        AND ost_ticket_status.state = 'open'");
+        $res->execute(array(':type'=>$type));
+        return $res->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function search_tickets($search){
         $res = $this->dbh->prepare(
         "SELECT ost_ticket.ticket_id,ost_ticket_status.name as status_name,status_id,number,lastupdate,closed,subject,ost_ticket.source,ost_user.name,ost_user.org_id,ost_user.org_name,ost_user__cdata.firsname,priority_desc,ost_organization.name as org_name

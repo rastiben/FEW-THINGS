@@ -1,19 +1,6 @@
 moment.locale('fr');
 
 /*CONFIG*/
-var serialize = function(obj, prefix) {
-  var str = [];
-  for(var p in obj) {
-    if (obj.hasOwnProperty(p)) {
-      var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-      str.push(typeof v == "object" ?
-        serialize(v, k) :
-        encodeURIComponent(k) + "=" + encodeURIComponent(v));
-    }
-  }
-  return str.join("&");
-};
-
 app.factory('stockFactory',['$http','$rootScope','$httpParamSerializerJQLike',function($http,$rootScope,$httpParamSerializerJQLike){
     var stock;
     return {
@@ -106,14 +93,15 @@ app.factory('rapportFactory',['$http','$window',function($http,$window){
                             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                         });
        },
-       printRapport : function(ticketID,rapportID,img){
-            $http({method: 'POST',
+       printRapport : function(ticketID,rapportID,img=undefined){
+            return $http({method: 'POST',
                 url: './tickets.php?id='+ticketID+'&a=printR&idR='+rapportID,
                 data: {img:img},
                 headers: {'Content-Type': 'application/json'}
             })
             .then(function(data){
-                var win = $window.open(data.data, 'Download');
+                return data.data;
+                //var win = $window.open(data.data, 'Download');
                 //$window.location.assign(data.data);
                 //$window.open(data.data);
             });
@@ -299,11 +287,38 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
         });
     })
 
+    $scope.convertDataURIToBinary = function(dataURI) {
+      var BASE64_MARKER = ';base64,';
+      var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+      var base64 = dataURI.substring(base64Index);
+      var raw = window.atob(base64);
+      var rawLength = raw.length;
+      var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+      for(var i = 0; i < rawLength; i++) {
+        array[i] = raw.charCodeAt(i);
+      }
+      return array;
+    }
+
     $scope.printRapport = function(){
-        var img = document.getElementById("signature-pad").toDataURL();
+        //var img = document.getElementById("signature-pad").toDataURL();
         //console.log(jpegUrl);
         //$('body').append('<img src="'+jpegUrl+'"></img>');
-        rapportFactory.printRapport($scope.ticketID,$scope.rapportID,img);
+        //PDFJS.workerSrc = "./js/pdf.worker.js";
+        rapportFactory.printRapport($scope.ticketID,$scope.rapportID).then(function(pdf){
+            //var pdfAsArray = $scope.convertDataURIToBinary(pdfB);
+            //PDFJS.getDocument(pdfAsArray).then(function (pdf) {
+                $('.modal-body').append('<iframe id="pdfFrame" src="./viewer.html"></iframe>');
+                var pdfjsframe = document.getElementById('pdfFrame');
+            console.log(pdf);
+                // At the very least, wait until the frame is ready, e.g via onload.
+                pdfjsframe.onload = function() {
+                    //pdfjsframe.contentWindow.PDFViewerApplication);
+                    pdfjsframe.contentWindow.PDFViewerApplication.open(pdf);
+                };
+            //})
+        });
     }
 
 }]);

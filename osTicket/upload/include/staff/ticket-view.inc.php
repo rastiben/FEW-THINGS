@@ -68,6 +68,8 @@ if($ticket->isOverdue())
 <script type="text/javascript" src="./js/jszip.js"></script>
 <script type="text/javascript" src="./js/jszip-utils.js"></script>
 <script type="text/javascript" src="./js/file-saver.min.js"></script>
+<script src="./js/pdf.js"></script>
+<script src="./js/pdf.worker.js"></script>
 
 <div>
     <div class="sticky bar col-md-12" data_ticket_id="<?php echo $ticket->getId(); ?>"
@@ -580,7 +582,7 @@ if($ticket->isOverdue())
             <h4 class="modal-title">Signature</h4>
           </div>
           <div class="modal-body">
-            <canvas id="signature-pad"></canvas>
+            <!--<canvas id="signature-pad"></canvas>-->
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
@@ -1732,7 +1734,7 @@ $(function() {
     });
 
     $('#signature').on('shown.bs.modal', function() {
-        var canvas = document.querySelector("#signature-pad");
+        /*var canvas = document.querySelector("#signature-pad");
         canvas.width = $('.modal-body').width();
         canvas.height = $('.modal-body').height();
 
@@ -1745,7 +1747,7 @@ $(function() {
               dotSize: 1,
               throttle: 50
             });
-        }
+        }*/
     });
 
     //Valid signature

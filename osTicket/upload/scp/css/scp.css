@@ -337,11 +337,12 @@ a time {
     font-weight:bold;
 }
 
-#sub_nav .open     { background-image:url(../images/icons/open.gif) }
+/*#sub_nav .open     { background-image:url(../images/icons/open.gif) }*/
 #sub_nav .answered { background-image:url(../images/icons/answered.gif) }
 #sub_nav .mine     { background-image:url(../images/icons/mine.gif) }
 #sub_nav .closed   { background-image:url(../images/icons/closed.gif) }
 #sub_nav .new      { background-image:url(../images/icons/new.gif) }
+/*.dropdown.open { background:none }*/
 
 a.test  { background-image:url(../images/icons/open.gif) }
 
@@ -4006,14 +4007,18 @@ input[type="radio"]{
 table.atelierT{
     margin-top:0px;
     font-size: 14px;
-    border: 1px solid #1A5276;
+    /*border: 1px solid #1A5276;*/
 }
 
 table.atelierT td{
     line-height: 30px;
 }
 
-table.atelierT tr{
+table.atelierT thead tr{
+    height: 30px;
+}
+
+table.atelierT tbody tr{
     height: 40px;
 }
 
@@ -4022,11 +4027,19 @@ table.atelierT .parent td{
 }
 
 table.atelierT .parent{
-    border-bottom: 1px solid #1A5276;
+    /*border-bottom: 1px solid #1A5276;*/
 }
 
 table.atelierT thead tr{
-    border-bottom: 1px solid #1A5276;
+    /*border-bottom: 1px solid #1A5276;*/
+}
+
+
+.childLine{
+    height: 30px;
+    width: 2px;
+    background: black;
+    margin-left: 17px;
 }
 
 
@@ -4931,4 +4944,55 @@ table.atelierT thead tr{
 
 #signature .modal-body{
     min-height: 300px;
+}
+
+
+/*DROPDOWN*/
+#sub_nav .dropdown{
+    display: inline-block;
+    height: 25px;
+    margin-right: 15px;
+    margin-left: -25px;
+}
+
+#sub_nav .icon{
+    background:url(../images/icons/open_tickets.gif);
+    height: 15px;
+    background-repeat: no-repeat;
+    width: 16px;
+    padding: 0px;
+    display: inline-block;
+    vertical-align: text-top;
+}
+
+#sub_nav .dropdown .btn{
+    height: 25px;
+    padding: 0px 12px;
+    background: none;
+    vertical-align: top;
+}
+
+#sub_nav .dropdown .dropdown-menu{
+    padding: 0px;
+}
+
+#sub_nav .dropdown .dropdown-menu li{
+    display:block;
+}
+
+#sub_nav .dropdown .dropdown-menu li a{
+    width: 100%;
+    margin-left: 5px;
+    padding: 0px;
+}
+
+#sub_nav .dropdown .dropdown-menu li:hover a{
+    background: none;
+}
+
+
+/*PDF IFRAME*/
+#pdfFrame{
+    width: 100%;
+    min-height: 500px;
 }

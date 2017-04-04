@@ -377,7 +377,7 @@ $open_name = _P('queue-name',
     'Open');
 
 /*ATELIER*/
-if($cfg->showAnsweredTickets()) {
+/*if($cfg->showAnsweredTickets()) {
     $nav->addSubMenu(array('desc'=>$open_name.' ('.number_format(TicketsInfos::getInstance()->numberOfOpenTickets()).')',
                             'title'=>__('Open Tickets'),
                             'href'=>'tickets.php?status=open',
@@ -392,7 +392,7 @@ if($cfg->showAnsweredTickets()) {
                                'href'=>'tickets.php?status=open',
                                'iconclass'=>'Ticket'),
                             ((!$_REQUEST['status'] && !isset($_SESSION['advsearch'])) || $_REQUEST['status']=='open'));
-    }
+    }*/
 
     /*if($stats['answered']) {
         $nav->addSubMenu(array('desc'=>__('Answered').' ('.number_format($stats['answered']).')',
@@ -400,19 +400,34 @@ if($cfg->showAnsweredTickets()) {
                                'href'=>'tickets.php?status=answered',
                                'iconclass'=>'answeredTickets'),
                             ($_REQUEST['status']=='answered'));
-    }*/
+    }
+}*/
+
+//if($stats['assigned']) {
+
+$nav->addSubMenu(array('desc'=>__('My Tickets').' ('.TicketsInfos::getInstance()->numberOfAssignedTickets().')',
+                        'title'=>__('Assigned Tickets'),
+                        'href'=>'tickets.php?status=assigned',
+                        'iconclass'=>'assignedTickets'),
+                    ($_REQUEST['status']=='assigned'));
+
+//GET TOPICS
+if ($topics=Topic::getHelpTopics(false, false, true)) {
+
+    foreach($topics as $id =>$name) {
+    $nav->addSubMenu(array('desc'=>$name,
+                        'title'=>'Tickets '.$name,
+                        'href'=>'tickets.php?status=open&type='.$name),
+                    ($_REQUEST['type']==$name));
+        /*echo sprintf('<option value="%d" %s %s>%s</option>',
+        $id, ($info['topicId']==$id)?'selected="selected"':'',
+        $selected, $name);*/
+    }
 }
 
-if($stats['assigned']) {
+//}
 
-    $nav->addSubMenu(array('desc'=>__('My Tickets').' ('.TicketsInfos::getInstance()->numberOfAssignedTickets().')',
-                           'title'=>__('Assigned Tickets'),
-                           'href'=>'tickets.php?status=assigned',
-                           'iconclass'=>'assignedTickets'),
-                        ($_REQUEST['status']=='assigned'));
-}
-
-if($stats['overdue']) {
+/*if($stats['overdue']) {
     $nav->addSubMenu(array('desc'=>__('Overdue').' ('.number_format($stats['overdue']).')',
                            'title'=>__('Stale Tickets'),
                            'href'=>'tickets.php?status=overdue',
@@ -421,7 +436,7 @@ if($stats['overdue']) {
 
     if(!$sysnotice && $stats['overdue']>10)
         $sysnotice=sprintf(__('%d overdue tickets!'),$stats['overdue']);
-}
+}*/
 
 if (isset($_SESSION['advsearch'])) {
     // XXX: De-duplicate and simplify this code

@@ -182,7 +182,9 @@
        <?php } ?>
 <div class="signature">
     <h5>Cachet et signature du client le</h5>
+    <?php if(!empty($img)){ ?>
     <img src="<?php echo $img ?>"></img>
+    <?php } ?>
 </div>
 </body>
 </html>

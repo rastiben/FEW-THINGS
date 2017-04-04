@@ -3,6 +3,7 @@ if(($subnav=$nav->getSubMenu()) && is_array($subnav)){
     $activeMenu=$nav->getActiveMenu();
     if($activeMenu>0 && !isset($subnav[$activeMenu-1]))
         $activeMenu=0;
+    $typeDropdown = [];
     foreach($subnav as $k=> $item) {
         if($item['droponly']) continue;
         $class=$item['iconclass'];
@@ -25,8 +26,26 @@ if(($subnav=$nav->getSubMenu()) && is_array($subnav)){
 
 
         //Calcule du nombre de fichier ouvert/fermé/assigné
-
-        echo sprintf('<li><a class="%s no-pjax" href="%s" title="%s" id="%s" %s>%s</a></li>',
+        //SI ISSET(TYPE) AJOUTER DANS UNE DROPDOWN
+        if(strstr($item['href'],"type")){
+            array_push($typeDropdown,sprintf('<li><a class="%s no-pjax" href="%s" title="%s" id="%s" %s>%s</a></li>',
+                $class, $item['href'], $item['title'], $id, $attr, $item['desc']));
+        } else {
+            if($item['desc'] == "Fermé"){
+                echo '<div class="dropdown">
+                      <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                      <div class="icon"></div>
+                      Type
+                      <span class="caret"></span></button>
+                      <ul class="dropdown-menu">';
+                foreach($typeDropdown as $key=>$type){
+                    echo $type;
+                }
+                echo '</ul></div>';
+            }
+            echo sprintf('<li><a class="%s no-pjax" href="%s" title="%s" id="%s" %s>%s</a></li>',
                 $class, $item['href'], $item['title'], $id, $attr, $item['desc']);
+        }
+
     }
 }
