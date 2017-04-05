@@ -575,18 +575,18 @@ if($ticket->isOverdue())
 
     <!--RAPPORTS-->
     <div class="modal fade" id="signature" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Signature</h4>
+            <h4 class="modal-title">Impression du rapport</h4>
           </div>
           <div class="modal-body">
-            <!--<canvas id="signature-pad"></canvas>-->
+                <canvas id="signature-pad"></canvas>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-            <button type="button" ng-click="printRapport()" class="btn btn-primary">Valider</button>
+            <button type="button" ng-click="removePDFView($event)" class="btn btn-default">Annuler</button>
+            <button type="button" ng-click="displaySignature($event)" class="btn btn-primary">Signer</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -597,7 +597,7 @@ if($ticket->isOverdue())
           <img class="imgRapport" src="../assets/default/images/report.png"/>
           <h4>Liste des rapports</h4>
           <!--<a class="no-pjax printRapport" target="_blank" ng-href="./tickets.php?id={{ticketID}}&a=printR&idR={{rapportID}}"><i class="fa fa-print fa-2x" id="{{rapport.id}}" aria-hidden="true" style="color:black"></i></a>-->
-          <a class="no-pjax printRapport" target="_blank"><i class="fa fa-print fa-2x" aria-hidden="true" style="color:black"></i></a>
+          <a class="no-pjax printRapport" ng-click="printRapport()" target="_blank"><i class="fa fa-print fa-2x" aria-hidden="true" style="color:black"></i></a>
       </div>
        <table width="100%" style="table-layout:fixed">
            <thead>
@@ -1726,36 +1726,6 @@ $(function() {
 
     //SIGNATURE
     //printRapport
-    var signaturePad = undefined;
-
-    $('.printRapport').click(function(){
-        if(signaturePad !== undefined) signaturePad.clear();
-        $('#signature').modal('toggle');
-    });
-
-    $('#signature').on('shown.bs.modal', function() {
-        /*var canvas = document.querySelector("#signature-pad");
-        canvas.width = $('.modal-body').width();
-        canvas.height = $('.modal-body').height();
-
-        if(signaturePad === undefined){
-            signaturePad = new SignaturePad(canvas, {
-              backgroundColor: 'rgba(255, 255, 255, 0)',
-              penColor: 'rgb(0, 0, 0)',
-              minWidth: 1,
-              maxWidth: 1,
-              dotSize: 1,
-              throttle: 50
-            });
-        }*/
-    });
-
-    //Valid signature
-    /*$('.modal-body button.printR').click(function(){
-       $.ajax({
-           url:''
-       })
-    });*/
 
     //GESTION DU SNIPPER
     $(document).on('click','.number-spinner button',function () {

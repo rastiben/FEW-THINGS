@@ -248,7 +248,7 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
                 $scope.date_inter = horaire.arrive_inter.format('DD/MM/YYYY');
                 $scope.arrive_inter = horaire.arrive_inter.format('HH:mm');
                 $scope.depart_inter = horaire.depart_inter.format('HH:mm');
-                $('#addTimeDiv .redactor-editor').last().text(horaire.comment);
+                $('#addTimeDiv .redactor-editor').last().html(horaire.comment);
                 $('#addTimeDiv .redactor-editor').last().attr('placeholder','');
             } else {
                 $scope.toUpdate = undefined;
@@ -287,38 +287,87 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
         });
     })
 
-    $scope.convertDataURIToBinary = function(dataURI) {
-      var BASE64_MARKER = ';base64,';
-      var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
-      var base64 = dataURI.substring(base64Index);
-      var raw = window.atob(base64);
-      var rawLength = raw.length;
-      var array = new Uint8Array(new ArrayBuffer(rawLength));
+    $scope.pdfjsframe = undefined;
+    $scope.displayPDF = function(pdf) {
+        //Ajout de l'iframe.
+        if($scope.pdfjsframe == undefined){
+            $('.modal-body').append('<iframe id="pdfFrame" src="./viewer.html#zoom=page-fit"></iframe>');
+        } else {
+            $('.modal-body #pdfFrame').replaceWith('<iframe id="pdfFrame" src="./viewer.html#zoom=page-fit"></iframe>');
+        }
 
-      for(var i = 0; i < rawLength; i++) {
-        array[i] = raw.charCodeAt(i);
-      }
-      return array;
+        $scope.pdfjsframe = document.getElementById('pdfFrame');
+        //Ajout du PDF dans la vue
+        $scope.pdfjsframe.onload = function() {
+            var pdfApp = $scope.pdfjsframe.contentWindow.PDFViewerApplication;
+            pdfApp.open(pdf);
+        };
+    }
+
+    $scope.removePDFView = function($event){
+        var button = $event.currentTarget;
+        if($(button).siblings().text() == "Valider")
+            $scope.cancelSignature($event);
+        else
+            $scope.cancelPDF();
+    }
+
+    $scope.createPDF = function(img=undefined){
+        rapportFactory.printRapport($scope.ticketID,$scope.rapportID,img).then(function(pdf){
+            $scope.displayPDF(pdf);
+        });
+    }
+
+    $scope.cancelPDF = function(){
+        $('#signature').modal('toggle');
+        $('#pdfFrame').remove();
+        $scope.pdfjsframe = undefined;
     }
 
     $scope.printRapport = function(){
-        //var img = document.getElementById("signature-pad").toDataURL();
-        //console.log(jpegUrl);
-        //$('body').append('<img src="'+jpegUrl+'"></img>');
-        //PDFJS.workerSrc = "./js/pdf.worker.js";
-        rapportFactory.printRapport($scope.ticketID,$scope.rapportID).then(function(pdf){
-            //var pdfAsArray = $scope.convertDataURIToBinary(pdfB);
-            //PDFJS.getDocument(pdfAsArray).then(function (pdf) {
-                $('.modal-body').append('<iframe id="pdfFrame" src="./viewer.html"></iframe>');
-                var pdfjsframe = document.getElementById('pdfFrame');
-            console.log(pdf);
-                // At the very least, wait until the frame is ready, e.g via onload.
-                pdfjsframe.onload = function() {
-                    //pdfjsframe.contentWindow.PDFViewerApplication);
-                    pdfjsframe.contentWindow.PDFViewerApplication.open(pdf);
-                };
-            //})
-        });
+        $('#signature').modal('toggle');
+        $scope.createPDF();
+    }
+
+    $scope.signaturePad = undefined;
+    $scope.displaySignature = function($event){
+        if($($event.currentTarget).text() == "Valider"){
+            $scope.validSignature($event,$scope.signaturePad.toDataURL());
+            //console.log($scope.signaturePad.toDataURL());
+        } else {
+            $($event.currentTarget).text('Valider');
+
+            var canvas = $("#signature-pad");
+            canvas.css('display','block');
+            canvas[0].width = $('.modal-body').width();
+            canvas[0].height = '300';
+
+
+            if($scope.signaturePad === undefined){
+                $scope.signaturePad = new SignaturePad(canvas[0], {
+                  backgroundColor: 'rgba(255, 255, 255, 0)',
+                  penColor: 'rgb(0, 0, 0)',
+                  minWidth: 1,
+                  maxWidth: 1,
+                  dotSize: 1,
+                  throttle: 50
+                });
+            }
+        }
+    }
+
+    $scope.cancelSignature = function($event){
+        $($event.currentTarget).siblings().text('Signer');
+        $("#signature-pad").css('display','none');
+        $scope.signaturePad = undefined
+    }
+
+    $scope.validSignature = function($event,img){
+        $($event.currentTarget).text('Signer');
+        $("#signature-pad").css('display','none');
+        $scope.signaturePad = undefined
+
+        $scope.createPDF(img);
     }
 
 }]);

@@ -37,11 +37,9 @@
 <?php
 
     $rapport = Rapport::getInstance()->getRapport($_GET['idR']);
-    $horaires = Rapport::getInstance()->getRapportsHoraires($_GET['idR']);
+    //$horaires = Rapport::getInstance()->getRapportsHoraires($_GET['idR']);
 
     //SIGNATURE
-    $data = (array)json_decode(trim(file_get_contents('php://input')));
-    $img = $data['img'];
     //$img = (array)json_decode(trim(file_get_contents('php://input')))['img'];
 
 ?>
@@ -150,41 +148,5 @@
     </tr>
     </tbody>
 </table>
-        <?php
-        foreach($horaires as $horaire){
-            ?>
-<table style="border-collapse: collapse;border-spacing: 0;border-right:1px solid black;margin-top:15px" width="100%">
-    <tbody>
-    <tr>
-        <th style="border:1px solid black;" >Libellé article et commentaires</th>
-        <th style="border:1px solid black;">quantité</th>
-        <th style="border:1px solid black;">P.U.</th>
-        <th style="border-bottom:1px solid black;border-left:1px solid black;border-top:1px solid black">Prix total</th>
-    </tr>
-    <tr>
-       <td style="border:1px solid black;">
-
-            <span>Note d'intervention du <?php $arriveInter = new DateTime($horaire['arrive_inter']);
-                    $departInter = new DateTime($horaire['depart_inter']);
-                    echo $arriveInter->format('d/m/Y'); ?></span><br>
-            <span>De : <?php echo $arriveInter->format('H:i') . ' à ' . $departInter->format('H:i')  ?></span>
-            <br><br>
-            <span>Commentaires : </span><br><br>
-            <?php echo $horaire['comment'] ?>
-            <br><br>
-       </td>
-        <td style="border:1px solid black;"></td>
-        <td style="border:1px solid black;"></td>
-        <td style="border:1px solid black;"></td>
-       </tr>
-    </tbody>
-</table>
-       <?php } ?>
-<div class="signature">
-    <h5>Cachet et signature du client le</h5>
-    <?php if(!empty($img)){ ?>
-    <img src="<?php echo $img ?>"></img>
-    <?php } ?>
-</div>
 </body>
 </html>
