@@ -106,60 +106,158 @@ class Ticket2PDF extends mPDFWithLocalImages
         $this->WriteHtml($html, 0, true, true);
 
         $horaires = Rapport::getInstance()->getRapportsHoraires($_GET['idR']);
-        foreach($horaires as $horaire){
+        foreach($horaires as $key=>$horaire){
 
-$arriveInter = new DateTime($horaire['arrive_inter']);
-$departInter = new DateTime($horaire['depart_inter']);
+        $arriveInter = new DateTime($horaire['arrive_inter']);
+        $departInter = new DateTime($horaire['depart_inter']);
+        $comment = "";
+        //Découpage en nouvelle ligne
 
-    $html = '<table autosize="1" style="page-break-inside: auto;border-collapse: collapse;border-spacing: 0;border-right:1px solid black;margin-top:15px" width="100%">
-       <thead>
-        <tr>
-            <th width="70%" style="border:1px solid black;" >Libellé article et commentaires</th>
-            <th width="10%" style="border:1px solid black;">quantité</th>
-            <th width="10%" style="border:1px solid black;">P.U.</th>
-            <th width="10%" style="border-bottom:1px solid black;border-left:1px solid black;border-top:1px solid black">Prix total</th>
-        </tr>
-       </thead>
-        <tbody>
-        <tr>
-       <td style="border:1px solid black;border-bottom:none">
+        $horaireDecouper = "";
+        $i = 0;
+        while($i < strlen($horaire['comment'])){
+            if(strlen(substr($horaire['comment'],$i,strpos($horaire['comment'],'<br')))){
 
-            <span>Note d\'intervention du'. $arriveInter->format('d/m/Y') .'</span><br>
-            <span>De : '. $arriveInter->format('H:i') . ' à ' . $departInter->format('H:i') .'</span>
-            <br><br>
-            <span>Commentaires : </span><br><br>
-                '.$horaire['comment'].'
-            <br><br>
-       </td>
-        <td style="border:1px solid black;border-bottom:none"></td>
-        <td style="border:1px solid black;border-bottom:none"></td>
-        <td style="border:1px solid black;border-bottom:none"></td>
-       </tr></tbody></table>';
+            } else {
 
-        $this->WriteHtml($html, 0, true, true);
+            }
+        }
 
-        $percent = ($this->y * 100) / $this->h;
-        $manquant = 100-$percent;
+        //$horaire['comment'] = $str = chunk_split($horaire['comment'], 70, '<br>');
+        //$horaire['comment'] = wordwrap($horaire['comment'], 70, "<br>");
+        //$array = preg_split('/<br[^>]*>/i',$horaire['comment']);
 
-        //$height = ($this->h - $this->y) * (($manquant*4)/100);
-        $height = ($this->h - $this->y) + (((100-$percent)*$this->y)/$percent);
-        //position:absolute;bottom:220px;width:1000px
-        $html = "<div style='position:absolute;left:37.8px;right:37.8px;border:1px solid black;border-top:none'>
-        TOTO
-        </div>";
-        /*$html = '<table autosize="1" style="page-break-inside: auto;border-collapse: collapse;border-spacing: 0;border-right:1px solid black" width="100%">
-        <tbody>
-        <tr>
-            <td style="border:1px solid black;border-top:none;width:70%;padding:'.$height.'px">
-            '.$height.' '.(((100-$percent)*$this->y)/$percent).'</td>
-            <td style="border:1px solid black;border-top:none;width:10%"></td>
-            <td style="border:1px solid black;border-top:none;width:10%"></td>
-            <td style="border:1px solid black;border-top:none;width:10%"></td>
-       </tr></tbody></table>';*/
+        $premierPassage = true;
+        //$comment .= "<tr><td>".htmlspecialchars($horaire['comment'])."</td></tr>";
+        $cpt=0;
+        foreach($array as $nb=>$line){
+            $cpt += 1;
 
-        $this->WriteHtml($html, 0, true, true);
+            $comment .= '<tr>
+                    <td style="border:1px solid black;border-top:none;border-bottom:none" >'.$line.'</td>
+                    <td style="border:1px solid black;border-top:none;border-bottom:none"></td>
+                    <td style="border:1px solid black;border-top:none;border-bottom:none"></td>
+                    <td style="border-left:1px solid black"></td>
+                </tr>';
+            if(($cpt+1)%45 == 0 || ($premierPassage && ($cpt+1)%28 == 0)){
+                $cpt = 0;
+                $html = '<table autosize="1" style="page-break-inside: auto;border-collapse: collapse;border-spacing: 0;border-right:1px solid black;margin-top:15px;table-layout: fixed;" width="100%">
+                   <thead>
+                    <tr>
+                        <th width="70%" style="border:1px solid black;" >Libellé article et commentaires</th>
+                        <th width="10%" style="border:1px solid black;">quantité</th>
+                        <th width="10%" style="border:1px solid black;">P.U.</th>
+                        <th width="10%" style="border-bottom:1px solid black;border-left:1px solid black;border-top:1px solid black">Prix total</th>
+                    </tr>
+                   </thead>
+                   <tbody>
+                   <tr>
+                        <td style="border-left:1px solid black;border-right:1px solid black">';
+                if($premierPassage){
+                    $html .= 'Note d\'intervention du '. $arriveInter->format('d/m/Y') .'<br>
+                        De : '. $arriveInter->format('H:i') . ' à ' . $departInter->format('H:i') .'
+                        <br><br>
+                        Commentaires : <br><br>';
+                }
 
+                $html .= '</td>
+                        <td style="border-left:1px solid black;border-right:1px solid black"></td>
+                        <td style="border-left:1px solid black;border-right:1px solid black"></td>
+                        <td style="border-left:1px solid black;border-right:1px solid black"></td>
+                   </tr>
+                   '.$comment.'
+                   </tbody>
+                </table>';
+                $this->WriteHtml($html, 0, true, true);
 
+                $manquant = (100*$this->y)/$this->h;
+
+                if($this->y > 230){
+                    $html = "<div style='position:absolute;top:".$manquant."%;bottom:40px;left:37.8px;right:259.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                    <div style='position:absolute;top:".$manquant."%;bottom:40px;left:555.4px;right:185.7px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                    <div style='position:absolute;top:".$manquant."%;bottom:40px;left:629.4px;right:111.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                    <div style='position:absolute;top:".$manquant."%;bottom:40px;left:703.3px;right:37.8px;border:1px solid black;border-top:none;'>&nbsp;</div>";
+                    $this->WriteHtml($html, 0, true, true);
+                    if($premierPassage == false) $this->AddPage();
+                } else {
+                    $html = "<div style='position:absolute;top:".$manquant."%;bottom:210px;left:37.8px;right:259.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                    <div style='position:absolute;top:".$manquant."%;bottom:210px;left:555.4px;right:185.7px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                    <div style='position:absolute;top:".$manquant."%;bottom:210px;left:629.4px;right:111.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                    <div style='position:absolute;top:".$manquant."%;bottom:210px;left:703.3px;right:37.8px;border:1px solid black;border-top:none;'>&nbsp;</div>";
+                    $this->WriteHtml($html, 0, true, true);
+                }
+
+                $premierPassage = false;
+                $comment = "";
+            }
+            //$this->WriteHtml($html, 0, true, true);
+        }
+
+        if(count($array) < 40){
+            $html = '<table autosize="1" style="page-break-inside: auto;border-collapse: collapse;border-spacing: 0;border-right:1px solid black;margin-top:15px" width="100%">
+                   <thead>
+                    <tr>
+                        <th width="70%" style="border:1px solid black;" >Libellé article et commentaires</th>
+                        <th width="10%" style="border:1px solid black;">quantité</th>
+                        <th width="10%" style="border:1px solid black;">P.U.</th>
+                        <th width="10%" style="border-bottom:1px solid black;border-left:1px solid black;border-top:1px solid black">Prix total</th>
+                    </tr>
+                   </thead>
+                   <tbody>
+                   <tr>
+                        <td style="border-left:1px solid black;border-right:1px solid black">Note d\'intervention du '. $arriveInter->format('d/m/Y') .'<br>
+                        De : '. $arriveInter->format('H:i') . ' à ' . $departInter->format('H:i') .'
+                        <br><br>
+                        Commentaires : <br><br></td>
+                        <td style="border-left:1px solid black;border-right:1px solid black"></td>
+                        <td style="border-left:1px solid black;border-right:1px solid black"></td>
+                        <td style="border-left:1px solid black;border-right:1px solid black"></td>
+                   </tr>
+                   '.$comment.'
+                   </tbody>
+                </table>';
+            //$html .= $key." ".(count($horaires)-1)." ".count($array);
+            $this->WriteHtml($html, 0, true, true);
+            if($key == (count($horaires)-1)){
+                $manquant = (100*$this->y)/$this->h;
+                if(count($array) <= 25){
+                    $html = "<div style='position:absolute;top:".$manquant."%;bottom:210px;left:37.8px;right:259.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                    <div style='position:absolute;top:".$manquant."%;bottom:210px;left:555.4px;right:185.7px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                    <div style='position:absolute;top:".$manquant."%;bottom:210px;left:629.4px;right:111.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                    <div style='position:absolute;top:".$manquant."%;bottom:210px;left:703.3px;right:37.8px;border:1px solid black;border-top:none;'>&nbsp;</div>";
+                    $this->WriteHtml($html, 0, true, true);
+                }
+
+            } else if($key < count($horaires)-1) {
+
+                $manquant = (100*$this->y)/$this->h;
+                $html = "<div style='position:absolute;top:".$manquant."%;bottom:40px;left:37.8px;right:259.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                <div style='position:absolute;top:".$manquant."%;bottom:40px;left:555.4px;right:185.7px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                <div style='position:absolute;top:".$manquant."%;bottom:40px;left:629.4px;right:111.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                <div style='position:absolute;top:".$manquant."%;bottom:40px;left:703.3px;right:37.8px;border:1px solid black;border-top:none;'>&nbsp;</div>";
+                $this->WriteHtml($html, 0, true, true);
+
+                $this->AddPage();
+
+            } else {
+
+                $manquant = (100*$this->y)/$this->h;
+                $borderTop = "";
+                if($this->y > 230){
+                    $borderTop = "border-top:1px solid black;";
+                    $this->AddPage();
+                } else {
+                    $borderTop = "border-top:none";
+                }
+
+                $html = "<div style='position:absolute;top:37.8px;bottom:210px;left:37.8px;right:259.6px;border:1px solid black;".$borderTop."'>&nbsp;</div>
+                <div style='position:absolute;top:37.8px;bottom:210px;left:555.4px;right:185.7px;border:1px solid black;".$borderTop."'>&nbsp;</div>
+                <div style='position:absolute;top:37.8px;bottom:210px;left:629.4px;right:111.6px;border:1px solid black;".$borderTop."'>&nbsp;</div>
+                <div style='position:absolute;top:37.8px;bottom:210px;left:703.3px;right:37.8px;border:1px solid black;".$borderTop."'>&nbsp;</div>";
+                $this->WriteHtml($html, 0, true, true);
+
+            }
+        }
         //$this->WriteHtml("<p>".$this->h." ".$this->y." ".$height."</p>", 0, true, true);
     }
 
@@ -170,6 +268,7 @@ $departInter = new DateTime($horaire['depart_inter']);
             $html .= '<img src="'. $img . '"></img>';
         }
         $html .= '</div>';
+        //$this->WriteHtml($this->page, 0, true, true);
         $this->SetHTMLFooter($html);
     }
 }

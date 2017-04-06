@@ -3541,6 +3541,10 @@ span.avatar{
     box-shadow: 2px 2px 2px 1px rgba(189,189,189,1);
 }
 
+.commentContent span{
+    word-break: break-all;
+}
+
 .comment{
     margin-bottom: 15px;
 }
