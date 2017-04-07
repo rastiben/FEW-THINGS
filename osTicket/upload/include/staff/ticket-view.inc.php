@@ -712,7 +712,7 @@ if($ticket->isOverdue())
                          <div class="comment">
                              <div class="titleComment">
                                 <div class="green"></div>
-                                <img class="modifyInter" src="../assets/default/images/edit.png" ng_click="showUpdate($index,$parent.$index,horaire.id)" id="{{horaire.id}}"/>
+                                <img class="modifyInter" src="../assets/default/images/edit.png" ng_click="showUpdate($parent.$index,$index,horaire.id)" id="{{horaire.id}}"/>
                                  <div class="commentTitle"><p>Intervention du {{horaire.arrive_inter | mFormat:'dddd DD MMMM YYYY' | capitalize}}</p></div>
                              </div>
                              <div class="commentContent">

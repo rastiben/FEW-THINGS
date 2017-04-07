@@ -106,6 +106,7 @@ class Ticket2PDF extends mPDFWithLocalImages
         $this->WriteHtml($html, 0, true, true);
 
         $horaires = Rapport::getInstance()->getRapportsHoraires($_GET['idR']);
+
         foreach($horaires as $key=>$horaire){
 
         $arriveInter = new DateTime($horaire['arrive_inter']);
@@ -113,24 +114,32 @@ class Ticket2PDF extends mPDFWithLocalImages
         $comment = "";
         //Découpage en nouvelle ligne
 
-        $horaireDecouper = "";
-        $i = 0;
-        while($i < strlen($horaire['comment'])){
-            if(strlen(substr($horaire['comment'],$i,strpos($horaire['comment'],'<br')))){
-
+        $content = $horaire['comment'];
+        $newcontent = preg_replace("/<p[^>]*?>/", "", $content);
+        $newcontent = str_replace("</p>", "<br>", $newcontent);
+        $array = preg_split('/<br[^>]*>/i',$newcontent);
+        //$this->WriteHtml(count($array), 0, true, true);
+        $newarray = [];
+        foreach($array as $line){
+            $temp = [];
+            if (strlen($line) >= 70){
+                //$this->WriteHtml("titi", 0, true, true);
+                $temptext = wordwrap($line, 70, "<br>");
+                $temp = preg_split('/<br[^>]*>/i',$temptext);
+                foreach($temp as $templine){
+                    array_push($newarray,$templine);
+                }
             } else {
-
+                array_push($newarray,$line);
             }
         }
 
-        //$horaire['comment'] = $str = chunk_split($horaire['comment'], 70, '<br>');
-        //$horaire['comment'] = wordwrap($horaire['comment'], 70, "<br>");
-        //$array = preg_split('/<br[^>]*>/i',$horaire['comment']);
 
+        //$this->WriteHtml(print_r($newarray,true), 0, true, true);
         $premierPassage = true;
-        //$comment .= "<tr><td>".htmlspecialchars($horaire['comment'])."</td></tr>";
+
         $cpt=0;
-        foreach($array as $nb=>$line){
+        foreach($newarray as $nb=>$line){
             $cpt += 1;
 
             $comment .= '<tr>
@@ -141,7 +150,7 @@ class Ticket2PDF extends mPDFWithLocalImages
                 </tr>';
             if(($cpt+1)%45 == 0 || ($premierPassage && ($cpt+1)%28 == 0)){
                 $cpt = 0;
-                $html = '<table autosize="1" style="page-break-inside: auto;border-collapse: collapse;border-spacing: 0;border-right:1px solid black;margin-top:15px;table-layout: fixed;" width="100%">
+                $html = '<table autosize="1" style="page-break-inside: auto;border-collapse: collapse;border-spacing: 0;border-right:1px solid black;margin-top:15px;overflow:wrap" width="100%">
                    <thead>
                     <tr>
                         <th width="70%" style="border:1px solid black;" >Libellé article et commentaires</th>
@@ -154,10 +163,10 @@ class Ticket2PDF extends mPDFWithLocalImages
                    <tr>
                         <td style="border-left:1px solid black;border-right:1px solid black">';
                 if($premierPassage){
-                    $html .= 'Note d\'intervention du '. $arriveInter->format('d/m/Y') .'<br>
+                    $html .= '<b>Note d\'intervention du '. $arriveInter->format('d/m/Y') .'<br>
                         De : '. $arriveInter->format('H:i') . ' à ' . $departInter->format('H:i') .'
                         <br><br>
-                        Commentaires : <br><br>';
+                        Commentaires : <br><br></b>';
                 }
 
                 $html .= '</td>
@@ -180,11 +189,19 @@ class Ticket2PDF extends mPDFWithLocalImages
                     $this->WriteHtml($html, 0, true, true);
                     if($premierPassage == false) $this->AddPage();
                 } else {
-                    $html = "<div style='position:absolute;top:".$manquant."%;bottom:210px;left:37.8px;right:259.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
-                    <div style='position:absolute;top:".$manquant."%;bottom:210px;left:555.4px;right:185.7px;border:1px solid black;border-top:none;'>&nbsp;</div>
-                    <div style='position:absolute;top:".$manquant."%;bottom:210px;left:629.4px;right:111.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
-                    <div style='position:absolute;top:".$manquant."%;bottom:210px;left:703.3px;right:37.8px;border:1px solid black;border-top:none;'>&nbsp;</div>";
+                    if(count($newarray) == 1){
+                        $html = "<div style='position:absolute;top:".$manquant."%;bottom:210px;left:37.8px;right:259.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                        <div style='position:absolute;top:".$manquant."%;bottom:210px;left:555.4px;right:185.7px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                        <div style='position:absolute;top:".$manquant."%;bottom:210px;left:629.4px;right:111.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                        <div style='position:absolute;top:".$manquant."%;bottom:210px;left:703.3px;right:37.8px;border:1px solid black;border-top:none;'>&nbsp;</div>";
+                    } else {
+                        $html = "<div style='position:absolute;top:".$manquant."%;bottom:40px;left:37.8px;right:259.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                        <div style='position:absolute;top:".$manquant."%;bottom:40px;left:555.4px;right:185.7px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                        <div style='position:absolute;top:".$manquant."%;bottom:40px;left:629.4px;right:111.6px;border:1px solid black;border-top:none;'>&nbsp;</div>
+                        <div style='position:absolute;top:".$manquant."%;bottom:40px;left:703.3px;right:37.8px;border:1px solid black;border-top:none;'>&nbsp;</div>";
+                    }
                     $this->WriteHtml($html, 0, true, true);
+
                 }
 
                 $premierPassage = false;
@@ -192,9 +209,8 @@ class Ticket2PDF extends mPDFWithLocalImages
             }
             //$this->WriteHtml($html, 0, true, true);
         }
-
-        if(count($array) < 40){
-            $html = '<table autosize="1" style="page-break-inside: auto;border-collapse: collapse;border-spacing: 0;border-right:1px solid black;margin-top:15px" width="100%">
+        if($cpt != 0 && ($cpt+1) < 45 || ($premierPassage && ($cpt+1) < 28)){
+            $html = '<table autosize="1" style="page-break-inside: auto;border-collapse: collapse;border-spacing: 0;border-right:1px solid black;margin-top:15px;overflow:wrap" width="100%">
                    <thead>
                     <tr>
                         <th width="70%" style="border:1px solid black;" >Libellé article et commentaires</th>
@@ -205,10 +221,15 @@ class Ticket2PDF extends mPDFWithLocalImages
                    </thead>
                    <tbody>
                    <tr>
-                        <td style="border-left:1px solid black;border-right:1px solid black">Note d\'intervention du '. $arriveInter->format('d/m/Y') .'<br>
+                        <td style="border-left:1px solid black;border-right:1px solid black">';
+                if($premierPassage){
+                    $html .= '<b>Note d\'intervention du '. $arriveInter->format('d/m/Y') .'<br>
                         De : '. $arriveInter->format('H:i') . ' à ' . $departInter->format('H:i') .'
                         <br><br>
-                        Commentaires : <br><br></td>
+                        Commentaires : <br><br></b>';
+                }
+
+                $html .= '</td>
                         <td style="border-left:1px solid black;border-right:1px solid black"></td>
                         <td style="border-left:1px solid black;border-right:1px solid black"></td>
                         <td style="border-left:1px solid black;border-right:1px solid black"></td>
