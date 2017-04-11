@@ -336,6 +336,24 @@ if($ticket->isOverdue())
         </div>
     </div>
 
+    <div class="modal fade" id="signatureFs" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Impression de la fiche de suivi</h4>
+          </div>
+          <div class="modal-body">
+                <canvas id="signature-pad2"></canvas>
+          </div>
+          <div class="modal-footer">
+            <button type="button" ng-click="removePDFView($event)" class="btn btn-default">Annuler</button>
+            <button type="button" ng-click="displaySignature($event)" class="btn btn-primary">Signer</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
     <div id="ifRepa" class="col-md-12" ng-show="showRepa">
 
         <div class="bubble bubble-repa col-md-12">
@@ -448,7 +466,7 @@ if($ticket->isOverdue())
             <div class="col-md-12 text-right" style="padding: 0px;">
                 <div class="col-md-12" style="padding: 0px;">
                     <button ng-click="addFicheSuivi('repa')" class="btn btn-success">{{buttonFicheSuivi}}</button>
-                    <button ng-click="printRepa()" class="btn btn-info"><span class="glyphicon glyphicon-print"></span></button>
+                    <button ng-click="printFicheSuivi()" class="btn btn-info"><span class="glyphicon glyphicon-print"></span></a></button>
                 </div>
             </div>
     </div>
@@ -661,7 +679,7 @@ if($ticket->isOverdue())
             <button ng-click="unShowUpdate($event)" class="cancel pending" type="cancel" style="float:right">Annuler</button>
             <input ng-click="insertOrUpdateHoraire()" class="horaire add save pending" type="submit" name="addRapport" style="float:right">
         </div>
-        <div ng-repeat="rapport in rapports" class="eachRapport col-md-12 col-lg-12 col-xs-12" ng-class="$first ? 'active' : ''" id="{{$index}}">
+        <div ng-repeat="rapport in rapports" style="float:none" class="eachRapport col-md-12 col-lg-12 col-xs-12" ng-class="$first ? 'active' : ''" id="{{$index}}">
 
             <div class="col-md-12 col-xs-12 rapport">
                <div class="col-lg-4 col-md-12 col-xs-12" id="borderIdentity">
@@ -1592,6 +1610,9 @@ $(function() {
         });
 
         $(window).resize(function(){
+            if($(this).width() <= 992){
+                $(".ticket_right").css('height','auto');
+            }
             /*if($('.fixed-right').css('position') == "fixed"){
                 $('.fixed-right').css('height',$('.ticket_left').height());
             } else {
@@ -1599,24 +1620,19 @@ $(function() {
             }*/
         });
 
+        var timeout;
         $(window).scroll(function() {
-            //console.log($(document).scrollTop());
-
-            if($('.fixed-right').css('display') != 'none' && $(document).width() > 974){
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                if($('.fixed-right').css('display') != 'none' && $(document).width() > 974){
                 $('.ticket_right').height($('.ticket_left').height());
 
-                /*Pourcentage de descente de la sticky bar par rapport a la taille du flux du ticket*/
-                var st = $(this).scrollTop();
-                var wh = $('.fixed-right').height() + ($(document).height()-$('.ticket_left').height());
-                var perc = (st*100)/wh;
+                var tlHeight = $('.ticket_left').offset().top + $('.ticket_left').height();
+                var trHeight = $(this).scrollTop() + $('.fixed-right').height() + 90;
 
-                var st2 = $('.ticket_left').height();
-                var wh2 = $(document).height();
-                var perc2 = (st2*100)/wh2;
-
-                if(perc >= perc2){
+                if(trHeight >= tlHeight){
                     $('.fixed-right').css('position','absolute');
-                    $('.fixed-right').css('bottom','0px');
+                    $('.fixed-right').css('bottom','30px');
                     $('.fixed-right').css('top','initial');
                     $('.fixed-right').css('width','100%');
                     $('.fixed-right').css('height','auto');
@@ -1634,6 +1650,7 @@ $(function() {
                     $('.fixed-right').css('height','auto');
                 }
             }
+            }, 10);
         });
 
         //$(".fixed-right").stick_in_parent();

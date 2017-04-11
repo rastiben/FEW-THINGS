@@ -9,6 +9,8 @@ require_once(INCLUDE_DIR . 'class.stats.php');
 require_once(INCLUDE_DIR . 'class.contrat.php');
 require_once(INCLUDE_DIR . 'class.stock.php');
 require_once(INCLUDE_DIR . 'class.docSage.php');
+require_once(INCLUDE_DIR . 'class.pdf.php');
+
 //METHOD
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -36,7 +38,9 @@ $routes = array
     'contrat' => array('contrat',':orgId'),
     'stock' => array('stock',':agent'),
     'stockSN' => array('stock','sn',':reference',':agent'),
-    'docSage' => array('docSage',':action')
+    'docSage' => array('docSage',':action'),
+    'print' => array('print',':doc',':id'),
+    'printNoId' => array('print',':doc')
 );
 
 function dispatcher($url, $routes)
@@ -171,5 +175,20 @@ if(strstr($url['path'],"org")){
             docSage::createDocument($org,$stock,$lines);
         }
     }
+} else if(strstr($url['path'],"print")){
+    if($url['parameters']['doc'] == 'fs'){
+        //impression de la fiche de suivi
+        $id = $url['parameters']['id'];
+        $pdf = new Ticket2PDF(null, 'Letter', null, "fs", $id);
+        $output = $pdf->Output($name, 'S');
+        $pdfBase64 = base64_encode($output);
+        echo 'data:application/pdf;base64,' . $pdfBase64;
+    } else if($url['parameters']['doc'] == 'atelier'){
+        $pdf = new Ticket2PDF(null, 'A3-L', null, "atelier");
+        $output = $pdf->Output($name, 'S');
+        $pdfBase64 = base64_encode($output);
+        echo 'data:application/pdf;base64,' . $pdfBase64;
+    }
 }
+
 ?>

@@ -291,9 +291,9 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
     $scope.displayPDF = function(pdf) {
         //Ajout de l'iframe.
         if($scope.pdfjsframe == undefined){
-            $('.modal-body').append('<iframe id="pdfFrame" src="./viewer.html#zoom=page-fit"></iframe>');
+            $('#signature .modal-body').append('<iframe id="pdfFrame" src="./viewer.html#zoom=page-fit"></iframe>');
         } else {
-            $('.modal-body #pdfFrame').replaceWith('<iframe id="pdfFrame" src="./viewer.html#zoom=page-fit"></iframe>');
+            $('#signature .modal-body #pdfFrame').replaceWith('<iframe id="pdfFrame" src="./viewer.html#zoom=page-fit"></iframe>');
         }
 
         $scope.pdfjsframe = document.getElementById('pdfFrame');
@@ -339,7 +339,7 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
 
             var canvas = $("#signature-pad");
             canvas.css('display','block');
-            canvas[0].width = $('.modal-body').width();
+            canvas[0].width = $('#signature .modal-body').width();
             canvas[0].height = '300';
 
 

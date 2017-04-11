@@ -444,6 +444,17 @@ app.factory('atelierFactory',['$http',function($http){
                             //resolve the promise as the data
                             return result.data;
                         });
+       },
+       printFS : function(ticketID,data,img=undefined){
+            return $http({method: 'POST',
+                url: './ajaxs.php/print/fs/'+ticketID,
+                data: {img:img,
+                       data:data},
+                headers: {'Content-Type': 'application/json'}
+            })
+            .then(function(data){
+                return data.data;
+            });
        }
 
    };
@@ -651,6 +662,109 @@ app.controller("atelierCtrl",["$scope","atelierFactory", function($scope,atelier
                 });
             }
         });
+    }
+
+    $scope.pdfjsframe = undefined;
+    $scope.displayPDF = function(pdf) {
+        //Ajout de l'iframe.
+        if($scope.pdfjsframe == undefined){
+            $('#signatureFs .modal-body').append('<iframe id="pdfFrame" src="./viewer.html#zoom=page-fit"></iframe>');
+        } else {
+            $('#signatureFs .modal-body #pdfFrame').replaceWith('<iframe id="pdfFrame" src="./viewer.html#zoom=page-fit"></iframe>');
+        }
+
+        $scope.pdfjsframe = document.getElementById('pdfFrame');
+        //Ajout du PDF dans la vue
+        $scope.pdfjsframe.onload = function() {
+            var pdfApp = $scope.pdfjsframe.contentWindow.PDFViewerApplication;
+            pdfApp.open(pdf);
+        };
+    }
+
+    $scope.removePDFView = function($event){
+        var button = $event.currentTarget;
+        if($(button).siblings().text() == "Valider")
+            $scope.cancelSignature($event);
+        else
+            $scope.cancelPDF();
+    }
+
+    $scope.createPDF = function(img=undefined){
+
+        //id_contenu,marque,model,sn,vd,os,motDePasse,login,office,autreSoft
+        var data = {org:$scope.org
+                    ,contact:$scope.contact
+                    ,dateOuverture:$scope.dateOuverture
+                    ,tech:$scope.tech
+                    ,description:$scope.description
+                    ,id_contenu:$scope.idRepa
+                    ,marque:$scope.marque
+                    ,model:$scope.model
+                    ,sn:$scope.sn
+                    ,vd:$scope.vd
+                    ,os:$scope.os
+                    ,motDePasse:$scope.motDePasse
+                    ,login:$scope.login
+                    ,office:$scope.office
+                    ,autreSoft:$scope.autreSoft
+                    ,type: $scope.type
+                    ,accessoire: $scope.accessoire};
+
+        atelierFactory.printFS($scope.ticketID,data,img).then(function(pdf){
+            $scope.displayPDF(pdf);
+        });
+    }
+
+    $scope.cancelPDF = function(){
+        $('#signatureFs').modal('toggle');
+        $('#pdfFrame').remove();
+        $scope.pdfjsframe = undefined;
+    }
+
+    $scope.printFicheSuivi = function(){
+        $('#signatureFs').modal('toggle');
+        $scope.createPDF();
+    }
+
+    $scope.signaturePad = undefined;
+    $scope.displaySignature = function($event){
+        if($($event.currentTarget).text() == "Valider"){
+            $scope.validSignature($event,$scope.signaturePad.toDataURL());
+            //console.log($scope.signaturePad.toDataURL());
+        } else {
+            $($event.currentTarget).text('Valider');
+
+            var canvas = $("#signature-pad2");
+            canvas.css('display','block');
+            canvas[0].width = $('#signatureFs .modal-body').width();
+            canvas[0].height = '300';
+
+
+            if($scope.signaturePad === undefined){
+                $scope.signaturePad = new SignaturePad(canvas[0], {
+                  backgroundColor: 'rgba(255, 255, 255, 0)',
+                  penColor: 'rgb(0, 0, 0)',
+                  minWidth: 1,
+                  maxWidth: 1,
+                  dotSize: 1,
+                  throttle: 50
+                });
+            }
+        }
+    }
+
+    $scope.cancelSignature = function($event){
+        $($event.currentTarget).siblings().text('Signer');
+        $("#signature-pad2").css('display','none');
+        $scope.signaturePad = undefined
+    }
+
+    $scope.validSignature = function($event,img){
+        $($event.currentTarget).text('Signer');
+        $("#signature-pad2").css('display','none');
+        $scope.signaturePad = undefined
+
+        $scope.createPDF(img);
     }
 
 }]);

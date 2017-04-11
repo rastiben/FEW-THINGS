@@ -3635,12 +3635,12 @@ input[type="radio"]{
     height: auto;
 }
 
-/*@media (min-width:992px){
+@media (max-width:992px){
     .fixed-right{
-        position: fixed;
-        overflow-y: scroll;
+        padding-left: 30px;
+        padding-right: 30px;
     }
-}*/
+}
 
 .addRapport{
     text-align: center;

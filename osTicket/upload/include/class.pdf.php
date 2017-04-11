@@ -56,7 +56,8 @@ class Ticket2PDF extends mPDFWithLocalImages
 
     var $ticket = null;
 
-	function __construct($ticket, $psize='Letter', $notes=false,$rapport) {
+	function __construct($ticket, $psize='Letter', $notes=false, $document, $id=null) {
+
         global $thisstaff;
 
         $this->ticket = $ticket;
@@ -64,8 +65,12 @@ class Ticket2PDF extends mPDFWithLocalImages
 
         parent::__construct('', $psize);
 
-        if($rapport)
+        if($document == "rapport")
             $this->print_rapport();
+        else if($document == "fs")
+            $this->print_fiche_suivi($id);
+        else if($document == "atelier")
+            $this->print_atelier();
         else
             $this->_print();
 	}
@@ -90,6 +95,116 @@ class Ticket2PDF extends mPDFWithLocalImages
         $html = ob_get_clean();
 
         $this->WriteHtml($html, 0, true, true);
+    }
+
+    function print_atelier(){
+        require_once(SCP_DIR.'Request/Atelier.php');
+
+        $atelier = Atelier::getInstance();
+        $planches = $atelier->getPlanches();
+
+        ob_start();
+            include STAFFINC_DIR.'templates/atelier-print.tmpl.php';
+        $html = ob_get_clean();
+
+        //http://localhost:8080/osTicket/upload/assets/atelier/atelier.png
+
+        $this->WriteHtml($html, 0, true, true);
+    }
+
+    function print_fiche_suivi($id) {
+        global $thisstaff, $thisclient, $cfg;
+
+        //if(!($ticket=$this->getTicket()))
+            //return;
+
+        ob_start();
+            include STAFFINC_DIR.'templates/fs-print.tmpl.php';
+        $html = ob_get_clean();
+
+        $this->WriteHtml($html, 0, true, true);
+
+        $html = '<table width="100%" style="margin-bottom:50px">
+        <tbody>
+            <tr>
+                <td style="border-right:2px solid black;" width="50%" style="font-size:40px">
+                <img height="100" style="float:right" src=' . (INCLUDE_DIR . 'fpdf/logo_OK.jpg').' class="logo"/><br>
+                FICHE DE SUIVI</td>
+                <td style="border-left:2px solid black;padding-left:15px;vertical-align:top" width="50%">'.$field->org.'<br>
+                '.$field->contact->address.'<br>
+                '.$field->contact->tel.'</td>
+            </tr>
+        </tbody>
+        </table>
+
+
+        <table width="100%" style="border:1px solid black;border-collapse: collapse;margin-bottom:50px">
+           <thead>
+              <tr>
+               <th style="background:gray;border:1px solid black;" width="34%">Date d\'ouverture</th>
+               <th style="background:gray;border:1px solid black;" width="34%">Technicien</th>
+               <th style="background:gray;border:1px solid black;" width="34%">Type</th>
+               </tr>
+           </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align:center;border:1px solid black;">'. strftime("%d/%m/%Y", strtotime( $field->dateOuverture)) .'</td>
+                    <td style="text-align:center;border:1px solid black;">'.$field->tech->name.'</td>
+                    <td style="text-align:center;border:1px solid black;">'.$field->type.'</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <h2 style="text-align:center">Identification du poste (VD)</h2>
+
+        <table width="100%" style="border:1px solid black;border-collapse: collapse;margin-bottom:50px">
+            <tbody>
+                <tr>
+                    <td width="50%" style="vertical-align:top;border:1px solid black;">
+                        <p>'.$field->marque.'</p>
+                        <p>'.$field->model.'</p>
+                        <p>'.$field->sn.'</p>
+                    </td>
+                    <td width="50%" style="vertical-align:top;border:1px solid black;">
+                        <p>'.$field->os.'</p>
+                        <p>'.$field->motDePasse.' '.$field->login.'</p>
+                        <p>'.$field->office.'</p>
+                        <p>'.$field->autreSoft.'</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 style="text-align:center">Description du problème</h2>
+
+        <table width="100%" style="border:1px solid black;border-collapse: collapse;border-bottom:none">
+            <tbody>
+                <tr>
+                    <td style="vertical-align:top;border:1px solid black;border-bottom:none">
+                        '.$field->description.'
+                    </td>
+                </tr>
+            </tbody>
+        </table>';
+
+        $this->WriteHtml($html, 0, true, true);
+
+        $manquant = (100*$this->y)/$this->h;
+        $html = "<div style='position:absolute;top:".$manquant."%;bottom:250px;left:37.8px;right:37.8px;border:1px solid black;border-top:none;'>&nbsp;</div>";
+
+        $this->WriteHtml($html, 0, true, true);
+
+        $manquant = (100*$this->y)/$this->h;
+        $html = "<div style='position: absolute;top:805px;bottom: 210px;left:37.8px;right:37.8px;border:1px solid black;'>Accessoires : ".$field->accessoire."</div>";
+
+        $this->WriteHtml($html, 0, true, true);
+
+        $html = '<div class="signature"><h5>Cachet et signature du client le</h5>
+        ' . ( empty($img) ? '' : '<img src="'. $img . '"></img>' ) . '
+        </div>';
+
+        $this->SetHTMLFooter($html);
+
     }
 
     function print_rapport(){

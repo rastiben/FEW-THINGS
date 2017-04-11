@@ -56,7 +56,7 @@ $queue_columns = array(
    </div>
 
    <!--MODAL-->
-<div class="modal fade" id="fichesModal" data_planche="" data_id_contenu="" data_staff="<?php echo $thisstaff->getId() ?>">
+<!--<div class="modal fade" id="fichesModal" data_planche="" data_id_contenu="" data_staff="<?php echo $thisstaff->getId() ?>">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -70,7 +70,7 @@ $queue_columns = array(
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
    <script>
        $(function(){
@@ -154,6 +154,25 @@ $queue_columns = array(
         <tbody> </tbody>
         <tfoot> </tfoot>
     </table>
+
+    <div class="modal fade" id="signatureFs" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Impression de la fiche de suivi</h4>
+          </div>
+          <div class="modal-body">
+                <canvas id="signature-pad"></canvas>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="removePDFView" class="btn btn-default">Fermer</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+    <button class="printAtelier">Imprimer</button>
 
 <script>
     $(document).ready(function(){
@@ -253,6 +272,44 @@ $queue_columns = array(
             }
         });
     }
+
+
+    //IMPRESSION
+    var pdfjsframe = undefined;
+    var displayPDF = function(pdf) {
+        //Ajout de l'iframe.
+
+        if(pdfjsframe == undefined){
+            $('.modal-body').append('<iframe id="pdfFrame" src="./viewer.html#zoom=page-fit"></iframe>');
+        } else {
+            $('.modal-body #pdfFrame').replaceWith('<iframe id="pdfFrame" src="./viewer.html#zoom=page-fit"></iframe>');
+        }
+
+        pdfjsframe = document.getElementById('pdfFrame');
+        //Ajout du PDF dans la vue
+        pdfjsframe.onload = function() {
+            var pdfApp = pdfjsframe.contentWindow.PDFViewerApplication;
+            pdfApp.open(pdf);
+        };
+        //window.open('./viewer.html','_blank')
+
+    };
+
+    $('.printAtelier').click(function() {
+        $('.modal').modal('toggle');
+        $.ajax({type: 'POST',
+                url: './ajaxs.php/print/atelier'})
+        .success(function(data){
+            displayPDF(data);
+        });
+    });
+
+    $('.removePDFView').click(function(){
+        $('.modal').modal('toggle');
+        $('#pdfFrame').remove();
+        pdfjsframe = undefined;
+    });
+
 
 </script>
 
