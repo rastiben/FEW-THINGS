@@ -109,7 +109,7 @@
         echo "<tr><td>";
         print_r($temp);
         echo "</tr></td>";
-        unset($temp);
+        //unset($temp);
             /*if($temp.length >= 0){
             ?>
             <tr>

@@ -59,17 +59,6 @@ if($ticket->isOverdue())
 ?>
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
-<script src="./js/moment.js"></script>
-<script src="./js/rapport.js"></script>
-<script src="./js/atelier.js"></script>
-<script src="../js/autosize.js"></script>
-<script src="./js/docxtemplater.js"></script>
-<script type="text/javascript" src="./js/jszip.js"></script>
-<script type="text/javascript" src="./js/jszip-utils.js"></script>
-<script type="text/javascript" src="./js/file-saver.min.js"></script>
-<script src="./js/pdf.js"></script>
-<script src="./js/pdf.worker.js"></script>
 
 <div>
     <div class="sticky bar col-md-12" data_ticket_id="<?php echo $ticket->getId(); ?>"
@@ -304,7 +293,7 @@ if($ticket->isOverdue())
     /*
     *Récupération du premier message ( dans notre cas la problématique pour une repa ).
     */
-    $orgsC = OrganisationCollection::getInstance();
+    /*$orgsC = OrganisationCollection::getInstance();
     //$org = $orgsC->lookUpByName($ticket->getOwner()->getOrgId())[0]
     $org_name = $userInfo->getOrgName();
     $org = $orgsC->searchByName($org_name)[0];
@@ -314,7 +303,7 @@ if($ticket->isOverdue())
         $phone = $org->getPhone();
         $orgName = $org->getName();
         $orgId = '411VDOC';
-    }
+    }*/
 
 
 ?>
@@ -1517,6 +1506,19 @@ $tcount = $ticket->getThreadEntries($types)->count();
     </form>
     <div class="clear"></div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+<script src="./js/moment.js"></script>
+<script src="./js/rapport.js"></script>
+<script src="./js/atelier.js"></script>
+<script src="../js/autosize.js"></script>
+<script src="./js/docxtemplater.js"></script>
+<script type="text/javascript" src="./js/jszip.js"></script>
+<script type="text/javascript" src="./js/jszip-utils.js"></script>
+<script type="text/javascript" src="./js/file-saver.min.js"></script>
+<script src="./js/pdf.js"></script>
+<script src="./js/pdf.worker.js"></script>
+
 <script type="text/javascript">
 $(function() {
     $(document).on('click', 'a.change-user', function(e) {

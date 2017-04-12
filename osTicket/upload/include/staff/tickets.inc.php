@@ -548,30 +548,26 @@ return false;">
         $total=0;
         $ids=($errors && $_POST['tids'] && is_array($_POST['tids']))?$_POST['tids']:null;
 
-
-        /*CREATION D'UN RAPPORT*/
         $status = $_GET['status'];
         $search = $_GET['search'];
         $type = $_GET['type'];
 
-        if($status == 'assigned' || ($status == null && $type == null)){
-            $tickets = TicketsInfos::getInstance()->tickets_assigned($thisstaff->getId());
-        } else if($type != null){
-            $tickets = TicketsInfos::getInstance()->ticketsByType($type);
+        $tickets = TicketModel::objects();
+        if($type != null){
+            $tickets->filter(array('topic__topic'=>$type,'status__state'=>'open'));
+        } else if($status == "closed") {
+            $tickets->filter(array('status__state'=>'closed'));
+        } else {
+            $tickets->filter(array('status__state'=>'open'),
+                Q::any(array(
+                'staff_id'=>$thisstaff->getId(),
+                Q::all(array('staff_id' => 0, 'team_id__gt' => 0)),
+            )));
         }
 
-        /*if(!empty($search)){
-            $tickets = TicketsInfos::getInstance()->search_tickets($search);
-        } else {
-            if($status == 'assigned'){
-                $tickets = TicketsInfos::getInstance()->tickets_assigned($thisstaff->getId());
-            } else {
-                if(!empty($status))
-                    $tickets = TicketsInfos::getInstance()->tickets($status);
-                else
-                    $tickets = TicketsInfos::getInstance()->tickets();
-            }
-        }*/
+        $tickets->values('lock__staff_id', 'staff_id', 'isoverdue', 'team_id',
+        'ticket_id', 'number', 'cdata__subject', 'user__default_email__address',
+        'source', 'cdata__:priority__priority_color', 'cdata__:priority__priority_desc', 'status_id', 'status__name', 'status__state', 'dept_id', 'dept__name', 'user__name', 'lastupdate', 'isanswered', 'staff__firstname', 'staff__lastname', 'team__name','user_id','user__org_name');
 
         //TRIER LE TABLEAU
         if(isset($_GET['sort'])){
@@ -588,7 +584,7 @@ return false;">
         }
 
         foreach ($tickets as $T) {
-            $total += 1;
+                $total += 1;
                 /*$tag=$T['staff_id']?'assigned':'openticket';
                 $flag=null;
                 if($T['lock__staff_id'] && $T['lock__staff_id'] != $thisstaff->getId())
@@ -633,7 +629,7 @@ return false;">
                     ><?php echo $tid; ?></a></td>
                 <td align="center" nowrap><?php echo Format::datetime($T[$date_col ?: 'lastupdate']) ?: $date_fallback; ?></td>
                 <td>
-                    <span><?php echo $T['subject']; ?></span>
+                    <span><?php echo $T['cdata__subject']; ?></span>
 <?php               if ($T['attachment_count'])
                         echo '<i class="small icon-paperclip icon-flip-horizontal" data-toggle="tooltip" title="'
                             .$T['attachment_count'].'"></i>';
@@ -651,7 +647,7 @@ return false;">
                         echo $T['collab_count'] ? '150px' : '170px'; ?>"><?php
                     /*TO CHANGE*/
                     $un = new UsersName($T['user__name']);
-                        echo '<a href="./users.php?id='. TicketsInfos::getInstance()->ticket_user_id($T['ticket_id']) .'#tickets">' . ucwords($T['firsname'] . ' ' . $T['name']) . '</a>';
+                        echo '<a href="./users.php?id='. $T['user_id'] .'#tickets">' . ucwords($T['user__name']) . '</a>';
                     ?></span></div></td>
                 <td nowrap><div><?php
                     if ($T['collab_count'])
@@ -659,20 +655,20 @@ return false;">
                             .$T['collab_count'].'"><i class="icon-group"></i></span>';
                     ?><span class="truncate" style="max-width:<?php
                         echo $T['collab_count'] ? '150px' : '170px'; ?>"><?php
-                        echo '<a href="./orgs.php?id='. $T['org_id'] .'#users">'. $T['org_name'] .'</a>';
+                        echo '<a href="./orgs.php?id='. $T['user__org_name'] .'#users">'. $T['user__org_name'] .'</a>';
                     ?></span></div></td>
                 <?php
                 if($search && !$status){
-                    $displaystatus=TicketStatus::getLocalById($T['status_id'], 'value', $T['status__name']);
+                    $displaystatus=$T['status__name'];
                     if(!strcasecmp($T['status__state'],'open'))
                         $displaystatus="<b>$displaystatus</b>";
                     echo "<td>$displaystatus</td>";
                 } else { ?>
                 <td class="nohover" align="center">
-                    <?php echo $T['status_name']; ?></td>
+                    <?php echo $T['status__name']; ?></td>
                 <td class="nohover" align="center"
                     style="background-color:<?php echo $T['cdata__:priority__priority_color']; ?>;">
-                    <?php echo $T['priority_desc']; ?></td>
+                    <?php echo $T['cdata__:priority__priority_desc']; ?></td>
                 <?php
                 }
                 ?>
