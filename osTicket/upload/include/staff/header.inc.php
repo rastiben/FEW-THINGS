@@ -78,24 +78,6 @@ if ($lang) {
     elseif($ost->getNotice())
         echo sprintf('<div id="notice_bar">%s</div>', $ost->getNotice());
     ?>
-    <div id="header">
-       <div class="col-md-10 col-md-offset-1">
-        <a href="<?php echo ROOT_PATH ?>scp/index.php" class="no-pjax" id="logo">
-            <span class="valign-helper"></span>
-            <img src="<?php echo ROOT_PATH ?>scp/logo.php?<?php echo strtotime($cfg->lastModified('staff_logo_id')); ?>" alt="osTicket &mdash; <?php echo __('Customer Support System'); ?>"/>
-        </a>
-        <p id="info" class="no-pjax"><?php echo sprintf(__('Welcome, %s.'), '<strong>'.$thisstaff->getFirstName().'</strong>'); ?>
-           <?php
-            if($thisstaff->isAdmin() && !defined('ADMINPAGE')) { ?>
-            | <a href="<?php echo ROOT_PATH ?>scp/admin.php" class="no-pjax"><?php echo __('Admin Panel'); ?></a>
-            <?php }else{ ?>
-            | <a href="<?php echo ROOT_PATH ?>scp/index.php" class="no-pjax"><?php echo __('Agent Panel'); ?></a>
-            <?php } ?>
-            | <a href="<?php echo ROOT_PATH ?>scp/profile.php"><?php echo __('Profile'); ?></a>
-            | <a href="<?php echo ROOT_PATH ?>scp/logout.php?auth=<?php echo $ost->getLinkToken(); ?>" class="no-pjax"><?php echo __('Log Out'); ?></a>
-        </p>
-        </div>
-    </div>
     <div id="pjax-container" class="<?php if ($_POST) echo 'no-pjax'; ?>">
 <?php } else {
     header('X-PJAX-Version: ' . GIT_VERSION);
@@ -110,35 +92,67 @@ if ($lang) {
     } ?>
     <title><?php echo ($ost && ($title=$ost->getPageTitle()))?$title:'osTicket :: '.__('Staff Control Panel'); ?></title><?php
 } # endif X_PJAX ?>
-    <nav class="navbar navbar-default">
-      <div class="container-fluid col-md-10 col-md-offset-1">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-      <!--<a class="navbar-brand" href="#">Brand</a>-->
-    </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-
-        <?php include STAFFINC_DIR . "templates/navigation.tmpl.php"; ?>
-
-      </ul>
-    </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-    </nav>
-    <ul id="sub_nav">
-        <div class="col-md-10 col-md-offset-1">
-<?php include STAFFINC_DIR . "templates/sub-navigation.tmpl.php"; ?>
-        </div>
-    </ul>
     <!-- id="content"-->
-    <div class="col-md-10 col-md-offset-1 container">
+    <div class="container">
+
+      <div style="background-color: #f8f8f8;
+                  padding-bottom: 30px;
+                  position: absolute;
+                  top: 0px;
+                  left: 0px;
+                  width: 100%">
+
+      <div style="width: 300px;
+         position: fixed;
+         left: 0px;
+         height: 100%;">
+            <nav class="navbar navbar-default" style="">
+              <div class="">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+              <!--<a class="navbar-brand" href="#">Brand</a>-->
+            </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+
+                <?php include STAFFINC_DIR . "templates/navigation.tmpl.php"; ?>
+
+              </ul>
+            </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+            </nav>
+       </div>
+
+       <div style="margin-left:300px;">
+       <div id="header">
+            <a href="<?php echo ROOT_PATH ?>scp/index.php" class="no-pjax" id="logo">
+                <span class="valign-helper"></span>
+                <img src="<?php echo ROOT_PATH ?>scp/logo.php?<?php echo strtotime($cfg->lastModified('staff_logo_id')); ?>" alt="osTicket &mdash; <?php echo __('Customer Support System'); ?>"/>
+            </a>
+            <p id="info" class="no-pjax"><?php echo sprintf(__('Welcome, %s.'), '<strong>'.$thisstaff->getFirstName().'</strong>'); ?>
+               <?php
+                if($thisstaff->isAdmin() && !defined('ADMINPAGE')) { ?>
+                | <a href="<?php echo ROOT_PATH ?>scp/admin.php" class="no-pjax"><?php echo __('Admin Panel'); ?></a>
+                <?php }else{ ?>
+                | <a href="<?php echo ROOT_PATH ?>scp/index.php" class="no-pjax"><?php echo __('Agent Panel'); ?></a>
+                <?php } ?>
+                | <a href="<?php echo ROOT_PATH ?>scp/profile.php"><?php echo __('Profile'); ?></a>
+                | <a href="<?php echo ROOT_PATH ?>scp/logout.php?auth=<?php echo $ost->getLinkToken(); ?>" class="no-pjax"><?php echo __('Log Out'); ?></a>
+            </p>
+        </div>
+        <ul id="sub_nav">
+            <div class="">
+    <?php include STAFFINC_DIR . "templates/sub-navigation.tmpl.php"; ?>
+            </div>
+        </ul>
+
         <?php if($errors['err']) { ?>
             <div id="msg_error"><?php echo $errors['err']; ?></div>
         <?php }elseif($msg) { ?>

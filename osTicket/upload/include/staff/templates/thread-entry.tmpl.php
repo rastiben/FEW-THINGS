@@ -28,7 +28,14 @@ else
 
 <?php
 
-    $avatar = $entry->getUser() ? NULL : Agent::getInstance()->staff_avatar($user);
+    $avatar = NULL;
+    if(!$entry->getUser()){
+        $agent = Agent::objects();
+        $agent->filter(array('ost_staff__firstname'=>$thisstaff->getFirstName(),
+                         'ost_staff__lastname'=>$thisstaff->getLastName()));
+        $agent->values('avatar');
+        $avatar = $agent[0]['avatar'];
+    }
 
 ?>
 
@@ -147,7 +154,7 @@ else
             height: 50px;
             right: -76px;
             top: -6px;
-            background: url(../assets/avatar/<?php echo $avatar[0]['avatar'] ?>) no-repeat center;
+            background: url(../assets/avatar/<?php echo $avatar ?>) no-repeat center;
             background-size: 120%;"
     ></div>
 <!--<span class="pull-right avatar">

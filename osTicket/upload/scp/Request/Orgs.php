@@ -1,6 +1,6 @@
 <?php
 
-class Organisation
+/*class Organisation
 {
     private static $instance;
     private $hostname;
@@ -37,11 +37,11 @@ class Organisation
     }
 
     public function add_place($id_org,$adresse){
-        /*REMOVE ADRESSES*/
+        REMOVE ADRESSES
         $res = $this->dbh->prepare("DELETE FROM ost_organization_places WHERE id_org = :id_org");
         $res->execute(array(':id_org'=>$id_org));
 
-        /*APPEND*/
+        APPEND
         foreach($adresse as $adr){
             $res = $this->dbh->prepare("INSERT INTO ost_organization_places (id_org,Adresse) VALUES (:id_org,:adresse)");
             $res->execute(array(':id_org'=>$id_org,':adresse'=>$adr));
@@ -56,11 +56,6 @@ class Organisation
         return $res->fetchAll();
     }
 
-    /*public function getPrincipalAdress($id_org){
-        $res = $this->dbh->prepare("SELECT * FROM ost_organization__cdata WHERE id_org = :id_org");
-        $res->execute(array(':id_org'=>$id_org));
-        return $res->fetchAll();
-    }*/
 }
 
 if(isset($_POST['add_place'])){
@@ -70,6 +65,6 @@ if(isset($_POST['add_place'])){
     print_r(json_encode($places));
 } else if(isset($_POST['getOrgsWithName'])){
     echo json_encode(Organisation::getInstance()->get_orgs_with_name($_POST['name']));
-}
+}*/
 
 ?>

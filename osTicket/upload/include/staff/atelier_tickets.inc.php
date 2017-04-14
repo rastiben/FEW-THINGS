@@ -164,6 +164,7 @@ $queue_columns = array(
           </div>
           <div class="modal-body">
                 <canvas id="signature-pad"></canvas>
+                <iframe id="pdfFrame" src="./print_atelier.php"></iframe>
           </div>
           <div class="modal-footer">
             <button type="button" class="removePDFView" class="btn btn-default">Fermer</button>
@@ -297,11 +298,11 @@ $queue_columns = array(
 
     $('.printAtelier').click(function() {
         $('.modal').modal('toggle');
-        $.ajax({type: 'POST',
+        /*$.ajax({type: 'POST',
                 url: './ajaxs.php/print/atelier'})
         .success(function(data){
-            displayPDF(data);
-        });
+            //displayPDF(data);
+        });*/
     });
 
     $('.removePDFView').click(function(){
