@@ -48,10 +48,12 @@ class PageNate {
          $url = THISPAGE.'?';
         }
 
-        if ($vars && is_array($vars))
+        if ($vars && is_array($vars)){
             $vars = Http::build_query($vars);
+        }
 
         $this->url = $url.$vars;
+        //die();
     }
 
     function getStart() {
@@ -149,7 +151,53 @@ class PageNate {
             $html .= "\n<a href=\"{$href}\" ><strong>&raquo;</strong></a>";
         }
 
+        return $html;
+    }
 
+    function getBSPageLinks($hash=false, $pjax=false) {
+        $html                 = '';
+        $file                = $this->url;
+        $displayed_span     = 5;
+        $total_pages         = ceil( ($this->total - $this->slack) / $this->limit );
+        $this_page             = ceil( ($this->start+1) / $this->limit );
+
+        $last=$this_page-1;
+        $next=$this_page+1;
+
+        $start_loop         = floor($this_page-$displayed_span);
+        $stop_loop          = ceil($this_page + $displayed_span);
+
+
+
+        $stopcredit    =($start_loop<1)?0-$start_loop:0;
+        $startcredit   =($stop_loop>$total_pages)?$stop_loop-$total_pages:0;
+
+        $start_loop =($start_loop-$startcredit>0)?$start_loop-$startcredit:1;
+        $stop_loop  =($stop_loop+$stopcredit>$total_pages)?$total_pages:$stop_loop+$stopcredit;
+
+        if($start_loop>1){
+            $lastspan=($start_loop-$displayed_span>0)?$start_loop-$displayed_span:1;
+            $html .= '<li><a href="'.$file.'&p='.$lastspan.'">&laquo;</a></li>';
+        }
+
+        for ($i=$start_loop; $i <= $stop_loop; $i++) {
+            $page = ($i - 1) * $this->limit;
+            $href = "{$file}&p={$i}";
+            if ($hash)
+                $href .= '#'.$hash;
+            if ($i == $this_page) {
+                $html .= '<li class="disabled"><a style="pointer-events:none" href="#">'.$i.'</li>';
+            } else {
+                $html .= '<li><a href="'.$href.'">'.$i.'</a></li>';
+            }
+        }
+        if($stop_loop<$total_pages){
+            $nextspan=($stop_loop+$displayed_span>$total_pages)?$total_pages-$displayed_span:$stop_loop+$displayed_span;
+            $href = "{$file}&p={$nextspan}";
+            if ($hash)
+                $href .= '#'.$hash;
+            $html .= '<li><a href="'.$href.'&p='.$lastspan.'">&raquo;</a></li>';
+        }
 
         return $html;
     }

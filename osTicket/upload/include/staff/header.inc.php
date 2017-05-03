@@ -100,9 +100,10 @@ if ($lang) {
                   position: absolute;
                   top: 0px;
                   left: 0px;
-                  width: 100%">
+                  width: 100%;
+                  height:100%">
 
-      <div style="width: 300px;
+      <div style="width: 230px;
          position: fixed;
          left: 0px;
          height: 100%;">
@@ -130,7 +131,7 @@ if ($lang) {
             </nav>
        </div>
 
-       <div style="margin-left:300px;">
+       <div style="margin-left:230px;">
        <div id="header">
             <a href="<?php echo ROOT_PATH ?>scp/index.php" class="no-pjax" id="logo">
                 <span class="valign-helper"></span>

@@ -2,7 +2,7 @@
     require_once('./Request/Tickets.php');
     require_once('./Request/Atelier.php');
 
-    $orgsC = OrganisationCollection::getInstance();
+    //$orgsC = OrganisationCollection::getInstance();
 
 ?>
 
