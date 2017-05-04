@@ -10,7 +10,6 @@ $info=($_POST && $errors)?Format::input($_POST):array();
 
 require_once(SCP_DIR . 'Request/Tickets.php');
 require_once(SCP_DIR . 'Request/Rapport.php');
-require_once(SCP_DIR . 'Request/Agent.php');
 require_once(SCP_DIR . 'Request/Atelier.php');
 
 //Get the goodies.
@@ -237,7 +236,7 @@ if($ticket->isOverdue())
   </div>
 </div>
 
-<div class="col-md-12" style="min-height: 680px;">
+<div class="col-md-12" style="min-height: 680px;background-color: #f8f8f8;">
     <hr>
 <div class="ticket_left col-md-9">
 
@@ -293,12 +292,13 @@ if($ticket->isOverdue())
     /*
     *Récupération du premier message ( dans notre cas la problématique pour une repa ).
     */
-    /*$orgsC = OrganisationCollection::getInstance();
-    //$org = $orgsC->lookUpByName($ticket->getOwner()->getOrgId())[0]
+    //$orgsC = OrganisationCollection::getInstance();
+    //die();
+    /*$org = $orgsC->lookUpByName($ticket->getOwner()->getOrgId())[0]
     $org_name = $userInfo->getOrgName();
-    $org = $orgsC->searchByName($org_name)[0];
+    $org = $orgsC->searchByName($org_name)[0];*/
 
-    if(!empty($org)){
+    /*if(!empty($org)){
         $address = addslashes($org->getAddress() . " " . $org->getComplement() . "&#013;&#010;" . $org->getCP() . " " . $org->getCity());
         $phone = $org->getPhone();
         $orgName = $org->getName();

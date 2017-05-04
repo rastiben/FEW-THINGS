@@ -404,18 +404,21 @@ $open_name = _P('queue-name',
 }*/
 
 //if($stats['assigned']) {
+if (!$_REQUEST['status'] && !$_REQUEST['type']){
+    echo "toto";
+}
 
 $nav->addSubMenu(array('desc'=>__('My Tickets').' ('.TicketsInfos::getInstance()->numberOfAssignedTickets().')',
                         'title'=>__('Assigned Tickets'),
                         'href'=>'tickets.php?status=assigned',
                         'iconclass'=>'assignedTickets'),
-                    ($_REQUEST['status']=='assigned'));
+                    ($_REQUEST['status']=='assigned' || ($_REQUEST['status'] == 'open' && !$_REQUEST['type'])));
 
 //GET TOPICS
 if ($topics=Topic::getHelpTopics(false, false, true)) {
 
     foreach($topics as $id =>$name) {
-    $nav->addSubMenu(array('desc'=>$name,
+        $nav->addSubMenu(array('desc'=>$name,
                         'title'=>'Tickets '.$name,
                         'href'=>'tickets.php?status=open&type='.$name),
                     ($_REQUEST['type']==$name));

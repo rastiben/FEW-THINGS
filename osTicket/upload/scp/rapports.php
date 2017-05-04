@@ -81,7 +81,9 @@ die();*/
 
 
 if(!empty($_POST)){
-    require(INCLUDE_DIR.'staff/templates/rapports.tmpl.php');
+    echo json_encode(['rapports'=>$rapportl,
+                      'pagination'=> sprintf('<ul class="pagination">%s</ul>',
+                    $pageNav->getBSPageLinks(false,false))]);
 } else {
     require_once(STAFFINC_DIR.'header.inc.php');
     require_once(STAFFINC_DIR.'rapports.inc.php');

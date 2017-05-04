@@ -90,20 +90,27 @@ class UsersAjaxAPI extends AjaxController {
                 )));
             }
 
+            $matches = [];
             foreach ($users as $U) {
                 list($id, $name, $email) = $U;
-                foreach ($matches as $i=>$u) {
+                //??????????????
+                /*foreach ($matches as $i=>$u) {
                     if ($u['email'] == $email) {
                         unset($matches[$i]);
                         break;
                     }
-                }
+                }*/
                 $name = Format::htmlchars(new UsersName($name));
-                $matches[] = array('email'=>$email, 'name'=>$name, 'info'=>"$email - $name",
-                    "id" => $id, "/bin/true" => $_REQUEST['q']);
+                array_push($matches,array('email'=>$email, 'name'=>$name, 'info'=>"$email - $name",
+                    "id" => $id, "/bin/true" => $_REQUEST['q']));
             }
             usort($matches, function($a, $b) { return strcmp($a['name'], $b['name']); });
         }
+
+        /*foreach($matches as $user){
+            var_dump($user);
+        }
+        die();*/
 
         return $this->json_encode(array_values($matches));
 
@@ -265,7 +272,6 @@ class UsersAjaxAPI extends AjaxController {
     }
 
     function getUser($id=false) {
-
         if(($user=User::lookup(($id) ? $id : $_REQUEST['id'])))
            Http::response(201, $user->to_json());
 

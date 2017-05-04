@@ -55,22 +55,27 @@ if(count($labelsWeek) === 0){
 ?>
 
 
+
 <div class="rapportInfo">
     <div class="col-md-4">
-        <div class="block r-2 gray">
-        Nombre de rapports par type (total)
-        <canvas id="typeRapportTotal" style="max-height:280px;max-width:280px;width: content-box;display:inline" class="pie chart"></canvas>
+        <div class="block r-2 col-md-12">
+            <span class="col-md-12 title"><p><strong>Nombre de rapports par type</strong></p>
+            <p>(total)</p></span>
+            <canvas id="typeRapportTotal" style="max-height:200px;max-width:200px;width: content-box;display:inline" class="pie chart"></canvas>
+            <div id="chartjs-legend-total" class="noselect col-md-12"></div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="block r-2 green">
-        Nombre de rapports par type (sur la semaine)
-        <canvas id="typeRapportWeek" style="max-height:280px;max-width:280px;width: content-box;display:inline" class="pie chart"></canvas>
+        <div class="block r-2 col-md-12">
+            <span class="col-md-12 title"><p><strong>Nombre de rapports par type</strong></p>
+            <p>(sur la semaine)</p></span>
+            <canvas id="typeRapportWeek" style="max-height:200px;max-width:200px;width: content-box;display:inline" class="pie chart"></canvas>
+            <div id="chartjs-legend-week" class="noselect col-md-12"></div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="col-md-12"><div class="block red">Nombre de rapports</div></div>
-        <div class="col-md-12"><div class="block blue">Nombre de rapports aujourd'hui</div></div>
+        <div class="col-md-12"><div class="block">Nombre de rapports</div></div>
+        <div class="col-md-12"><div class="block">Nombre de rapports aujourd'hui</div></div>
     </div>
 
     <div class="filtre">
@@ -80,13 +85,16 @@ if(count($labelsWeek) === 0){
     </div>
 </div>
 
-<div class="col-md-12">
+<div ng-controller="rapportCtrl" id="rapportCtrl" class="rapportHoraires col-md-12" ng-init="initRapport(<?php echo htmlspecialchars(json_encode($rapportl)); ?>)">
 <?php
 
 require(INCLUDE_DIR.'staff/templates/rapports.tmpl.php');
 
 ?>
 </div>
+
+<script src="./js/moment.js" type="application/javascript"></script>
+<script src="./js/rapport.js" type="application/javascript"></script>
 
 <script>
 
@@ -146,8 +154,13 @@ require(INCLUDE_DIR.'staff/templates/rapports.tmpl.php');
                 type:filtres['type'],
             },
             success: function(data){
+                data = $.parseJSON(data);
                 $('.loading.blank').css('display','none');
-                $('.rapportListe').replaceWith(data);
+                //$('.rapportListe').replaceWith(data);
+                angular.element('#rapportCtrl').scope().initRapport(data.rapports);
+                $('.pagination').replaceWith(data.pagination);
+
+                //maj pagination
             }
         });
         //console.log($_GET(href)['p']);
@@ -175,8 +188,11 @@ require(INCLUDE_DIR.'staff/templates/rapports.tmpl.php');
                 type:filtres['type'],
             },
             success: function(data){
+                data = $.parseJSON(data);
                 $('.loading.blank').css('display','none');
-                $('.rapportListe').replaceWith(data);
+                //$('.rapportListe').replaceWith(data);
+                angular.element('#rapportCtrl').scope().initRapport(data.rapports);
+                $('.pagination').replaceWith(data.pagination);
 
                 //Mise a jour des filtres.
                 maj.forEach(function(element,index,array){
@@ -237,10 +253,22 @@ require(INCLUDE_DIR.'staff/templates/rapports.tmpl.php');
 
     //Gestion des charts
 
-    /*var optionsPie = {
-        scaleBeginAtZero: false,
-        legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-    }*/
+    var options = {
+      legend: false,
+      legendCallback: function(chart) {
+        var text = [];
+        text.push('<ul class="' + chart.id + '-legend">');
+        for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
+          text.push('<li><span style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
+          if (chart.data.labels[i]) {
+            text.push(chart.data.labels[i]);
+          }
+          text.push('</span></li>');
+        }
+        text.push('</ul>');
+        return text.join("");
+      }
+    };
 
     //TOTAL
     var data = {
@@ -252,17 +280,14 @@ require(INCLUDE_DIR.'staff/templates/rapports.tmpl.php');
             }]
     };
 
-    Chart.defaults.global.defaultFontColor = "#fff";
-    var ctx = $("#typeRapportTotal").get(0).getContext("2d");
-
-    var myPieChart = new Chart(ctx,{
-        type: 'pie',
-        data: data,
-        options: {
-            responsive: true,
-            maintainAspectRatio: true
-        }
+    //Chart.defaults.global.defaultFontColor = "#fff";
+    var ctx = $("#typeRapportTotal");
+    var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: data,
+      options: options
     });
+    $("#chartjs-legend-total").html(myChart.generateLegend());
 
     //SEMAINE
     data = {
@@ -274,16 +299,13 @@ require(INCLUDE_DIR.'staff/templates/rapports.tmpl.php');
             }]
     };
 
-    Chart.defaults.global.defaultFontColor = "#fff";
-    var ctx = $("#typeRapportWeek").get(0).getContext("2d");
-
-    var myPieChart = new Chart(ctx,{
-        type: 'pie',
-        data: data,
-        options: {
-            responsive: true,
-            maintainAspectRatio: true
-        }
+    var ctx = $("#typeRapportWeek");
+    var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: data,
+      options: options
     });
+    $("#chartjs-legend-week").html(myChart.generateLegend());
+
 
 </script>

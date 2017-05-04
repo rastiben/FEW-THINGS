@@ -146,6 +146,33 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
         });
     }
 
+    $scope.initRapport = function(rapports){
+        if(rapports.length > 0){
+            $scope.rapports = rapports;
+            $scope.rapportID = $scope.rapports[0].id;
+
+            //Récupération des horaires pour chaque rapports.
+            angular.forEach($scope.rapports,function(value,key){
+                //value.horaires = horaires;
+                value.totalHours = moment.duration(0,'h');
+                angular.forEach(value.horaires,function(horaire,key){
+                    horaire.arrive_inter = moment(horaire.arrive_inter,"YYYY/MM/DD HH:mm:ss");
+                    horaire.depart_inter = moment(horaire.depart_inter,"YYYY/MM/DD HH:mm:ss");
+
+                    var temp = moment.duration(horaire.depart_inter.diff(horaire.arrive_inter));
+                    horaire.nbHours = temp._data.hours + ":" + temp._data.minutes;
+
+                        //temps total sur un rapport
+                    value.totalHours.add(temp._data.hours,'h');
+                    value.totalHours.add(temp._data.minutes,'m');
+                 });
+            });
+            if(!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }
+    }
+
     $scope.setRapportID = function($event,id,rapportID){
         $('.col-md-4.rapport').removeClass('active');
         $('#'+id+'.col-md-4.rapport').addClass('active');

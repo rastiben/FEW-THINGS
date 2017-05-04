@@ -121,6 +121,28 @@ if ($lang) {
             </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                <?php
+                    $agent = Staff::objects();
+                    $agent->filter(array('firstname'=>$thisstaff->getFirstName(),
+                                     'lastname'=>$thisstaff->getLastName()));
+                    $agent->values('avatar','firstname','lastname');
+                    $avatar = $agent[0]['avatar'];
+                ?>
+
+                <div class="connected_agent"/>
+                    <div class="img">
+                        <img class="<?php echo 'pull-left'; ?> avatar" src="../assets/avatar/<?php echo $avatar ?>"></img>
+                    </div>
+                    <div class="agent_info">
+                        <h6 class="agent_name"><?= $agent[0]['firstname'] . ' ' . $agent[0]['lastname'] ?></h6>
+                        <div class="online">
+                            <div class="online_point"></div>
+                            <span class="online_text">Online</span>
+                        </div>
+                    </div>
+                </div>
+
               <ul class="nav navbar-nav">
 
                 <?php include STAFFINC_DIR . "templates/navigation.tmpl.php"; ?>

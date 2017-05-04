@@ -135,7 +135,7 @@ a time {
     min-height:76px;
     /*border-left:1px solid #aaa;
     border-right:1px solid #aaa;*/
-    background-color: rgb(248,248,248);
+    background-color: #34495E;
     box-shadow: inset 0 -10px 8px -5px rgba(0,0,0,0.1);
 }
 
@@ -3044,6 +3044,32 @@ canvas.chart{
     bottom: 0px;
 }
 
+#chartjs-legend-week,
+#chartjs-legend-total{
+    text-align: left;
+}
+#chartjs-legend-week ul,
+#chartjs-legend-total ul{
+    margin: 0px;
+    padding: 0px;
+}
+#chartjs-legend-week li,
+#chartjs-legend-total li{
+    cursor:pointer;
+    margin: 10px 4px;
+    list-style: none;
+    display:inline-block;
+}
+#chartjs-legend-week li span,
+#chartjs-legend-total li span{
+    position: relative;
+    padding: 5px 12px;
+    border-radius: 13px;
+    color: white;
+    z-index: 2;
+    font-size: 12px;
+}
+
 @media (max-width:601px){
     .spellcheck label{
         width: 100%;
@@ -3286,6 +3312,15 @@ span.avatar{
     display: table;
     padding: 0px;
     margin-top: 30px;
+}
+
+.rapportHoraires .rapport{
+    margin-top: 0px;
+    margin-bottom: 30px;
+}
+
+.table > tbody > tr.active > td{
+    background-color: lightskyblue;
 }
 
 
@@ -4668,6 +4703,20 @@ table.atelierT thead tr{
     position: relative;
 }
 
+.block .title{
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.block .title p{
+    margin: 0px;
+}
+
+.block .title p:last-child{
+    font-size: 12px;
+    color: gray;
+}
+
 .block.r-2{
     min-height: 330px;
     text-align: center;
@@ -5455,6 +5504,53 @@ table.atelierT thead tr{
     min-height: 300px;
 }
 
+/*NAVBAR*/
+.connected_agent{
+    display: table;
+    width: 100%;
+    background-color: #223547;
+    height: 76px;
+    box-shadow: inset 0 -5px 8px #1a2938;
+}
+
+.connected_agent .img{
+    height: 100%;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.connected_agent img{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-left: 15px;
+    margin-bottom: 0px;
+}
+
+.connected_agent .agent_info{
+    color: white;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.connected_agent .agent_info .agent_name{
+    margin: 0px;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.connected_agent .online .online_point{
+    width: 10px;
+    height: 10px;
+    background-color: #58D68D;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.connected_agent .online .online_text{
+    font-size: 11px;
+    display: inline-block;
+}
 
 /*DROPDOWN*/
 #sub_nav .dropdown{

@@ -30,9 +30,9 @@ else
 
     $avatar = NULL;
     if(!$entry->getUser()){
-        $agent = Agent::objects();
-        $agent->filter(array('ost_staff__firstname'=>$thisstaff->getFirstName(),
-                         'ost_staff__lastname'=>$thisstaff->getLastName()));
+        $agent = Staff::objects();
+        $agent->filter(array('firstname'=>$thisstaff->getFirstName(),
+                         'lastname'=>$thisstaff->getLastName()));
         $agent->values('avatar');
         $avatar = $agent[0]['avatar'];
     }
