@@ -18,6 +18,7 @@ class BDD{
     *Instance de la base de données
     */
     public $ODBC = null;
+    public $SAGE = null;
 
     /*SWITCH ENTRE DEUX LIENS ODBC (Moins de dev)
     Pouvoir récupérer l'id de l'organisation (A favoriser en prog)
@@ -29,6 +30,7 @@ class BDD{
     private function __construct(){
         try{
             $this->ODBC = odbc_connect('DSN=srvsage;server=srvsage;', '', '');
+            $this->SAGE = odbc_connect('sage', '', '');
         }catch(PDOException $e){
             die($e);
         }
@@ -58,6 +60,13 @@ class BDD{
     */
     public function prepare($query){
         return odbc_prepare($this->ODBC,$query);
+    }
+
+    /*
+    *Préparation d'une requete sql
+    */
+    public function prepareSAGE($query){
+        return odbc_prepare($this->SAGE,$query);
     }
 
     /*

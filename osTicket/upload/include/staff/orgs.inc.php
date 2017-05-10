@@ -19,6 +19,7 @@ if(isset($_REQUEST['query']) && !empty($_REQUEST['query'])){
 } */ else {
     $orgs = $orgsC->lookUp($page);
 }
+
 /*
 *Récupération du nombre d'organisation
 */
@@ -138,87 +139,15 @@ echo $pagination;
         </div>
     </div>
 </div>
-<div class="clear"></div>
-<?php
-$showing = $search ? __('Search Results').': ' : '';
-if ($orgs->exists(true))
-    $showing .= $pageNav->showing();
-else
-    $showing .= __('No organizations found!');
+<div class="clear"></div>-->
 
-?>
-<form id="orgs-list" action="orgs.php" method="POST" name="staff" >
- <?php csrf_token(); ?>
- <input type="hidden" name="a" value="mass_process" >
- <input type="hidden" id="action" name="do" value="" >
- <input type="hidden" id="selected-count" name="count" value="" >
- <table class="list" border="0" cellspacing="1" cellpadding="0" width="100%">
-    <thead>
-        <tr>
-            <th nowrap width="4%">&nbsp;</th>
-            <th width="45%"><a <?php echo $name_sort; ?> href="orgs.php?<?php echo $qstr; ?>&sort=name"><?php echo __('Name'); ?></a></th>
-            <th width="11%"><a <?php echo $users_sort; ?> href="orgs.php?<?php echo $qstr; ?>&sort=users"><?php echo __('Users'); ?></a></th>
-            <th width="20%"><a <?php echo $create_sort; ?> href="orgs.php?<?php echo $qstr; ?>&sort=create"><?php echo __('Created'); ?></a></th>
-            <th width="20%"><a <?php echo $update_sort; ?> href="orgs.php?<?php echo $qstr; ?>&sort=update"><?php echo __('Last Updated'); ?></a></th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php
-        $ids=($errors && is_array($_POST['ids']))?$_POST['ids']:null;
-        foreach ($orgs as $org) {
-
-            $sel=false;
-            if($ids && in_array($org['id'], $ids))
-                $sel=true;
-            ?>
-           <tr id="<?php echo $org['id']; ?>">
-            <td nowrap align="center">
-                <input type="checkbox" value="<?php echo $org['id']; ?>" class="ckb mass nowarn"/>
-            </td>
-            <td>&nbsp; <a href="orgs.php?id=<?php echo $org['id']; ?>#users"><?php
-            echo $org['name']; ?></a> </td>
-            <td>&nbsp;<?php echo $org['user_count']; ?></td>
-            <td><?php echo Format::date($org['created']); ?></td>
-            <td><?php echo Format::datetime($org['updated']); ?>&nbsp;</td>
-           </tr>
-        <?php
-        }
-        ?>
-    </tbody>
-    <tfoot>
-     <tr>
-        <td colspan="7">
-            <?php if ($total) { ?>
-            <?php echo __('Select');?>:&nbsp;
-            <a id="selectAll" href="#ckb"><?php echo __('All');?></a>&nbsp;&nbsp;
-            <a id="selectNone" href="#ckb"><?php echo __('None');?></a>&nbsp;&nbsp;
-            <a id="selectToggle" href="#ckb"><?php echo __('Toggle');?></a>&nbsp;&nbsp;
-            <?php }else{
-                echo '<i>';
-                echo __('Query returned 0 results.');
-                echo '</i>';
-            } ?>
-        </td>
-     </tr>
-    </tfoot>
-</table>
-<?php
-/*if ($total): //Show options..
-    echo sprintf('<div>&nbsp;%s: %s &nbsp; <a class="no-pjax"
-            href="orgs.php?a=export">%s</a></div>',
-            __('Page'),
-            $pageNav->getPageLinks(),
-            __('Export'));
-endif;*/
-?>
-</form>-->
 
 <script type="text/javascript">
 $(function() {
-    /*$('input#basic-org-search').typeahead({
+    $('input#basic-org-search').typeahead({
         source: function (typeahead, query) {
             $.ajax({
-                url: "ajax.php/orgs/search?q="+query,
+                url: "ajaxs.php/orgs/typeahead/"+query,
                 dataType: 'json',
                 success: function (data) {
                     typeahead.process(data);
@@ -229,7 +158,7 @@ $(function() {
             window.location.href = 'orgs.php?id='+obj.id;
         },
         property: "/bin/true"
-    });*/
+    });
 
     $(document).on('click', 'a.add-org', function(e) {
         e.preventDefault();

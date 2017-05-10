@@ -172,7 +172,7 @@ class OrganisationCollection{
     *Récupération des occurences à afficher
     */
     public function getCollectionPage($offset=null,$query=null){
-        if(empty($query)){
+        if(empty($query) || !empty($offset)){
             return $this->orgs;
         } else {
             return array_splice($this->orgs,(50*($offset-1)),49);

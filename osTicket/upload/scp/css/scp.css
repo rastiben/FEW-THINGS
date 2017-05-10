@@ -2701,7 +2701,7 @@ td.indented {
 .pageContainer{
     margin-left: 230px;
     padding: 0px 10px;
-    width: auto;
+    width: calc(100% - 230px);
     margin-top: 76px;
     background: whitesmoke;
 }

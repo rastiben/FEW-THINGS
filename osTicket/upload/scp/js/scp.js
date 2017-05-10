@@ -441,7 +441,7 @@ var scp_prep = function() {
            visible = true;
            setTimeout(function() {
              $that.addClass('fixed').css('top', '-'+$that.height()+'px')
-                .animate({top:0}, {easing: 'swing', duration:'fast'});
+                .animate({top:76}, {easing: 'swing', duration:'fast'});
              placeholder.height($that.height());
              $that.find('[data-dropdown]').dropdown('hide');
            }, 1);
@@ -454,6 +454,7 @@ var scp_prep = function() {
              placeholder.removeAttr('style');
              $that.find('[data-dropdown]').dropdown('hide');
              $that.stop().removeClass('fixed');
+             $that.css('top','0');
            }, 1);
          }
        }

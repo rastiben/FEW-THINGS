@@ -32,6 +32,7 @@ $routes = array
     'orgV' => array('org', ':id', ':variable'),
     'orgA' => array('org', ':action', ':id'),
     'orgs' => array('orgs', ':name'),
+    'orgsTypeahead' => array('orgs', 'typeahead' , ':name'),
     'userC' => array('user',':action'),
     'userA' => array('user', ':action', ':id'),
     'stats' => array('stats',':objet',':id'),
@@ -88,15 +89,26 @@ $url = dispatcher($url, $routes);
     $org = OrganisationCollection::getInstance();
     $org->toto();
 }*/
+
 /*REQUETES ORGANISATION*/
 if(strstr($url['path'],"org")){
     $org = OrganisationCollection::getInstance();
-    if($url['path'] == "orgs"){
-        switch($method){
-            case "GET":
-                echo json_encode($org->searchByName($url['parameters']['name']));
-                break;
-        }
+    if(strstr($url['path'],"Typeahead")){
+      $orgs = $org->searchByName($url['parameters']['name']);
+
+      foreach ($orgs as $O) {
+        $matched[] = array('name' => $O->getName(), 'info' => $O->getName(),
+            'id' => $O->getName(), '/bin/true' => $url['parameters']['name']);
+      }
+
+      echo json_encode(array_values($matched));
+
+    } else if($url['path'] == "orgs"){
+      switch($method){
+          case "GET":
+              echo json_encode($org->searchByName($url['parameters']['name']));
+              break;
+      }
     } else {
         if($action = isset($url['parameters']['action'])){
 

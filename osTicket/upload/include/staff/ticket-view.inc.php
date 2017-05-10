@@ -283,6 +283,7 @@ if($ticket->isOverdue())
     *Récupération du prénom de l'utilisateur
     */
     $userInfo = $ticket->getOwner();
+    $orgName = $userInfo->getOrgName();
     foreach($userInfo->getForms()[0]->_fields as $field){
         if($field->answer->_field->answer->_field->ht['label'] == "Prénom"){
             $prenom = $field->answer->_field->answer->ht['value'];
@@ -1176,9 +1177,9 @@ if ($errors['err'] && isset($_POST['a'])) {
         <a href="./users.php?id=<?php echo $ticket->getUserId() ?>#tickets"><span><?php echo Format::htmlchars($ticket->getName()) ?></span></a>
     </div>
     <div class="mail icon">
-        <?php if(!empty($org)) { ?>
+        <?php if(!empty($orgName)) { ?>
             <img width="20" src="../assets/default/images/company.png">
-            <a href="./orgs.php?id=<?php echo Format::htmlchars($orgId) ?>#users"><span><?php echo Format::htmlchars($orgName) ?></span></a>
+            <a href="./orgs.php?id=<?php echo Format::htmlchars($orgName) ?>"><span><?php echo Format::htmlchars($orgName) ?></span></a>
         <?php } else { ?>
             <img width="20" src="../assets/default/images/company.png">
             <input class="user_org" type="text">
@@ -1719,7 +1720,7 @@ $(function() {
                     $(".orgsList").css('left',left);
                     $(".orgsList").css('width','auto');
                     $(data).each(function(number,obj){
-                        $(".orgsList").append('<p data-org-name="" id="'+obj.data[0]+'">'+obj.data[1]+'</p>')
+                        $(".orgsList").append('<p data-org-name="" id="'+obj.data[0]+'">'+obj.data[0]+'</p>')
                     });
                     $(".orgsList").css('display','block');
                 });

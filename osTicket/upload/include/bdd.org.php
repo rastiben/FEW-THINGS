@@ -46,11 +46,11 @@ class bdd_org{
     */
     public function getOrgs($page){
         //if(empty($page)){
-        $prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site FROM F_COMPTET WHERE CT_Num LIKE '411%' ORDER BY CT_Num");
+        /*$prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site FROM F_COMPTET WHERE CT_Num LIKE '411%' ORDER BY CT_Num");
         $values = array();
         $this->DB->execute($prepare,$values);
         return $prepare;
-        /*} else {
+      } else {*/
             $fields = ["CT_Num","CT_Adresse","CT_Complement","CT_CodePostal","CT_Ville","CT_Telephone","CT_Site"];
             $whereClauses = [["CT_Num","LIKE","'%411%'"]];
             $orderBy = "CT_Num";
@@ -59,11 +59,11 @@ class bdd_org{
 
             $request = $this->DB->selectBetween("F_COMPTET",$fields,$whereClauses,$orderBy,$range);
 
-            $prepare = $this->DB->prepare($request);
+            $prepare = $this->DB->prepareSAGE($request);
             $values = array();
             $this->DB->execute($prepare,$values);
             return $prepare;
-        }*/
+        //}
     }
 
     /*
@@ -71,7 +71,7 @@ class bdd_org{
     */
     public function getOrgWithId($id){
         /*Préparation et execution de celle ci.*/
-        $prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site
+        $prepare = $this->DB->prepareSAGE("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site
                                         FROM F_COMPTET
                                         WHERE cbMarq LIKE ?
                                         ORDER BY CT_Num");
@@ -93,13 +93,15 @@ class bdd_org{
     public function getOrgWithName($name){
         /*Préparation et execution de celle ci.*/
         //$name = '411VDOC';
+
         if(substr( $name, 0, 3 ) === "411") $name = substr( $name, 3);
 
-        $prepare = $this->DB->prepare("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site
+        $prepare = $this->DB->prepareSAGE("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site
                                         FROM F_COMPTET
                                         WHERE CT_Num LIKE ?
                                         ORDER BY CT_Num");
         $values = array('411' . $name . '%');
+
         $this->DB->execute($prepare,$values);
         return $prepare;
     }
@@ -109,7 +111,7 @@ class bdd_org{
     */
     public function nbOrg($search){
         /*Préparation et execution de celle ci.*/
-        $prepare = $this->DB->prepare("SELECT COUNT(*) FROM F_COMPTET WHERE CT_Num LIKE ?");
+        $prepare = $this->DB->prepareSAGE("SELECT COUNT(*) FROM F_COMPTET WHERE CT_Num LIKE ?");
         $values = array("411".$search."%");
         $this->DB->execute($prepare,$values);
         return $prepare;
