@@ -153,7 +153,24 @@ if ($lang) {
             </nav>
        </div>
 
-       <div style="margin-left:230px;padding:10px">
+       <div id="header">
+           <a href="<?php echo ROOT_PATH ?>scp/index.php" class="no-pjax" id="logo">
+               <span class="valign-helper"></span>
+               <img src="<?php echo ROOT_PATH ?>scp/logo.php?<?php echo strtotime($cfg->lastModified('staff_logo_id')); ?>" alt="osTicket &mdash; <?php echo __('Customer Support System'); ?>"/>
+           </a>
+           <p id="info" class="no-pjax"><?php echo sprintf(__('Welcome, %s.'), '<strong>'.$thisstaff->getFirstName().'</strong>'); ?>
+              <?php
+               if($thisstaff->isAdmin() && !defined('ADMINPAGE')) { ?>
+               <a href="<?php echo ROOT_PATH ?>scp/admin.php" class="no-pjax" title="Panneau d'administration"><span class="glyphicon glyphicon-wrench"></span></a>
+               <?php }else{ ?>
+               <a href="<?php echo ROOT_PATH ?>scp/index.php" class="no-pjax"><?php echo __('Agent Panel'); ?></a>
+               <?php } ?>
+               <a href="<?php echo ROOT_PATH ?>scp/profile.php" title="Profile"><span class="glyphicon glyphicon-user"></span></a>
+               <a href="<?php echo ROOT_PATH ?>scp/logout.php?auth=<?php echo $ost->getLinkToken(); ?>" title="Déconnexion" class="no-pjax"><span class="glyphicon glyphicon-log-out"></span></a>
+           </p>
+        </div>
+
+       <div class="col-md-12 pageContainer">
        <!--<div id="header">
             <a href="<?php echo ROOT_PATH ?>scp/index.php" class="no-pjax" id="logo">
                 <span class="valign-helper"></span>
@@ -170,25 +187,9 @@ if ($lang) {
                 <span class="pipe">|</span> <a href="<?php echo ROOT_PATH ?>scp/logout.php?auth=<?php echo $ost->getLinkToken(); ?>" class="no-pjax"><?php echo __('Log Out'); ?></a>
             </p>
         </div>-->
-        <div id="header">
-            <a href="<?php echo ROOT_PATH ?>scp/index.php" class="no-pjax" id="logo">
-                <span class="valign-helper"></span>
-                <img src="<?php echo ROOT_PATH ?>scp/logo.php?<?php echo strtotime($cfg->lastModified('staff_logo_id')); ?>" alt="osTicket &mdash; <?php echo __('Customer Support System'); ?>"/>
-            </a>
-            <p id="info" class="no-pjax"><?php echo sprintf(__('Welcome, %s.'), '<strong>'.$thisstaff->getFirstName().'</strong>'); ?>
-               <?php
-                if($thisstaff->isAdmin() && !defined('ADMINPAGE')) { ?>
-                <a href="<?php echo ROOT_PATH ?>scp/admin.php" class="no-pjax" title="Panneau d'administration"><span class="glyphicon glyphicon-wrench"></span></a>
-                <?php }else{ ?>
-                <a href="<?php echo ROOT_PATH ?>scp/index.php" class="no-pjax"><?php echo __('Agent Panel'); ?></a>
-                <?php } ?>
-                <a href="<?php echo ROOT_PATH ?>scp/profile.php" title="Profile"><span class="glyphicon glyphicon-user"></span></a>
-                <a href="<?php echo ROOT_PATH ?>scp/logout.php?auth=<?php echo $ost->getLinkToken(); ?>" title="Déconnexion" class="no-pjax"><span class="glyphicon glyphicon-log-out"></span></a>
-            </p>
-           </div>
 
         <ul id="sub_nav">
-            <div class="">
+            <div class="sub">
     <?php include STAFFINC_DIR . "templates/sub-navigation.tmpl.php"; ?>
             </div>
         </ul>

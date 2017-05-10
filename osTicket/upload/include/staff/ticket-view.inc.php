@@ -236,8 +236,8 @@ if($ticket->isOverdue())
   </div>
 </div>
 
-<div class="col-md-12" style="min-height: 680px;background-color: #f8f8f8;">
-    <hr>
+<div style="min-height: 680px;background-color: #f8f8f8;">
+
 <div class="ticket_left col-md-9">
 
 

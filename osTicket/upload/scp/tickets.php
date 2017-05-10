@@ -467,7 +467,8 @@ $nav->addSubMenu(array('desc' => __('Closed'),
 //Liste des rapports.
 $nav->addSubMenu(array('desc'=>'Liste des rapports',
                         'title'=>'Liste des rapports',
-                        'href'=>'rapports.php'));
+                        'href'=>'rapports.php',
+                        'iconclass'=>'rapportList'));
 
 if ($thisstaff->hasPerm(TicketModel::PERM_CREATE, false)) {
     $nav->addSubMenu(array('desc'=>__('New Ticket'),
