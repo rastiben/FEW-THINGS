@@ -4,13 +4,14 @@ moment.locale('fr');
 app.factory('stockFactory',['$http','$rootScope','$httpParamSerializerJQLike',function($http,$rootScope,$httpParamSerializerJQLike){
     var stock;
     return {
-        query : function(agent) {
+        query : function(stock) {
              return $http({method: 'POST',
-                    url: './ajaxs.php/stock/'+agent,
+                    url: './ajaxs.php/stock/'+stock,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 })
                 .then(function(data){
                     stock = data;
+                    return stock;
                 })
          },
          getSN : function(reference,agent){
@@ -291,16 +292,16 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
     }
 
     /*STOCK*/
-    $scope.getStock = function(agent){
-        $scope.agent = agent;
+    $scope.getStock = function(stock){
+        //$scope.agent = agent;
 
         //display balls
         $('.fixed-right').css('display','none');
         $('.ticket_right').css('height','auto');
         $('.balls').css('display','block');
 
-        stockFactory.query('nicolas').then(function(){
-            $scope.stock = stockFactory.getStock().data;
+        stockFactory.query(stock).then(function(data){
+            $scope.stock = data.data;
             $rootScope.$broadcast('STOCK', $scope.stock);
             $('.balls').css('display','none');
             $('.stock').css('display','block');

@@ -35,7 +35,7 @@ else {
 }
 ?>
 
-<form action="staff.php?<?php echo Http::build_query($qs); ?>" method="post" class="save" autocomplete="off">
+<form action="staff.php?<?php echo Http::build_query($qs); ?>" method="post" enctype="multipart/form-data" class="save" autocomplete="off">
   <?php csrf_token(); ?>
   <input type="hidden" name="do" value="<?php echo $action; ?>">
   <input type="hidden" name="a" value="<?php echo Format::htmlchars($_REQUEST['a']); ?>">
@@ -58,8 +58,13 @@ else {
     <table class="table two-column" width="940" border="0" cellspacing="0" cellpadding="2">
       <tbody>
         <tr><td colspan="2"><div>
-        <div class="avatar pull-left" style="width: 100px; margin: 10px;">
-            <?php echo $staff->getAvatar(); ?>
+        <div class="avatar pull-left" style="width: 150px; margin: 10px;margin-top:0px">
+            <img src="../assets/avatar/<?= $staff->avatar ?>" id="avatar" style="width:150px">
+            <div class="input-file-container">
+              <input class="input-file" id="my-file" name="avatar" type="file">
+              <label for="my-file" class="input-file-trigger" tabindex="0">Select a file...</label>
+            </div>
+            <p class="file-return"></p>
         </div>
         <table class="table two-column" border="0" cellspacing="2" cellpadding="2" style="width: 760px">
         <tr>
@@ -101,6 +106,15 @@ else {
           <td>
             <input type="tel" size="18" name="mobile" class="auto phone"
               value="<?php echo Format::htmlchars($staff->mobile); ?>" />
+            <div class="error"><?php echo $errors['mobile']; ?></div>
+          </td>
+        </tr>
+        <tr>
+          <td><?php echo __('Stock');?>:</td>
+          <td>
+            <select name="stock">
+              <option>Récupération des informations</option>
+            </select>
             <div class="error"><?php echo $errors['mobile']; ?></div>
           </td>
         </tr>
@@ -440,6 +454,9 @@ foreach ($staff->teams as $TM) {
 </form>
 
 <script type="text/javascript">
+
+var existingStock = <?= json_encode($staff->stock); ?>;
+
 var addAccess = function(daid, name, role, alerts, error) {
   if (!daid) return;
   var copy = $('#extended_access_template').clone();
@@ -515,6 +532,56 @@ $('#join_team').find('button').on('click', function() {
   return false;
 });
 
+$.ajax({
+  type:"GET",
+  url:'./ajaxs.php/stocks'
+}).success(function(data){
+  $('select[name="stock"]').html('');
+  $.each($.parseJSON(data),function(id,stock){
+    $('select[name="stock"]').append('<option id="'+id+'">'+stock+'</option>');
+  });
+  $('select[name="stock"]').val(existingStock);
+});
+
+// initialisation des variables
+var fileInput  = document.querySelector( ".input-file" ),
+    button     = document.querySelector( ".input-file-trigger" ),
+    the_return = document.querySelector(".file-return");
+
+// action lorsque la "barre d'espace" ou "Entrée" est pressée
+button.addEventListener( "keydown", function( event ) {
+    if ( event.keyCode == 13 || event.keyCode == 32 ) {
+        fileInput.focus();
+    }
+});
+
+// action lorsque le label est cliqué
+button.addEventListener( "click", function( event ) {
+   fileInput.focus();
+   return false;
+});
+
+// affiche un retour visuel dès que input:file change
+fileInput.addEventListener( "change", function( event ) {
+    the_return.innerHTML = this.value;
+});
+
+function readURL(input) {
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#avatar').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#my-file").change(function(){
+    readURL(this);
+});
 
 <?php
 foreach ($staff->dept_access as $dept_access) {

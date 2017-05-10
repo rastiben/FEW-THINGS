@@ -38,7 +38,7 @@ class bdd_stock{
         FROM F_ARTSTOCK,F_DEPOT,F_ARTICLE
         WHERE  F_DEPOT.DE_No = F_ARTSTOCK.DE_No
         AND F_ARTICLE.AR_Ref = F_ARTSTOCK.AR_Ref
-        AND F_DEPOT.DE_Intitule = 'STOCK VOITURE NICOLAS'
+        AND F_DEPOT.DE_Intitule = ?
         AND F_ARTSTOCK.AS_QteSto > 0");
         $values = array($stock);
         $this->DB->execute($prepare,$values);
@@ -54,6 +54,13 @@ class bdd_stock{
         $values = array($reference,$stock);
         $this->DB->execute($prepare,$values);
         return $prepare;
+    }
+
+    public function getStocks(){
+      $prepare = $this->DB->prepare("SELECT DE_INTITULE FROM F_DEPOT");
+      $values = array();
+      $this->DB->execute($prepare,$values);
+      return $prepare;
     }
 }
 

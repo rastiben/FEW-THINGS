@@ -441,7 +441,7 @@ var scp_prep = function() {
            visible = true;
            setTimeout(function() {
              $that.addClass('fixed').css('top', '-'+$that.height()+'px')
-                .animate({top:0}, {easing: 'swing', duration:'fast'});
+                .animate({top:76}, {easing: 'swing', duration:'fast'});
              placeholder.height($that.height());
              $that.find('[data-dropdown]').dropdown('hide');
            }, 1);
@@ -1227,4 +1227,3 @@ window.relativeAdjust = setInterval(function() {
     if (rel) $(this).text(rel);
   });
 }, 20000);
-

@@ -38,6 +38,7 @@ $routes = array
     'contrat' => array('contrat',':orgId'),
     'stock' => array('stock',':agent'),
     'stockSN' => array('stock','sn',':reference',':agent'),
+    'stocks' => array('stocks'),
     'docSage' => array('docSage',':action'),
     'print' => array('print',':doc',':id'),
     'printNoId' => array('print',':doc')
@@ -154,13 +155,16 @@ if(strstr($url['path'],"org")){
     }
 /*REQUETES STOCKS*/
 } else if(strstr($url['path'],"stock")){
-    if($url['path'] == 'stockSN'){
+    if($url['path'] == "stocks"){
+        $stocks = stock::getStocks();
+        echo json_encode($stocks);
+    }else if($url['path'] == 'stockSN'){
         $reference = $url['parameters']['reference'];
         $agent = $url['parameters']['agent'];
         $stock = stock::getSN($reference,$agent);
         echo json_encode($stock);
     }else if(isset($url['parameters']['agent'])){
-        $agent = $url['parameters']['agent'];
+        $agent = urldecode($url['parameters']['agent']);
         $stock = new stock($agent);
         echo json_encode($stock->articles);
     }

@@ -6,6 +6,7 @@ if($topic && $_REQUEST['a']!='add') {
     $action='update';
     $submit_text=__('Save Changes');
     $info=$topic->getInfo();
+    $couleur=$topic->getCouleur();
     $info['id']=$topic->getId();
     $info['pid']=$topic->getPid();
     $trans['name'] = $topic->getTranslateTag('name');
@@ -52,6 +53,15 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
             <td>
                 <input type="text" size="30" name="topic" value="<?php echo $info['topic']; ?>"
                 autofocus data-translate-tag="<?php echo $trans['name']; ?>"/>
+                &nbsp;<span class="error">*&nbsp;<?php echo $errors['topic']; ?></span> <i class="help-tip icon-question-sign" href="#topic"></i>
+            </td>
+        </tr>
+        <tr>
+            <td width="180" class="required">
+               Couleur
+            </td>
+            <td>
+                <input type="text" id="colorpickerField" class="jscolor {hash:true}" size="30" name="couleur" value="<?php echo $couleur; ?>"/>
                 &nbsp;<span class="error">*&nbsp;<?php echo $errors['topic']; ?></span> <i class="help-tip icon-question-sign" href="#topic"></i>
             </td>
         </tr>
@@ -107,7 +117,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
 
 </div>
 
-<div class="tab_content" id="routing">
+<div class="tab_content" id="routing" style="display:none">
 <div style="padding:8px 0;border-bottom: 2px dotted #ddd;">
 <div><b class="big"><?php echo __('New ticket options');?></b></div>
 </div>
@@ -332,7 +342,7 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
  </table>
 </div>
 
-<div class="tab_content" id="forms">
+<div class="tab_content" id="forms" style="display:none">
  <table id="topic-forms" class="table" border="0" cellspacing="0" cellpadding="2">
 
 <?php
@@ -412,6 +422,9 @@ foreach ($forms as $F) {
     <input type="button" name="cancel" value="<?php echo __('Cancel');?>" onclick='window.location.href="helptopics.php"'>
 </p>
 </form>
+
+<script src="./js/jscolor.js"></script>
+
 <script type="text/javascript">
 $(function() {
     var request = null,
@@ -456,5 +469,6 @@ $(function() {
         return ui;
       }
     }).disableSelection();
+
 });
 </script>

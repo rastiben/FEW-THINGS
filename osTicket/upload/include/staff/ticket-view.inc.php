@@ -294,6 +294,9 @@ if($ticket->isOverdue())
     */
     //$orgsC = OrganisationCollection::getInstance();
     //die();
+
+    //TODO : Asynchronously load org data
+
     /*$org = $orgsC->lookUpByName($ticket->getOwner()->getOrgId())[0]
     $org_name = $userInfo->getOrgName();
     $org = $orgsC->searchByName($org_name)[0];*/
@@ -571,7 +574,7 @@ if($ticket->isOverdue())
             <div class="articleSortie" ng-repeat="article in stockOut">{{article.reference}} ({{article.quantite}})</div>
         </div>
 
-        <button ng-click="getStock('<?php echo $thisstaff->getFirstName() ?>')" class="pending getStock">Récupérer le stock</button>
+        <button ng-click="getStock('<?php echo $thisstaff->getStock() ?>')" class="pending getStock">Récupérer le stock</button>
         <button class="cancel pending newRapport" type="cancel" style="float:right">Annuler</button>
         <input ng-click="addRapport()" class="horaire add save pending pull-right" type="submit" name="addRapport">
         </div>

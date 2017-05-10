@@ -270,6 +270,10 @@ implements AuthenticatedUser, EmailContact, TemplateVariable {
         return $this->getId();
     }
 
+    function getStock() {
+      return $this->stock;
+    }
+
     function getEmail() {
         return $this->email;
     }
@@ -964,6 +968,16 @@ implements AuthenticatedUser, EmailContact, TemplateVariable {
 
     function update($vars, &$errors) {
 
+      //echo realpath('../assets/avatar/');
+      //die();
+      if(isset($_FILES['avatar']))
+      {
+           $dossier = '../assets/avatar/';
+           $fichier = basename($_FILES['avatar']['name']);
+           if(!move_uploaded_file($_FILES['avatar']['tmp_name'], $dossier . $fichier)) //Si la fonction renvoie TRUE, c'est que ça a fonctionné...
+                echo 'Echec de l\'upload !';
+      }
+
         $vars['username']=Format::striptags($vars['username']);
         $vars['firstname']=Format::striptags($vars['firstname']);
         $vars['lastname']=Format::striptags($vars['lastname']);
@@ -1057,7 +1071,9 @@ implements AuthenticatedUser, EmailContact, TemplateVariable {
         $this->phone = Format::phone($vars['phone']);
         $this->phone_ext = $vars['phone_ext'];
         $this->mobile = Format::phone($vars['mobile']);
+        $this->stock = $vars['stock'];
         $this->notes = Format::sanitize($vars['notes']);
+        $this->avatar = $fichier;
 
         if ($errors)
             return false;

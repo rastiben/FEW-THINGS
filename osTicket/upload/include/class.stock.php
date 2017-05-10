@@ -9,10 +9,8 @@ class stock{
 
     private $bdd_stock = null;
 
-    public function __construct($agent){
+    public function __construct($stock){
         $this->bdd_stock = bdd_stock::getInstance();
-
-        $stock = 'STOCK VOITURE ' . strtoupper($agent);
         $result = $this->bdd_stock->getStock($stock);
 
         while($myRow = odbc_fetch_array($result)){
@@ -43,6 +41,20 @@ class stock{
         }
 
         return $serialNumbers;
+    }
+
+    /*
+    *Récupération de tout les stocks
+    */
+    public static function getStocks(){
+      $bdd_stock = bdd_stock::getInstance();
+      $temp = $bdd_stock->getStocks();
+
+      $stocks = [];
+      while($myRow = odbc_fetch_array($temp)){
+          array_push($stocks,$myRow['DE_INTITULE']);
+      }
+      return $stocks;
     }
 }
 

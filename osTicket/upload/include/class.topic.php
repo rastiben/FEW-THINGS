@@ -206,6 +206,10 @@ implements TemplateVariable {
         return $this->ht;
     }
 
+    function getCouleur(){
+      return $this->couleur;
+    }
+
     function getInfo() {
         $base = $this->getHashtable();
         $base['custom-numbers'] = $this->hasFlag(self::FLAG_CUSTOM_NUMBERS);
@@ -412,6 +416,7 @@ implements TemplateVariable {
             return false;
 
         $this->topic = $vars['topic'];
+        $this->couleur = $vars['couleur'];
         $this->topic_pid = $vars['topic_pid'] ?: 0;
         $this->dept_id = $vars['dept_id'];
         $this->priority_id = $vars['priority_id'] ?: 0;
