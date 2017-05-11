@@ -161,6 +161,15 @@ class OrganisationCollection{
         return $this->getCollectionPage($offset,$query);
     }
 
+    public function findOneOccur($query){
+      $result = $this->bdd_org->findOneOccur($query);
+
+      $row = odbc_fetch_array($result);
+      $this->addOrg($row);
+
+      return $this->orgs;
+    }
+
     /*
     *Ajout d'un élément dans la collection
     */

@@ -29,8 +29,8 @@ $routes = array
 (
     // actual path => filter
     'org' => array('org', ':id'),
+    'orgA' => array('org', 'find', ':id'),
     'orgV' => array('org', ':id', ':variable'),
-    'orgA' => array('org', ':action', ':id'),
     'orgs' => array('orgs', ':name'),
     'orgsTypeahead' => array('orgs', 'typeahead' , ':name'),
     'userC' => array('user',':action'),
@@ -110,8 +110,8 @@ if(strstr($url['path'],"org")){
               break;
       }
     } else {
-        if($action = isset($url['parameters']['action'])){
-
+        if($url['path'] == "orgA"){
+          echo json_encode($org->findOneOccur($url['parameters']['id']));
         } else if($variable = isset($url['parameters']['variable'])) {
             $org = $org->lookUpById($url['parameters']['id'])[0];
             if($variable == "name"){

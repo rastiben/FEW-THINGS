@@ -106,6 +106,18 @@ class bdd_org{
         return $prepare;
     }
 
+    public function findOneOccur($name){
+
+      $prepare = $this->DB->prepareSAGE("SELECT CT_Num,CT_Adresse,CT_Complement,CT_CodePostal,CT_Ville,CT_Telephone,CT_Site
+                                      FROM F_COMPTET
+                                      WHERE CT_Num = ?
+                                      ORDER BY CT_Num");
+      $values = array($name);
+
+      $this->DB->execute($prepare,$values);
+      return $prepare;
+    }
+
     /*
     *Récupération du nombre d'organisation
     */

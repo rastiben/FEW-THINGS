@@ -1577,6 +1577,17 @@ $(function() {
 
     $(document).ready(function(){
 
+        //Récupération asynchrone des données de l'organisation
+        $.ajax({
+          type:'GET',
+          url:'ajaxs.php/org/find/'+<?= json_encode($orgName); ?>
+        }).success(function(data){
+          data = $.parseJSON(data);
+          data = data[0].data;
+          console.log(data);
+          $('#contact').val(data[1] + " " + data[2] + "\n" + data[3] + " " + data[4]);
+        });
+
         var user = <?php echo $user->getId(); ?>;
         /*$(document).on('click','.rapports tbody tr',function(){
             var id = $(this).attr('id');

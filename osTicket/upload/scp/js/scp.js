@@ -408,8 +408,7 @@ var scp_prep = function() {
 
      // Append scroll-up icon and set stop point for this sticky
      $('.content', $that)
-     .append($('<a class="only sticky scroll-up" href="#" data-stop='
-             + (placeholder.offset().top-75) +' ><i class="icon-chevron-up icon-large"></i></a>'));
+     .append($('<a class="only sticky scroll-up" href="#" data-stop="0" ><i class="icon-chevron-up icon-large"></i></a>'));
 
      if (stop.length) {
        var onmove = function() {
@@ -434,8 +433,8 @@ var scp_prep = function() {
        // what the y position of the scroll is
        var y = $(this).scrollTop();
 
-       // whether that's below the form
-       if (y >= top && (!stopAt || stopAt > y)) {
+       // whether that's below the form && (!stopAt || stopAt > y)
+       if (y >= top) {
          // if so, add the fixed class
          if (!visible) {
            visible = true;

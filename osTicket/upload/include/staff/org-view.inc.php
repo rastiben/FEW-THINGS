@@ -10,7 +10,9 @@ $name = $_GET['id'];
 
 $orgsC = OrganisationCollection::getInstance();
 
-$org = $orgsC->lookUpByName($name)[0];
+$org = $orgsC->findOneOccur($name)[0];
+//var_dump($org);
+//die();
 
 $apiKey = "AIzaSyB4pINEbEV_CczgRAhMhIza1OAEzSJV6JA";
 

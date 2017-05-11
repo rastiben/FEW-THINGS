@@ -606,7 +606,7 @@ return false;">
                 $subject = $subject_field->display($subject_field->to_php($T['cdata__subject']));
                 $threadcount=$T['thread_count'];
                 if(!strcasecmp($T['status__state'],'open') && !$T['isanswered'] && !$T['lock__staff_id']) {
-                    $tid=sprintf('<b>%s</b>',$tid);
+                    $tid=sprintf('%s',$tid);
                 }
                 ?>
             <tr id="<?php echo $T['ticket_id']; ?>">
@@ -736,4 +736,3 @@ $(function() {
     $('[data-toggle=tooltip]').tooltip();
 });
 </script>
-
