@@ -764,6 +764,16 @@ $.confirm = function(message, title, options) {
     return D.promise();
 };
 
+$.contratLookup = function (url, cb) {
+    $.dialog(url, 201, function (xhr) {
+        var contrat = $.parseJSON(xhr.responseText);
+        if (cb) return cb(user);
+    }, {
+        onshow: function() { $('#user-search').focus(); }
+    });
+};
+
+
 $.userLookup = function (url, cb) {
     $.dialog(url, 201, function (xhr) {
         var user = $.parseJSON(xhr.responseText);
