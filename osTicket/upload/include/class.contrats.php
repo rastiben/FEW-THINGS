@@ -24,7 +24,13 @@ implements TemplateVariable {
 
         if ($create) {
             $contrat = new Contrat(array(
-                'code' => $vars['code']
+                'code' => $vars['code'],
+                'org' => $vars['org'],
+                'etat' => $vars['etat'],
+                'date_debut' => $vars['date_debut'],
+                'date_fin' => $vars['date_fin'],
+                'type' => $vars['type'],
+                'created' => $vars['created']
             ));
             // Is there an organization registered for this domain
             /*list($mailbox, $domain) = explode('@', $vars['email'], 2);

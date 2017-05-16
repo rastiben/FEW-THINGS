@@ -2571,7 +2571,7 @@ tr i.help-tip.warning {
 }
 
 .ui-datepicker {
-    z-index: 200 !important;
+    z-index: 10000 !important;
 }
 .draft-saved {
     background-color: black;
@@ -2703,7 +2703,7 @@ td.indented {
     padding: 0px 10px;
     width: calc(100% - 230px);
     margin-top: 76px;
-    background: whitesmoke;
+    background: #f8f8f8;
 }
 
 .sticky.bar{
@@ -3705,6 +3705,10 @@ span.avatar{
     line-height: 24px;
     padding: 1px 10px;
     font-size: 0.95em;
+}
+
+.contratModals .modal-dialog{
+  margin: 100px auto;
 }
 
 #contrat{

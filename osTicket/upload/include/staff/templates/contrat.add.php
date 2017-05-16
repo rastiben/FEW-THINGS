@@ -14,7 +14,7 @@ if (!$_POST) {
 <div class="clear"></div>
 
 <div id="contrat-add" style="display:block; margin:5px;">
-    <form method="post" class="user" action="#contrat/add">
+    <form method="post" class="user" action="#contrats/add">
 
       <div class="form-group row col-md-12">
         <label for="code" class="col-sm-2 col-form-label">Code</label>
@@ -24,9 +24,9 @@ if (!$_POST) {
       </div>
 
       <div class="form-group row col-md-12">
-        <label for="client" class="col-sm-2 col-form-label">Client</label>
+        <label for="org" class="col-sm-2 col-form-label">Client</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="client" name="client" placeholder="Client" value="toto">
+          <input type="text" class="form-control" id="org" name="org" placeholder="Client" value="toto">
         </div>
       </div>
 
@@ -59,9 +59,9 @@ if (!$_POST) {
       </div>
 
       <div class="form-group row col-md-12">
-        <label for="etablissement" class="col-sm-2 col-form-label">Date d'établissement</label>
+        <label for="created" class="col-sm-2 col-form-label">Date d'établissement</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="etablissement" name="etablissement" placeholder="Date d'établissement" value="15/05/2017">
+          <input type="text" class="form-control" id="created" name="created" placeholder="Date d'établissement" value="15/05/2017">
         </div>
       </div>
 

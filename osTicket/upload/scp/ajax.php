@@ -143,9 +143,9 @@ $dispatcher = patterns('',
         url_post('^(?P<id>\d+)/ticket/(?P<tid>\d+)/renew', 'renewLock'),
         url_post('^(?P<id>\d+)/release', 'releaseLock')
     )),
-    url('^/contrat', patterns('ajax.contrat.php:ContratsAjaxAPI',
-        url_get('^/add$', 'addContrat'),
-        url_post('^/add$', 'createContrat')
+    url('^/contrats', patterns('ajax.contrat.php:ContratsAjaxAPI',
+        url_post('$','createContrat'),
+        url_get('$','index')
     )),
     url('^/tickets/', patterns('ajax.tickets.php:TicketsAjaxAPI',
         url_get('^(?P<tid>\d+)/change-user$', 'changeUserForm'),
