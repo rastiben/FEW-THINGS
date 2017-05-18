@@ -144,7 +144,9 @@ $dispatcher = patterns('',
         url_post('^(?P<id>\d+)/release', 'releaseLock')
     )),
     url('^/contrats', patterns('ajax.contrat.php:ContratsAjaxAPI',
-        url_post('$','createContrat'),
+        url_delete('^/(?P<id>\d+)$', 'delete'),
+        url_post('^/(?P<id>\d+)$','update'),
+        url_post('$','add'),
         url_get('$','index')
     )),
     url('^/tickets/', patterns('ajax.tickets.php:TicketsAjaxAPI',

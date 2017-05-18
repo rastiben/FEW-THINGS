@@ -100,6 +100,17 @@ class OrganisationCollection{
         echo "</tbody></table>";
     }
 
+    /*Récupération des contrats*/
+    public function getContrats(){
+      $result = $this->bdd_org->getContrats();
+
+      while($myRow = odbc_fetch_array($result)){
+        //die();
+        $contrats[] = $myRow['AR_REF'];
+      }
+
+      return $contrats;
+    }
 
     /*
     *Récupération des Organisation

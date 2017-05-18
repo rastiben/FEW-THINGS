@@ -1073,7 +1073,9 @@ implements AuthenticatedUser, EmailContact, TemplateVariable {
         $this->mobile = Format::phone($vars['mobile']);
         $this->stock = $vars['stock'];
         $this->notes = Format::sanitize($vars['notes']);
-        $this->avatar = $fichier;
+
+        if(!empty($fichier))
+          $this->avatar = $fichier;
 
         if ($errors)
             return false;

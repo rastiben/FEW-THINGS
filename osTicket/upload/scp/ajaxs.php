@@ -6,7 +6,6 @@ require_once('staff.inc.php');
 require_once(INCLUDE_DIR . 'class.org.php');
 require_once(INCLUDE_DIR . 'class.users.php');
 require_once(INCLUDE_DIR . 'class.stats.php');
-require_once(INCLUDE_DIR . 'class.contrat.php');
 require_once(INCLUDE_DIR . 'class.stock.php');
 require_once(INCLUDE_DIR . 'class.docSage.php');
 require_once(INCLUDE_DIR . 'class.pdf.php');
@@ -33,10 +32,10 @@ $routes = array
     'orgV' => array('org', ':id', ':variable'),
     'orgs' => array('orgs', ':name'),
     'orgsTypeahead' => array('orgs', 'typeahead' , ':name'),
+    'contratTypeahead' => array('contrats','typeahead'),
     'userC' => array('user',':action'),
     'userA' => array('user', ':action', ':id'),
     'stats' => array('stats',':objet',':id'),
-    'contrat' => array('contrat',':orgId'),
     'stock' => array('stock',':agent'),
     'stockSN' => array('stock','sn',':reference',':agent'),
     'stocks' => array('stocks'),
@@ -158,15 +157,7 @@ if(strstr($url['path'],"org")){
         }
     }
 /*REQUETES CONTRAT*/
-} else if(strstr($url['path'],"contrat")){
-    $contrat = contratCollection::getInstance();
-    if($action = isset($url['parameters']['action'])){
-
-    } else if($id = isset($url['parameters']['orgId'])){
-        echo json_encode($contrat->lookUpById($id));
-    }
-/*REQUETES STOCKS*/
-} else if(strstr($url['path'],"stock")){
+}  else if(strstr($url['path'],"stock")){
     if($url['path'] == "stocks"){
         $stocks = stock::getStocks();
         echo json_encode($stocks);
@@ -205,6 +196,13 @@ if(strstr($url['path'],"org")){
         $pdfBase64 = base64_encode($output);
         echo 'data:application/pdf;base64,' . $pdfBase64;
     }
+} else if(strstr($url['path'],"contrat")){
+  $org = OrganisationCollection::getInstance();
+  if($url['path'] == "contratTypeahead"){
+    //[F_ARTICLE] where AR_Ref LIKE '%CONTRAT%'
+    $contrats = $org->getContrats();
+    echo json_encode(array_values($contrats));
+  }
 }
 
 ?>

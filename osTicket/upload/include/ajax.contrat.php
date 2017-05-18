@@ -4,19 +4,6 @@ require_once(INCLUDE_DIR.'class.contrats.php');
 
 class ContratsAjaxAPI extends AjaxController {
 
-  function addContrat(){
-
-    include(STAFFINC_DIR . 'templates/contrat.add.php');
-
-  }
-
-  function createContrat(){
-    $vars = (array)json_decode(file_get_contents("php://input"));
-
-    if (($contrat = Contrat::fromVars($vars)))
-        Http::response(201, json_encode($contrat));
-  }
-
   function index(){
     $contrats = ContratModel::objects();
     $temp = [];
@@ -27,6 +14,28 @@ class ContratsAjaxAPI extends AjaxController {
     }
 
     Http::response(200, json_encode($temp));
+  }
+
+  function add(){
+    $vars = (array)json_decode(file_get_contents("php://input"));
+
+    if (($contrat = Contrat::fromVars($vars)))
+        Http::response(201, json_encode($contrat->ht));
+  }
+
+  function update(){
+    $vars = (array)json_decode(file_get_contents("php://input"));
+
+    if (($contrat = Contrat::fromVars($vars,false,true)))
+        Http::response(201, json_encode($contrat->ht));
+  }
+
+  function delete($id){
+    if (!($org = Contrat::lookup($id)))
+        Http::response(404, 'Unknown organization');
+
+    if ($org->delete())
+        Http::response(204, 'Organization deleted successfully');
   }
 
 }

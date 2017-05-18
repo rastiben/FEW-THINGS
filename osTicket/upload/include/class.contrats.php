@@ -18,42 +18,26 @@ implements TemplateVariable {
     }
 
     static function fromVars($vars, $create=true, $update=false) {
-        //$vars = array_filter( $vars );
-        //var_dump($vars);
-        //die();
 
-        if ($create) {
-            $contrat = new Contrat(array(
-                'code' => $vars['code'],
-                'org' => $vars['org'],
-                'etat' => $vars['etat'],
-                'date_debut' => $vars['date_debut'],
-                'date_fin' => $vars['date_fin'],
-                'type' => $vars['type'],
-                'created' => $vars['created']
-            ));
-            // Is there an organization registered for this domain
-            /*list($mailbox, $domain) = explode('@', $vars['email'], 2);
-            if (isset($vars['org_id']))
-                $user->set('org_id', $vars['org_id']);
-            elseif ($org = Organization::forDomain($domain))
-                $user->setOrganization($org, false);*/
+        if ($create)
+            $contrat = new Contrat();
+        elseif ($update)
+            $contrat = static::lookup(array('id'=>$vars['id']));
 
-            try {
-                $contrat->save(true);
-                /*$user->emails->add($user->default_email);
-                // Attach initial custom fields
-                $user->addDynamicData($vars);*/
-            }
-            catch (OrmException $e) {
-                return null;
-            }
-            //Signal::send('user.created', $user);
+
+        $contrat->code = $vars['code'];
+        $contrat->org = $vars['org'];
+        $contrat->etat = $vars['etat'];
+        $contrat->date_debut = $vars['date_debut'];
+        $contrat->date_fin = $vars['date_fin'];
+        $contrat->type = $vars['type'];
+
+        try {
+            $contrat->save(true);
         }
-        /*elseif ($update) {
-            $errors = array();
-            $user->updateInfo($vars, $errors, true);
-        }*/
+        catch (OrmException $e) {
+            return null;
+        }
 
         return $contrat;
     }

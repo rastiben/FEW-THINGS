@@ -3711,6 +3711,31 @@ span.avatar{
   margin: 100px auto;
 }
 
+.newContrat{
+  margin-bottom: 15px;
+}
+
+.glyphicon-sort-by-alphabet-alt,
+.glyphicon-sort-by-alphabet{
+  float: right;
+  margin-top: 4px;
+}
+
+.contratTable thead input{
+  width: 100%;
+  margin-top: 5px;
+}
+
+.contratTable tbody tr{
+  cursor: pointer;
+}
+
+.contratModals select{
+  width: 100%;
+  height: 34px;
+  border: 1px solid #aaa;
+}
+
 #contrat{
     background: white;
     padding: 15px;
@@ -5681,4 +5706,8 @@ table.atelierT thead tr{
     width: 100%;
     height: 100vh;
     /*min-height: 500px;*/
+}
+
+md-pagination-wrapper {
+    width:auto !important;
 }

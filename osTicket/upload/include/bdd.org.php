@@ -41,6 +41,13 @@ class bdd_org{
         return [(50*($offset-1)),$between];
     }
 
+
+    public function getContrats(){
+      $prepare = $this->DB->prepare("SELECT AR_REF FROM F_ARTICLE WHERE AR_REF LIKE '%CONTRAT%' ORDER BY AR_REF");
+      $values = array();
+      $this->DB->execute($prepare,$values);
+      return $prepare;
+    }
     /*
     *Récupération des organisations
     */
