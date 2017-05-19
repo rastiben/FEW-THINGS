@@ -1,6 +1,6 @@
 <div ng-controller="contratCtrl">
 
-  <modal class="contratModals" lolo="modal1" data-header="{{header}}" data-contrat="contrat" data-valid="{{valid}}" data-ng-click-right-button="save(contrat)"></modal>
+  <modal class="contratModals" lolo="modal1" data-header="{{header}}" data-contrat="contrat" data-valid="{{valid}}" data-ng-click-left-button="cancel()" data-ng-click-right-button="save(contrat)"></modal>
   <a href="#{{modal1}}" role="button" class="btn btn-success newContrat" ng-click="modalInfo('Ajout d\'un contrat','Créer le contrat',null,'create')" data-toggle="modal">Nouveau contrat</a>
 
   <div class="block">
@@ -37,7 +37,7 @@
           <td>{{contrat.date_debut}}</td>
           <td>{{contrat.date_fin}}</td>
           <td>{{contrat.type}}</td>
-          <td>{{contrat.nextDate}}</td>
+          <td>{{contrat.date_prochaine_facture}}</td>
           <td><button ng-click="remove(contrat); $event.stopPropagation();" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></td>
         </tr>
       </tbody>

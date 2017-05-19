@@ -19,9 +19,7 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
     contrat.date_debut = moment(contrat.date_debut,'YYYY-MM-DD').format('DD/MM/YYYY');
     contrat.date_fin = moment(contrat.date_fin,'YYYY-MM-DD').format('DD/MM/YYYY');
     contrat.created = moment(contrat.created,'YYYY-MM-DD').format('DD/MM/YYYY');
-
-    /*Ajout de la prochaine date*/
-    contrat.nextDate = moment(contrat.date_fin,'DD-MM-YYYY').add(1,'d').format('DD/MM/YYYY');
+    contrat.date_prochaine_facture = moment(contrat.date_prochaine_facture,'YYYY-MM-DD').format('DD/MM/YYYY');
   }
 
   $scope.contrats = contratFactory.query(function(contrats){
@@ -44,6 +42,7 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
     else
       var contrat = angular.copy($scope.contrat);
 
+      /*Informations*/
       contrat.code = vars['code'];
       contrat.org = vars['org'];
       contrat.client = vars['client'];
@@ -52,13 +51,24 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
       contrat.date_fin = moment(vars['date_fin'],'DD/MM/YYYY').format('YYYY-MM-DD');
       contrat.type = vars['type'];
 
-    //if($scope.action == "create")
-      //contrat.created = moment().format('YYYY-MM-DD');
+      /*Facturation*/
+      contrat.periodicite = vars['periodicite'];
+      contrat.date_prochaine_facture = moment(vars['date_prochaine_facture'],'DD/MM/YYYY').format('YYYY-MM-DD');
+      contrat.tva = vars['tva'];
+      contrat.compte_compta = vars['compte_compta'];
+      contrat.prix = vars['prix'];
 
       contrat.$save(function(contrat){
         $scope.initContratData(contrat);
         if($scope.action == "create")
           $scope.contrats.push(angular.copy(contrat));
+      });
+    }
+
+    $scope.cancel = function(){
+      //$scope.contrat = $scope.originalContrat;
+      angular.forEach($scope.originalContrat,function(value,key){
+        $scope.contrat[key] = value;
       });
     }
 
@@ -72,7 +82,12 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
   $scope.modalInfo = function(header,valid,contrat,action){
     $scope.header = header;
     $scope.valid = valid;
-    $scope.contrat = contrat;
+    $scope.contrat = contrat == null ? new contratFactory() : contrat;
+    $scope.originalContrat = angular.copy($scope.contrat);
+
+    if($scope.contrat.compte_compta == undefined)
+      $scope.contrat.compte_compta = '706760';
+
     $scope.action = action;
   }
 
@@ -120,7 +135,7 @@ app.directive('datepicker', function() {
   };
 });
 
-app.directive('modal',['$http', function ($http) {
+app.directive('modal',['$http','contratFactory', function ($http,contratFactory) {
     return {
         restrict: 'EA',
         scope: {
@@ -129,21 +144,23 @@ app.directive('modal',['$http', function ($http) {
             footer: '@',
             validButton : '@valid',
             contrat : '=',
-            callbackbuttonleft: '&ngClickLeftButton',
             callbackbuttonright: '&ngClickRightButton',
+            callbackbuttonleft:'&ngClickLeftButton',
             handler: '=lolo'
         },
         templateUrl: './templates/modal.html',
         transclude: true,
         controller: function ($scope) {
             $scope.handler = 'pop';
-            /*$scope.updateEnd = function(){
-              $scope.contrat.date_fin = $scope.contrat.date_fin.add(1,'y');
-            }*/
-            $scope.updateCode = function(){
-              if(scope.contrat.date_debut != undefined)
-                $scope.contrat.code = moment(scope.contrat.date_debut,'DD/MM/YYYY').format('YYYYMM') + scope.contrat.org;
+            $scope.multiply = function(keycode){
+              if(keycode == 13)
+                if($scope.contrat.prix != undefined)
+                  $scope.contrat.prix = parseInt($scope.contrat.prix) + ($scope.contrat.prix * ($scope.multiplicateur/100));
             }
+            /*$scope.updateCode = function(){
+              if($scope.contrat.date_debut != undefined)
+                $scope.contrat.code = moment($scope.contrat.date_debut,'DD/MM/YYYY').format('YYYYMM') + $scope.contrat.org;
+            }*/
         },
         link: function(scope, element, attrs){
           $http.get('ajaxs.php/contrats/typeahead').then(function(data){
@@ -158,7 +175,8 @@ app.directive('typeahead', function () {
   return {
     restrict: 'A',
     scope: {
-      url:'='
+      url:'=',
+      contrat:'='
     },
     link: function(scope, element, attrs){
       $(element).typeahead({
@@ -172,7 +190,11 @@ app.directive('typeahead', function () {
               });
           },
           onselect: function (obj) {
-              $(element).val(obj.id);
+            scope.$apply(function(){
+              scope.contrat.org = obj.id;
+              if(scope.contrat.date_debut != undefined)
+                scope.contrat.code = moment(scope.contrat.date_debut,'DD/MM/YYYY').format('YYYYMM') + scope.contrat.org;
+            });
           },
           property: "/bin/true"
       });
