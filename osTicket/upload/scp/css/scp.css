@@ -3713,6 +3713,12 @@ span.avatar{
 
 .newContrat{
   margin-bottom: 15px;
+  float: right;
+}
+
+.invoicesBtn{
+  float:right;
+  margin: 0px 10px 30px 10px;
 }
 
 .glyphicon-sort-by-alphabet-alt,

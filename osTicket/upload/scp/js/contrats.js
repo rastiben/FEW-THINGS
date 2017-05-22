@@ -13,6 +13,7 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
 
   $scope.header = "Ajout d'un contrat";
   $scope.valid = "Créer le contrat";
+  $scope.doInvoice = false;
 
   $scope.initContratData = function(contrat){
     /*init date*/
@@ -50,6 +51,7 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
       contrat.date_debut = moment(vars['date_debut'],'DD/MM/YYYY').format('YYYY-MM-DD');
       contrat.date_fin = moment(vars['date_fin'],'DD/MM/YYYY').format('YYYY-MM-DD');
       contrat.type = vars['type'];
+      contrat.comments = vars['comments'];
 
       /*Facturation*/
       contrat.periodicite = vars['periodicite'];
@@ -79,17 +81,69 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
       });
     }
 
-  $scope.modalInfo = function(header,valid,contrat,action){
-    $scope.header = header;
-    $scope.valid = valid;
-    $scope.contrat = contrat == null ? new contratFactory() : contrat;
-    $scope.originalContrat = angular.copy($scope.contrat);
+    $scope.facturer = function(){
+      $scope.doInvoice = true;
+      $scope.createdFilter = moment().add(1,'M').format('MM/YYYY');
+    }
 
-    if($scope.contrat.compte_compta == undefined)
-      $scope.contrat.compte_compta = '706760';
+    $scope.printList = function(){
+      var h = screen.height;
+      var w = screen.width;
+      var printContents = $(".block").html();
+      var popupWin = window.open('', '_blank', 'width='+w+',height='+h+'');
+      popupWin.document.open();
+      popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</body></html>');
+      popupWin.document.close();
+    }
 
-    $scope.action = action;
-  }
+    $scope.invoice = function(){
+      //modification de toutes les dates associée à la facture
+      //Calcule des nouvelles date de renouvellement du contrat.
+      angular.forEach($scope.filteredContrats,function(value,key){
+        var momentDateProchaineFacture = moment(value.date_prochaine_facture,"DD/MM/YYYY");
+        var momentDateDebut = moment(value.date_debut,"DD/MM/YYYY");
+        var momentDateFin = moment(value.date_fin,"DD/MM/YYYY");
+        var month = 0;
+        switch (value.periodicite) {
+          case "Annuelle":
+          month = 12;
+            break;
+          case "Semestrielle":
+          month = 6;
+            break;
+          case "Trimestrielle":
+          month = 3;
+            break;
+          case "Mensuelle":
+          month = 1;
+            break;
+        }
+        value.date_prochaine_facture = momentDateProchaineFacture.add(month,"M").format("DD/MM/YYYY");
+        momentDateProchaineFacture = moment(value.date_prochaine_facture,"DD/MM/YYYY");
+
+        if(momentDateFin.isBefore(momentDateProchaineFacture)){
+          var monthDifference = momentDateFin.diff(momentDateDebut,'month');
+          value.date_debut = momentDateDebut.add(12,"M").format('DD/MM/YYYY');
+          value.date_fin = momentDateDebut.add(monthDifference,'M').endOf("month").format('DD/MM/YYYY');
+        }
+      });
+
+      $scope.doInvoice = false;
+      $scope.createdFilter = '';
+
+    }
+
+    $scope.modalInfo = function(header,valid,contrat,action){
+      $scope.header = header;
+      $scope.valid = valid;
+      $scope.contrat = contrat == null ? new contratFactory() : contrat;
+      $scope.originalContrat = angular.copy($scope.contrat);
+
+      if($scope.contrat.compte_compta == undefined)
+        $scope.contrat.compte_compta = '706760';
+
+      $scope.action = action;
+    }
 
 }]);
 

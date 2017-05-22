@@ -36,6 +36,7 @@ implements TemplateVariable {
         $contrat->tva = $vars['tva'];
         $contrat->compte_compta = $vars['compte_compta'];
         $contrat->prix = $vars['prix'];
+        $contrat->comments = $vars['comments'];
 
         try {
             $contrat->save(true);
