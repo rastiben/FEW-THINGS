@@ -344,6 +344,7 @@ foreach ($staff->dept_access as $dept_access) {
   <div id="permissions" style="display:none">
 <?php
     $permissions = array();
+
     foreach (RolePermission::allPermissions() as $g => $perms) {
         foreach ($perms as $k=>$P) {
             if (!$P['primary'])

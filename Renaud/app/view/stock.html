@@ -1,0 +1,78 @@
+
+<div id="titre_general">
+    <h1>Information/Historique du Materiel </h1>
+</div>
+
+
+<img src=".\image\test.jpg" id="test" width="300" height="200" align="right"/>
+
+        <div id="info">
+            <p>
+            <b>Id liste :</b> {{stock.id}}
+            </p>
+            <p>
+            <b>Designation :</b> {{stock.designation}}
+            </p>    
+            <p>
+            <b>Marque :</b> {{stock.marque}}
+            </p>    
+            <p>
+            <b>Categorie :</b> {{stock.categorie}}
+            </p>    
+            <p>
+            <b>Numero :</b> {{stock.numero}}
+            </p>
+            <div id="buttonInfo">
+            <b>Modifier les infos du Materiel :</b>
+            <button class="btn-warning" ng-click="displayForm()">
+                <span class="glyphicon glyphicon-refresh"></span>
+            </button>
+            </div>            
+</div>
+
+            <div id="buttonHisto">
+            <b>Ajouter un Historique :</b>
+            <button class="btn-warning" ng-click="displayForm()">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+
+
+
+<div id="historique" ng-repeat="historique in stock.historique"> 
+        <div id="titre">
+            <h3>Historique</h3>
+        </div>   
+        <div id="historique1">
+            <p>
+            <b>Id historique :</b> {{historique.id_histo}}
+            </p>
+            <p>
+            <b>Organisation :</b> {{historique.organisation}}
+            </p>    
+            <p>
+            <b>Destinataire : </b>{{historique.destinataire}}
+            </p>
+        </div>
+    
+        <div id="historique2"> 
+            <p>
+            <b>Initiale_Tech :</b> {{historique.initiale_tech}}
+            </p>    
+            <p>
+            <b>Raison_Pret :</b> {{historique.raison_pret}}
+            </p>
+            <p>
+            <b>Date_Pret :</b> {{historique.date}}
+            </p>
+        </div>
+    
+</div>
+
+
+ 
+
+
+    
+
+

@@ -15,12 +15,15 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
   $scope.valid = "Créer le contrat";
   $scope.doInvoice = false;
 
+  $scope.prixTotal = 0;
+
   $scope.initContratData = function(contrat){
     /*init date*/
     contrat.date_debut = moment(contrat.date_debut,'YYYY-MM-DD').format('DD/MM/YYYY');
     contrat.date_fin = moment(contrat.date_fin,'YYYY-MM-DD').format('DD/MM/YYYY');
     contrat.created = moment(contrat.created,'YYYY-MM-DD').format('DD/MM/YYYY');
     contrat.date_prochaine_facture = moment(contrat.date_prochaine_facture,'YYYY-MM-DD').format('DD/MM/YYYY');
+    $scope.prixTotal = parseFloat($scope.prixTotal) + parseFloat(contrat.prix);
   }
 
   $scope.contrats = contratFactory.query(function(contrats){
@@ -87,6 +90,7 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
     }
 
     $scope.printList = function(){
+      /*Impression sous le format EXCEL*/
       var h = screen.height;
       var w = screen.width;
       var printContents = $(".block").html();
@@ -118,14 +122,15 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
           month = 1;
             break;
         }
-        value.date_prochaine_facture = momentDateProchaineFacture.add(month,"M").format("DD/MM/YYYY");
-        momentDateProchaineFacture = moment(value.date_prochaine_facture,"DD/MM/YYYY");
 
         if(momentDateFin.isBefore(momentDateProchaineFacture)){
-          var monthDifference = momentDateFin.diff(momentDateDebut,'month');
+          var difference = momentDateFin.diff(momentDateDebut);
           value.date_debut = momentDateDebut.add(12,"M").format('DD/MM/YYYY');
-          value.date_fin = momentDateDebut.add(monthDifference,'M').endOf("month").format('DD/MM/YYYY');
+          value.date_fin = momentDateDebut.add(difference).format('DD/MM/YYYY');
         }
+
+        value.date_prochaine_facture = momentDateProchaineFacture.add(month,"M").format("DD/MM/YYYY");
+        //momentDateProchaineFacture = moment(value.date_prochaine_facture,"DD/MM/YYYY");
       });
 
       $scope.doInvoice = false;
@@ -178,7 +183,7 @@ app.directive('datepicker', function() {
       if($(el).attr('id') == "date_debut"){
         datepicker.on("input change",function(e){
           scope.$apply(function(){
-            scope.contrat.date_fin = moment(scope.contrat.date_debut,'DD/MM/YYYY').add(1,'y').format('DD/MM/YYYY');
+            scope.contrat.date_fin = moment(scope.contrat.date_debut,'DD/MM/YYYY').add(1,'y').subtract(1,'d').format('DD/MM/YYYY');
             if(scope.contrat.org != undefined)
               scope.contrat.code = moment(scope.contrat.date_debut,'DD/MM/YYYY').format('YYYYMM') + scope.contrat.org;
             scope.contrat.date_prochaine_facture = scope.contrat.date_debut;
@@ -198,6 +203,7 @@ app.directive('modal',['$http','contratFactory', function ($http,contratFactory)
             footer: '@',
             validButton : '@valid',
             contrat : '=',
+            permissions : '=',
             callbackbuttonright: '&ngClickRightButton',
             callbackbuttonleft:'&ngClickLeftButton',
             handler: '=lolo'
@@ -262,5 +268,11 @@ app.directive('typeahead', function () {
 app.filter('mFormat', function() {
     return function(input, format) {
       return (!!input) ? input.format(format) : '';
+    }
+});
+
+app.filter('havePerms', function() {
+    return function(input, perms) {
+      return input[perms] != undefined ? true : false;
     }
 });

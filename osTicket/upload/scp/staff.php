@@ -17,6 +17,7 @@ require('admin.inc.php');
 
 // Included here for role permission registration
 require_once INCLUDE_DIR . 'class.report.php';
+require_once(INCLUDE_DIR . 'class.contrats.php');
 
 $staff=null;
 if($_REQUEST['id'] && !($staff=Staff::lookup($_REQUEST['id'])))

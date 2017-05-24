@@ -1,0 +1,64 @@
+html, body{
+    height: 100%;
+    width: 100%;
+}
+
+#map{
+    height: 100%;
+    width: 100%;
+    /*width: 50%;
+    margin: 0 auto;*/
+}
+
+.app{
+    height:100%;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.form{
+    position: absolute !important;
+    top: 0;
+    left: -370px;
+    z-index: 9999;
+    height: 100%;
+    width: 350px !important;
+    background: #5499C7;
+    color: white;
+    padding-top: 15px;
+    transition: all 0.2s linear;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.submit{
+    margin-right:15px;
+}
+
+.filtres{
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
+.filtres.col-md-7{
+    padding-left: 15px !important;
+    padding-right: 2px !important;
+}
+
+.filtre{
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    padding: 0px !important;
+    cursor: pointer;
+    background: #3498DB;
+    color: white;
+    font-size: 15px;
+}
+
+.filtre.active{
+    background: #1F618D;
+}
+
+.filtre:hover{
+    background: #1F618D;
+}

@@ -5,7 +5,37 @@ class ContratModel extends VerySimpleModel {
         'table' => 'ost_contrat',
         'pk' => array('id')
     );
+
+    const PERM_CREATE =     'contrat.create';
+    const PERM_EDIT   =     'contrat.edit';
+    const PERM_VIEW   =     'contrat.view';
+
+    static protected $perms = array(
+        self::PERM_CREATE => array(
+            'title' => /* @trans */ 'Create',
+            'desc' => /* @trans */ 'Ability to add new contrats',
+            'primary' => true,
+        ),
+        self::PERM_EDIT => array(
+            'title' => /* @trans */ 'Edit',
+            'desc' => /* @trans */ 'Ability to manage contrat information',
+            'primary' => true,
+        ),
+        self::PERM_VIEW => array(
+            'title' => /* @trans */ 'View',
+            'desc' => /* @trans */ 'Ability to view contrat information',
+            'primary' => true,
+        ),
+    );
+
+    static function getPermissions() {
+        return self::$perms;
+    }
+
 }
+
+include_once INCLUDE_DIR.'class.role.php';
+RolePermission::register(/* @trans */ 'Contrats', ContratModel::getPermissions());
 
 class Contrat extends ContratModel
 implements TemplateVariable {

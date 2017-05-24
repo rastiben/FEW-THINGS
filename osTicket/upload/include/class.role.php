@@ -14,6 +14,8 @@
     vim: expandtab sw=4 ts=4 sts=4:
 **********************************************************************/
 
+require_once(INCLUDE_DIR . 'class.contrats.php');
+
 class RoleModel extends VerySimpleModel {
     static $meta = array(
         'table' => ROLE_TABLE,
@@ -270,6 +272,7 @@ class RolePermission {
             /* @trans */ 'Organizations' => array(),
             /* @trans */ 'Knowledgebase' => array(),
             /* @trans */ 'Miscellaneous' => array(),
+            /* @trans */ 'Contrats' => array(),
             );
 
     var $perms;
