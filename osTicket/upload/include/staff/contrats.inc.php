@@ -2,9 +2,12 @@
   $permissions = $thisstaff->getPermission()->perms;
 ?>
 
+<script src="http://cdn.jsdelivr.net/alasql/0.3/alasql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.10.3/xlsx.full.min.js"></script>
+
 <div ng-controller="contratCtrl" ng-init="permissions = <?= htmlspecialchars(json_encode($permissions)) ?>">
 
-  <modal class="contratModals" lolo="modal1" data-permissions="permissions" data-header="{{header}}" data-contrat="contrat" data-valid="{{valid}}" data-ng-click-left-button="cancel()" data-ng-click-right-button="save(contrat)"></modal>
+  <modal class="contratModals" lolo="modal1" data-permissions="permissions" data-header="{{header}}" data-contrat="contrat" data-valid="{{valid}}" data-call-remove="remove(contrat)" data-ng-click-left-button="cancel()" data-ng-click-right-button="save(contrat)"></modal>
   <a ng-if="permissions | havePerms:'contrat.create'" href="#{{modal1}}" role="button" class="btn btn-success newContrat" ng-click="modalInfo('Ajout d\'un contrat','Créer le contrat',null,'create')" data-toggle="modal">Nouveau contrat</a>
   <a ng-if="permissions | havePerms:'contrat.edit'" role="button" class="btn btn-primary" ng-click="facturer()">Facturer</a>
 
@@ -58,7 +61,7 @@
           <td><hr /></td>
           <td><hr /></td>
           <td><hr /></td>
-          <td ng-if="permissions | havePerms:'contrat.edit'" class="text-right">{{prixTotal | currency:'€':2}}</td>
+          <td ng-if="permissions | havePerms:'contrat.edit'" class="text-right">{{calcPrice() | currency:'€':2}}</td>
           <td><hr /></td>
           <td><hr /></td>
         </tr>

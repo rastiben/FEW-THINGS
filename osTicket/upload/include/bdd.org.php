@@ -43,7 +43,7 @@ class bdd_org{
 
 
     public function getContrats(){
-      $prepare = $this->DB->prepare("SELECT AR_REF FROM F_ARTICLE WHERE AR_REF LIKE '%CONTRAT%' ORDER BY AR_REF");
+      $prepare = $this->DB->prepare("SELECT AR_REF FROM F_ARTICLE WHERE AR_REF LIKE '%CONTRAT%' AND AR_Sommeil = 0 ORDER BY AR_REF");
       $values = array();
       $this->DB->execute($prepare,$values);
       return $prepare;

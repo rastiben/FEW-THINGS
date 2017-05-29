@@ -143,7 +143,7 @@ a time {
     position: fixed;
     width: calc(100% - 230px);
     top: 0;
-    z-index: 9999;
+    z-index: 1040;
     margin-left: -10px;
     margin-left: 230px;
 }
@@ -4314,6 +4314,7 @@ table.atelierT thead tr{
 
 .modal{
     text-align:left;
+    z-index: 9999 !important;
 }
 
 .modal-title{

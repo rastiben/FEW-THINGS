@@ -15,16 +15,22 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
   $scope.valid = "Créer le contrat";
   $scope.doInvoice = false;
 
-  $scope.prixTotal = 0;
-
   $scope.initContratData = function(contrat){
     /*init date*/
     contrat.date_debut = moment(contrat.date_debut,'YYYY-MM-DD').format('DD/MM/YYYY');
     contrat.date_fin = moment(contrat.date_fin,'YYYY-MM-DD').format('DD/MM/YYYY');
     contrat.created = moment(contrat.created,'YYYY-MM-DD').format('DD/MM/YYYY');
     contrat.date_prochaine_facture = moment(contrat.date_prochaine_facture,'YYYY-MM-DD').format('DD/MM/YYYY');
-    $scope.prixTotal = parseFloat($scope.prixTotal) + parseFloat(contrat.prix);
-  }
+    //$scope.calcPrice();
+  };
+
+  $scope.calcPrice = function(){
+    var prixTotal = 0;
+    angular.forEach($scope.filteredContrats,function(contrat,key){
+      prixTotal = parseFloat(prixTotal) + parseFloat(contrat.prix);
+    });
+    return prixTotal;
+  };
 
   $scope.contrats = contratFactory.query(function(contrats){
     angular.forEach(contrats,function(contrat,key){
@@ -39,6 +45,10 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
     $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : true;
     $scope.propertyName = propertyName;
   };
+
+  /*$scope.$watch('filteredContrats', function(newValue, oldValue) {
+    //console.log(newValue);
+  });*/
 
   $scope.save = function(vars){
     if($scope.action == "create")
@@ -91,13 +101,19 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
 
     $scope.printList = function(){
       /*Impression sous le format EXCEL*/
-      var h = screen.height;
-      var w = screen.width;
-      var printContents = $(".block").html();
-      var popupWin = window.open('', '_blank', 'width='+w+',height='+h+'');
-      popupWin.document.open();
-      popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</body></html>');
-      popupWin.document.close();
+      var toPrint = [];
+      var toKeep = ['code','org','date_debut','date_fin','type','prix','date_prochaine_facture'];
+
+      angular.forEach($scope.filteredContrats,function(contrat,keyC){
+        var temp = {};
+        angular.forEach(contrat,function(value,property){
+          if(toKeep.includes(property))
+            temp[property.charAt(0).toUpperCase() + property.replace(/_/g,' ').slice(1)] = value;
+        });
+        toPrint.push(temp);
+      });
+
+      alasql('SELECT * INTO XLSX("Facturation_Contrats_'+moment().format('MMYYYY')+'.xlsx",{headers:true}) FROM ?',[toPrint]);
     }
 
     $scope.invoice = function(){
@@ -206,6 +222,7 @@ app.directive('modal',['$http','contratFactory', function ($http,contratFactory)
             permissions : '=',
             callbackbuttonright: '&ngClickRightButton',
             callbackbuttonleft:'&ngClickLeftButton',
+            callremove:'&callRemove',
             handler: '=lolo'
         },
         templateUrl: './templates/modal.html',

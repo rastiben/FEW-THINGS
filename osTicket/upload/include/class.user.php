@@ -138,6 +138,11 @@ class UserModel extends VerySimpleModel {
          return $this->get('org_name');
     }
 
+    //FIRSTNAME
+    /*function getFirstName(){
+      return $this->get('cdata_firsname');
+    }*/
+
     function getOrganization() {
         return $this->org;
     }
@@ -296,6 +301,12 @@ implements TemplateVariable {
     function getPhoneNumber() {
         foreach ($this->getDynamicData() as $e)
             if ($a = $e->getAnswer('phone'))
+                return $a;
+    }
+
+    function getFirstName() {
+        foreach ($this->getDynamicData() as $e)
+            if ($a = $e->getAnswer('firsname'))
                 return $a;
     }
 

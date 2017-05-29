@@ -16,6 +16,7 @@ html, body{
     padding: 0px !important;
 }
 
+
 .form{
     position: absolute !important;
     top: 0;
@@ -28,6 +29,11 @@ html, body{
     padding-top: 15px;
     transition: all 0.2s linear;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.form.active{
+    left: 0px;
+    display: block !important;
 }
 
 .submit{

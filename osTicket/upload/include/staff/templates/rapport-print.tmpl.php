@@ -116,14 +116,14 @@
     </tr>
     <tr>
         <td style="text-align:center;border-left:1px solid black;border-right:1px solid black;">
-        <?php echo $ticket->getId(); ?>
+        <?php echo $ticket->getNumber(); ?>
         </td>
         <td style="text-align:center;border-left:1px solid black;border-right:1px solid black;">
-                   <!--<?php $createDate = new DateTime($ticket->getCreateDate());
-                    echo $createDate->format('d/m/Y'); ?>-->23/01/2017
+                   <?php $createDate = new DateTime($ticket->getCreateDate());
+                    echo $createDate->format('d/m/Y'); ?>
                     </td>
         <td style="text-align:center;border-left:1px solid black;border-right:1px solid black;">
-        <!--<?php echo $createDate->format('H:i'); ?>-->10h30
+          <?php echo $createDate->format('H:i'); ?>
         </td>
         <td style="text-align:center;border-left:1px solid black;border-right:1px solid black;">
         <?php echo $rapport[0]['lastname']; ?>
@@ -141,7 +141,7 @@
     </tr>
     <tr>
         <td colspan="1" style="text-align:center;border-top:1px solid black;border-right:1px solid black;">
-            David Becot
+            <?= ucfirst($ticket->getUser()->getName()) . ' ' . ucfirst($ticket->getUser()->getFirstName()); ?>
         </td>
         <td colspan="5" style="text-align:center;border-top:1px solid black;border-left:1px solid black;"><?php echo $ticket->getSubject(); ?>
         </td>

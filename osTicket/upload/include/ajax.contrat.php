@@ -31,11 +31,12 @@ class ContratsAjaxAPI extends AjaxController {
   }
 
   function delete($id){
-    if (!($org = Contrat::lookup($id)))
+    if (!($contrat = Contrat::lookup($id)))
         Http::response(404, 'Unknown organization');
 
-    if ($org->delete())
-        Http::response(204, 'Organization deleted successfully');
+    if ($contrat->delete())
+        Http::response(204, json_encode($contrat->ht));
+    //'Organization deleted successfully'
   }
 
 }
