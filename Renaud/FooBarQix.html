@@ -1,0 +1,54 @@
+<html>
+
+    <body>
+    
+    </body>
+
+    <script>
+    
+        for (var x = 1;x<100;x++){
+            var result = "";
+            
+            if(x%3 ===0){
+                result += "Foo";
+            }
+            if(x%5 === 0){
+                result += "Bar";
+            }
+            if(x%7 === 0){
+                result += "Qix";
+            }
+            
+            for(var i = 0;i<x.toString().length;i++){
+                if(x.toString().charAt(i)==="3") result += "Foo";
+                if(x.toString().charAt(i)==="5") result += "Bar";
+                if(x.toString().charAt(i)==="7") result += "Qix";
+            }
+            
+            if (result === ""){
+                result = x;
+            }
+            
+            console.log(x + " => " +result);
+    
+        }
+        
+        /*var char = ["","","","Foo","","Bar","","Qix","",""];
+        for(var i = 1;i<=1000;i++){
+            var result = "";
+            
+            if(i%3 === 0) result += "Foo";
+            if(i%5 === 0) result += "Bar";
+            if(i%7 === 0) result += "Qix";
+            
+            result += [].map.call(i.toString(),function(c){
+                return char[c];
+            }).join('');
+            
+            result = result.length == 0 ? i.toString() : result;
+            console.log(i.toString() + "=>" + result);
+        }*/
+    
+    
+    </script>
+</html>

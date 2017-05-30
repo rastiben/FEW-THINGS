@@ -133,7 +133,7 @@
                     groupes[i].push([]);
                 }
             }
-            //30 assoc
+            
             for(var i = 0;i < 75;i++){
                 var value = undefined;
                 do{
@@ -151,7 +151,7 @@
             var indexTable = 0;
             
             for(var i = 0;i<associations.length;i++){
-                for(var j= 0;j<4;j++){
+                for(var j= 0;j<6;j++){
                     var personne = {name:faker.name.findName(),association:associations[i],groupe:indexGroupes,t1:indexTable};
                     personnes.push(personne);
                     groupes[indexGroupes][indexTable].push(personne);   

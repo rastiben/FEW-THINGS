@@ -172,14 +172,18 @@ if(strstr($url['path'],"org")){
         echo json_encode($stock->articles);
     }
     //orgid
-} else if(strstr($url['path'],"docSage")){
+} else if(strstr($url['path'],'docSage')){
     if(isset($url['parameters']['action'])){
-        if($url['parameters']['action'] == 'createDoc') {
+      $action = $url['parameters']['action'];
+        if($action == 'createDoc') {
             $angular_http_params = (array)json_decode(trim(file_get_contents('php://input')));
             $org = $angular_http_params['org'];
             $stock = $angular_http_params['stock'];
             $lines = $angular_http_params['lines'];
             docSage::createDocument($org,$stock,$lines);
+        } else if($action == 'contrats'){
+          $angular_http_params = (array)json_decode(trim(file_get_contents('php://input')));
+          docSage::createDocumentF($angular_http_params);
         }
     }
 } else if(strstr($url['path'],"print")){

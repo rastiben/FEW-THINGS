@@ -12,9 +12,9 @@
 
 Ajouter un Materiel :
 <button class="btn-warning" ng-click="displayForm()">
-    <span class="glyphicon glyphicon-plus"></span>
+    <span ng-class="{'glyphicon glyphicon-minus' : addForm , 'glyphicon glyphicon-plus' : !addForm}"></span>
 </button>
-    
+
 
     <form novalidate class="simple-form" ng-show="addForm">
         <fieldset>
@@ -23,15 +23,15 @@ Ajouter un Materiel :
             <label>Categorie : <input type="text" ng-model="categorie" /></label>
             <label>Marque : <input type="text" ng-model="marque" /></label>
             <label>Num Serie : <input type="text" ng-model="numero" /></label>
-            <label class="checkbox-label">Disponible : <input type="checkbox" ng-model="dispo" class="radio" value="1" /></label>
+            <label>Disponible : <input type="checkbox" ng-model="dispo" ng-init="checked=true" class="radio" ng-checked="true" /></label> 
 
-            <input type="reset" ng-click="clear()" class="reset" value="Effacer" /> 
+            <input type="reset" onclick="reset()" ng-click="clear()" class="reset" value="Effacer" />
 
+            
+            
             <input type="submit" ng-click="addLine(stocks.length+1)" class="valid" value="Valider" />
         </fieldset>
     </form>
-
-
 
 
 <table class="table" style="text-align:center">
@@ -116,10 +116,13 @@ Ajouter un Materiel :
         </td> 
             
         <td>
-        <button class="btn btn-danger" ng-click="delete(stock)">
-            <span class="glyphicon glyphicon-trash"></span>
-        </button>
-        </td>    
+        <span class="glyphicon glyphicon-trash"></span>
+        <button confirmed-click="sayHi()" 
+        ng-confirm-click="Would you like to say hi?">Say hi to {{ stock.id }}</button>
+      
+        </td>
+        
+
         
     </tr>
 </tbody>

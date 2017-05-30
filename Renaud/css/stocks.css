@@ -91,11 +91,12 @@ fieldset{
 }
 
 label {
-     vertical-align: bottom;
+    vertical-align: bottom;
+    display: inline-block;
 }
 
-label.checkbox-label input[type=checkbox]{
-    position: relative;
-    vertical-align: middle;
-    bottom: 1px;   
+.radio{
+    width:20px;
+    height:20px;
+    display: inline-block;
 }

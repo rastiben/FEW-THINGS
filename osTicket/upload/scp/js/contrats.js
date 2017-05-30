@@ -9,7 +9,7 @@ app.factory('contratFactory',['$resource',function($resource){
 
 }]);
 
-app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,contratFactory,$log){
+app.controller('contratCtrl',['$scope','contratFactory','$log','$http',function($scope,contratFactory,$log,$http){
 
   $scope.header = "Ajout d'un contrat";
   $scope.valid = "Créer le contrat";
@@ -107,13 +107,17 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
       angular.forEach($scope.filteredContrats,function(contrat,keyC){
         var temp = {};
         angular.forEach(contrat,function(value,property){
-          if(toKeep.includes(property))
+          if(toKeep.includes(property)){
+            if(property == "prix")
+              value = parseFloat(value).toFixed(2);
             temp[property.charAt(0).toUpperCase() + property.replace(/_/g,' ').slice(1)] = value;
+          }
         });
         toPrint.push(temp);
       });
 
-      alasql('SELECT * INTO XLSX("Facturation_Contrats_'+moment().format('MMYYYY')+'.xlsx",{headers:true}) FROM ?',[toPrint]);
+      var opts = {headers:true};
+      alasql('SELECT * INTO XLSX("Facturation_Contrats_'+moment().format('MMYYYY')+'.xlsx",?) FROM ?',[opts,toPrint]);
     }
 
     $scope.invoice = function(){
@@ -147,6 +151,11 @@ app.controller('contratCtrl',['$scope','contratFactory','$log',function($scope,c
 
         value.date_prochaine_facture = momentDateProchaineFacture.add(month,"M").format("DD/MM/YYYY");
         //momentDateProchaineFacture = moment(value.date_prochaine_facture,"DD/MM/YYYY");
+      });
+
+      $http.post('./ajaxs.php/docSage/contrats',{contrats:JSON.stringify($scope.filteredContrats)},{headers: {'Content-Type': 'application/json'}})
+      .then(function(){
+
       });
 
       $scope.doInvoice = false;

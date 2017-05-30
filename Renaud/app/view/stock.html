@@ -22,22 +22,56 @@
             <p>
             <b>Numero :</b> {{stock.numero}}
             </p>
+            
+<!-- ############################################################################################## -->
+        </div>
             <div id="buttonInfo">
             <b>Modifier les infos du Materiel :</b>
-            <button class="btn-warning" ng-click="displayForm()">
-                <span class="glyphicon glyphicon-refresh"></span>
+            <button class="btn-warning" ng-click="displayInfo()">                   <!-- Ajout du boutton de modification d'information--> 
+                <span class="glyphicon glyphicon-refresh : addInfo"></span>
             </button>
-            </div>            
-</div>
+            </div>
+<!-- ############################################################################################## -->
 
-            <div id="buttonHisto">
+    <form novalidate class="simple-form" ng-show="addForm">
+        <fieldset>
+            <legend>Info du materiel : </legend>
+            <label>Designation : <input type="text" ng-model="stock.designation" /></label>
+            <label>Marque : <input type="text" ng-model="stock.marque" /></label>
+            <label>Categorie : <input type="text" ng-model="stock.categorie" /></label>           <!-- Valeurs a modifier dans le formulaire Info -->
+            <label>Numero : <input type="text" ng-model="stock.numero" /></label>
+            <input type="button" ng-click="reset()" class="reset" value="Reinitialiser" /> 
+            <input type="submit" ng-click="update(stock)" class="valid" value="Valider" />
+        </fieldset>
+    </form>
+
+
+<!-- ############################################################################################## -->
+
+    <div id="buttonHisto">
             <b>Ajouter un Historique :</b>
-            <button class="btn-warning" ng-click="displayForm()">
-                <span class="glyphicon glyphicon-plus"></span>
+            <button class="btn-warning" ng-click="displayHisto()">                  <!-- Ajout du boutton d'ajout d'historique --> 
+                <span class="glyphicon glyphicon-plus : addHisto"></span>
             </button>
-        </div>
+    </div>
+<!-- ############################################################################################## -->
 
+ 
+    <form novalidate class="simple-form" ng-show="addForm2">
+        <fieldset>
+            <legend>Info de l'historique : </legend>
+        <!--    <label>Id historique : <input type="text" ng-model="id_histo" /></label> -->
+            <label>Organisation : <input type="text" ng-model="organisation" /></label>
+            <label>Destinataire : <input type="text" ng-model="destinataire" /></label>
+            <label>Initiale du Technicien : <input type="text" ng-model="initiale_tech" /></label><!-- Valeurs a modifier dans le formulaire Histo -->
+            <label>Raison du Pret : <input type="text" ng-model="raison_pret" /></label>
+            <label>Date du Pret : <input type="text" ng-model="date" /></label>
+            <input type="reset" ng-click="clear()" class="reset" value="Effacer" /> 
+            <input type="submit" ng-click="addHisto()" class="valid" value="Valider" />
+        </fieldset> 
+    </form>
 
+<!-- ############################################################################################## -->
 
 <div id="historique" ng-repeat="historique in stock.historique"> 
         <div id="titre">

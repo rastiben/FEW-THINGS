@@ -43,9 +43,149 @@ class docSage{
         //$BDD->createDocLine();
     }
 
+    public static function createDocumentF($params){
+      //récupération des info envoyé depuis angular
+      $contrats = (array)json_decode($params['contrats']);
+
+      $contrat = $contrats[0];
+
+      //$final_str = iconv("UTF-8", "CP1252", 'Contrat ' . $typeM . ' de ' . $contrat->prix  . ' € HT');
+      //$final_str = utf8_decode(htmlentities('Contrat ' . $typeM . ' de ' . $contrat->prix  . ' € HT'));
+      //echo $final_str;
+      //die();
+      //Création de la boucle pour chaque contrat
+      //foreach($contrats as $contrat){
+        //Initialisation des données supplémentaire
+        //Calcule de la date précédente
+        switch($contrat->periodicite){
+          case "Annuelle":
+            $month = 12;
+            $contrat->prixF = $contrat->prix;
+            $contrat->designation = "Annuelle";
+            break;
+          case "Semestrielle":
+            $month = 6;
+            $contrat->prixF = $contrat->prix / 2;
+            $contrat->designation = "Semestrielle";
+            break;
+          case "Trimestrielle":
+            $month = 3;
+            $contrat->prixF = $contrat->prix / 4;
+            $contrat->designation = "Annuelle";
+            break;
+          case "Mensuelle":
+            $month = 1;
+            $contrat->prixF = $contrat->prix / 12;
+            break;
+        }
+
+        //periodicite masculin
+        $typeM = substr($contrat->periodicite,0,strlen($contrat->periodicite)-2);
+
+        $date = DateTime::createFromFormat('d/m/Y',$contrat->date_prochaine_facture);
+        $dateCopy = clone $date;
+        $contrat->date_debut_periode = $date->sub(new DateInterval('P'.$month.'M'))->format('d/m/Y');
+        $contrat->date_fin_periode = $dateCopy->sub(new DateInterval('P1D'))->format('d/m/Y');
+
+        $date1 = DateTime::createFromFormat('d/m/Y',$contrat->date_debut_periode);
+        $date2 = DateTime::createFromFormat('d/m/Y',$contrat->date_debut);
+        $monthDiff = $date1->diff($date2)->format('%m');
+
+        switch($contrat->periodicite){
+          case "Annuelle":
+            $contrat->designation = "Maintenance Ann";
+            break;
+          case "Semestrielle":
+            $contrat->designation = "Maintenance Sem " . (($monthDiff*2)/12+1);
+            break;
+          case "Trimestrielle":
+            $contrat->designation = "Maintenance Trim " . (($monthDiff*4)/12+1);
+            break;
+          case "Mensuelle":
+            $contrat->designation = "Maintenance Men " . (($monthDiff*12)/12+1);
+            break;
+        }
+      //}
+        //var_dump($contrats);
+        //die();
+
+        //Pour chaque ligne
+        $BDD = self::getBDD();
+
+        //Récupération du lieu de livraison
+        $LI_NO = $BDD->getLi_NO($contrat->org);
+        $LI_NO = odbc_fetch_array($LI_NO)['LI_NO'];
+
+        //Création de l'entete
+        do{
+            $DO_PIECE = self::getDoPieceFA4($BDD);
+            $ENTETE = $BDD->createDocEnteteContrat($contrat->org,2,$LI_NO,$DO_PIECE,$contrat->designation);
+        } while ($ENTETE === false);
+
+        //$DO_PIECE = "FA4N0405";
+
+        $ligne = 1000;
+
+        //Ajout des lignes
+        //$org,$DO_PIECE,$ligne,$line->reference,$line->stock,$line->designation,$line->prix,$sn
+
+        //Ajout de la ligne renouvellement
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'Renouvellement du contrat de maintenance');
+        $ligne += 1000;
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'');
+
+        //Ajout de la ligne du contrat
+        //Switch calcule du prix : mensuelle = /12;trimestielle = /4; semestrielle/2;
+        $info = $BDD->getArticle($contrat->type);
+        $BDD->createDocLineContrat($contrat->org,$DO_PIECE,3000,$contrat->type,1,0,odbc_fetch_array($info)['AR_DESIGN'],$contrat->prixF);
+
+
+        //Ajout des ligne de facturation
+        $ligne += 2000;
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'');
+        $ligne += 1000;
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'Facture ' . $contrat->periodicite);
+        $ligne += 1000;
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'du ' . $contrat->date_debut_periode . ' au ' . $contrat->date_fin_periode);
+
+        $ligne += 1000;
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'');
+        $ligne += 1000;
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'');
+
+        //Switch masculin = $typeM
+        $ligne += 1000;
+
+
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'Contrat ' . $typeM . ' de ' . $contrat->prix  . ' EUR HT');
+        $ligne += 1000;
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'du ' . $contrat->date_debut . ' au ' . $contrat->date_fin);
+
+        $ligne += 1000;
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'');
+        $ligne += 1000;
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'');
+
+        $ligne += 1000;
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'Nos factures de maintenance sont payables à réception.');
+        $ligne += 1000;
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'D\'avance, nous vous en remercions');
+
+        //$BDD = self::getBDD();
+        //$BDD->createDocLine();
+        //}
+    }
+
     private static function getDoPiece($BDD){
         //Récupération du nouveau BL
         $DO_PIECE = $BDD->getNewNumBL();
+        $DO_PIECE = odbc_fetch_array($DO_PIECE)['DC_PIECE'];
+        return $DO_PIECE;
+    }
+
+    private static function getDoPieceFA4($BDD){
+        //Récupération du nouveau numero de facture
+        $DO_PIECE = $BDD->getNewNumFA4();
         $DO_PIECE = odbc_fetch_array($DO_PIECE)['DC_PIECE'];
         return $DO_PIECE;
     }
