@@ -14,6 +14,7 @@ app.controller('contratCtrl',['$scope','contratFactory','$log','$http',function(
   $scope.header = "Ajout d'un contrat";
   $scope.valid = "Créer le contrat";
   $scope.doInvoice = false;
+  $scope.invoiceLoading = false;
 
   $scope.initContratData = function(contrat){
     /*init date*/
@@ -121,6 +122,8 @@ app.controller('contratCtrl',['$scope','contratFactory','$log','$http',function(
     }
 
     $scope.invoice = function(){
+
+      $scope.invoiceLoading = true;
       //modification de toutes les dates associée à la facture
       //Calcule des nouvelles date de renouvellement du contrat.
       angular.forEach($scope.filteredContrats,function(value,key){
@@ -155,7 +158,7 @@ app.controller('contratCtrl',['$scope','contratFactory','$log','$http',function(
 
       $http.post('./ajaxs.php/docSage/contrats',{contrats:JSON.stringify($scope.filteredContrats)},{headers: {'Content-Type': 'application/json'}})
       .then(function(){
-
+        $scope.invoiceLoading = false;
       });
 
       $scope.doInvoice = false;
@@ -238,10 +241,10 @@ app.directive('modal',['$http','contratFactory', function ($http,contratFactory)
         transclude: true,
         controller: function ($scope) {
             $scope.handler = 'pop';
-            $scope.multiply = function(keycode){
-              if(keycode == 13)
+            $scope.multiply = function($event){
+              if($event.keyCode == 13)
                 if($scope.contrat.prix != undefined)
-                  $scope.contrat.prix = parseInt($scope.contrat.prix) + ($scope.contrat.prix * ($scope.multiplicateur/100));
+                  $scope.contrat.prix = (parseFloat($scope.contrat.prix) + ($scope.contrat.prix * ($event.target.value/100))).toFixed(2);
             }
             /*$scope.updateCode = function(){
               if($scope.contrat.date_debut != undefined)
@@ -249,6 +252,14 @@ app.directive('modal',['$http','contratFactory', function ($http,contratFactory)
             }*/
         },
         link: function(scope, element, attrs){
+          element.bind('keydown', function(evt) {
+            if (evt.key == "Enter") {
+                evt.preventDefault(); // Doesn't work at all
+                window.stop(); // Works in all browsers but IE
+                document.execCommand("Stop"); // Works in IE
+                return false; // Don't even know why it's here. Does nothing.
+            }
+          });
           $http.get('ajaxs.php/contrats/typeahead').then(function(data){
             scope.contratTypes = data.data;
             $("#type #default").remove();

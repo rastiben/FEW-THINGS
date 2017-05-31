@@ -5747,3 +5747,15 @@ md-tabs .md-tab .md-ripple-container .md-ripple {
   background: #58D68D;
   border-color: #58D68D;
 }
+
+.invoiceLoading{
+    position: absolute;
+    /* left: 50%; */
+    margin-left: -10px;
+    margin-top: -10px;
+    width: 100%;
+    padding-top: 30px;
+    background: rgba(255,255,255,0.5);
+    height: 100%;
+    z-index: 10000;
+}

@@ -27,10 +27,18 @@ class BDD{
     /*
     *CONSTRUCTEUR
     */
-    private function __construct(){
+    private function __construct($odbc = false,$sage = false){
         try{
-            $this->ODBC = odbc_connect('DSN=srvsage;server=srvsage;', '', '');
-            $this->SAGE = odbc_connect('sage', '', '');
+            if($odbc){
+              $this->ODBC = odbc_connect('DSN=srvsage;server=srvsage;', '', '');
+            }
+            else if($sage){
+              $this->SAGE = odbc_connect('sage', '', '');
+            }
+            else{
+              $this->ODBC = odbc_connect('DSN=srvsage;server=srvsage;', '', '');
+              $this->SAGE = odbc_connect('sage', '', '');
+            }
         }catch(PDOException $e){
             die($e);
         }
@@ -39,11 +47,11 @@ class BDD{
     /*
     *Création de l'objet BDD;
     */
-    public static function getInstance()
+    public static function getInstance($odbc = false,$sage = false)
     {
         if(is_null(self::$instance))
         {
-          self::$instance = new BDD();
+          self::$instance = new BDD($odbc,$sage);
         }
         return self::$instance;
     }

@@ -15,6 +15,9 @@
     <label><input type="checkbox" ng-model="etatFilter" ng-true-value="'Actif'" ng-false-value="''" ng-init="etatFilter='Actif'">Ne pas afficher les contrats soldés</label>
   </div>
   <div class="block" style="float: left;width: 100%;">
+    <div layout="row" ng-show="invoiceLoading" class="invoiceLoading" layout-sm="column" layout-align="space-around">
+      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
     <table class="table table-striped contratTable">
       <thead>
         <th>Code<span class="sortorder" ng-click="sortBy('code')" ng-class="{'glyphicon glyphicon-sort-by-alphabet-alt':reverse && propertyName=='code' ,'glyphicon glyphicon-sort-by-alphabet':!reverse || propertyName != 'code'}"></span>

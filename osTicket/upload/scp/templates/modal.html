@@ -112,7 +112,7 @@
                             <label for="prix" class="col-sm-4 col-form-label">Prix</label>
                             <div class="col-sm-8">
                               <div class="col-md-8" style="padding:0px"><input type="text" ng-model="contrat.prix" class="form-control" id="prix" name="prix" placeholder="Prix"></div>
-                              <div class="col-md-4" style="padding-right:0px"><input type="text" ng-keyup="multiply($event.keyCode)" ng-model="multiplicateur" class="form-control" id="multiplicateur" name="multiplicateur" placeholder=""></div>
+                              <div class="col-md-4" style="padding-right:0px"><input type="text" ng-keyup="multiply($event)" class="form-control" id="multiplicateur" name="multiplicateur" placeholder=""></div>
                             </div>
                           </div>
 
@@ -124,7 +124,7 @@
             </div>
             <div class="modal-footer">
 
-                <button data-ng-click="callremove({contrat:contrat})" class="btn btn-danger" style="float:left" data-dismiss="modal" ng-if="permissions | havePerms:'contrat.edit'"><span class="glyphicon glyphicon-trash"></span></button>
+                <button type="button" data-ng-click="callremove({contrat:contrat})" class="btn btn-danger" style="float:left" data-dismiss="modal" ng-if="permissions | havePerms:'contrat.edit'"><span class="glyphicon glyphicon-trash"></span></button>
                 <button type="button" ng-if="permissions | havePerms:'contrat.edit'" class="btn btn-default" data-ng-click="callbackbuttonleft()" data-dismiss="modal">Annuler</button>
                 <button type="button" ng-if="permissions | havePerms:'contrat.edit'" class="btn btn-primary" data-dismiss="modal" data-ng-click="callbackbuttonright({contrat:contrat})">{{validButton}}</button>
 

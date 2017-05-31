@@ -48,11 +48,6 @@ class docSage{
       $contrats = (array)json_decode($params['contrats']);
 
       $contrat = $contrats[0];
-
-      //$final_str = iconv("UTF-8", "CP1252", 'Contrat ' . $typeM . ' de ' . $contrat->prix  . ' € HT');
-      //$final_str = utf8_decode(htmlentities('Contrat ' . $typeM . ' de ' . $contrat->prix  . ' € HT'));
-      //echo $final_str;
-      //die();
       //Création de la boucle pour chaque contrat
       //foreach($contrats as $contrat){
         //Initialisation des données supplémentaire
@@ -61,17 +56,14 @@ class docSage{
           case "Annuelle":
             $month = 12;
             $contrat->prixF = $contrat->prix;
-            $contrat->designation = "Annuelle";
             break;
           case "Semestrielle":
             $month = 6;
             $contrat->prixF = $contrat->prix / 2;
-            $contrat->designation = "Semestrielle";
             break;
           case "Trimestrielle":
             $month = 3;
             $contrat->prixF = $contrat->prix / 4;
-            $contrat->designation = "Annuelle";
             break;
           case "Mensuelle":
             $month = 1;
@@ -93,22 +85,21 @@ class docSage{
 
         switch($contrat->periodicite){
           case "Annuelle":
-            $contrat->designation = "Maintenance Ann";
+            $contrat->designation = "Maintenance";
             break;
           case "Semestrielle":
             $contrat->designation = "Maintenance Sem " . (($monthDiff*2)/12+1);
             break;
           case "Trimestrielle":
-            $contrat->designation = "Maintenance Trim " . (($monthDiff*4)/12+1);
+            $contrat->designation = "Maintenance Tri " . (($monthDiff*4)/12+1);
             break;
           case "Mensuelle":
-            $contrat->designation = "Maintenance Men " . (($monthDiff*12)/12+1);
+            $contrat->designation = "Maint Mens " . (($monthDiff*12)/12+1);
             break;
         }
       //}
         //var_dump($contrats);
         //die();
-
         //Pour chaque ligne
         $BDD = self::getBDD();
 
@@ -119,20 +110,13 @@ class docSage{
         //Création de l'entete
         do{
             $DO_PIECE = self::getDoPieceFA4($BDD);
-            $ENTETE = $BDD->createDocEnteteContrat($contrat->org,2,$LI_NO,$DO_PIECE,$contrat->designation);
+            $coord03 = DateTime::createFromFormat('d/m/Y',$contrat->date_debut_periode)->format('d/m/y') . '-' . DateTime::createFromFormat('d/m/Y',$contrat->date_fin_periode)->format('d/m/y');
+            $ENTETE = $BDD->createDocEnteteContrat($contrat->org,2,$LI_NO,$DO_PIECE,$contrat->designation,$coord03);
         } while ($ENTETE === false);
 
-        //$DO_PIECE = "FA4N0405";
-
-        $ligne = 1000;
-
-        //Ajout des lignes
-        //$org,$DO_PIECE,$ligne,$line->reference,$line->stock,$line->designation,$line->prix,$sn
-
         //Ajout de la ligne renouvellement
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'Renouvellement du contrat de maintenance');
-        $ligne += 1000;
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'');
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,1000,'Renouvellement du contrat de maintenance');
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,2000,'');
 
         //Ajout de la ligne du contrat
         //Switch calcule du prix : mensuelle = /12;trimestielle = /4; semestrielle/2;
@@ -141,38 +125,29 @@ class docSage{
 
 
         //Ajout des ligne de facturation
-        $ligne += 2000;
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'');
-        $ligne += 1000;
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'Facture ' . $contrat->periodicite);
-        $ligne += 1000;
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'du ' . $contrat->date_debut_periode . ' au ' . $contrat->date_fin_periode);
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,4000,'');
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,5000,'Facture ' . $contrat->periodicite);
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,6000,'du ' . $contrat->date_debut_periode . ' au ' . $contrat->date_fin_periode);
 
-        $ligne += 1000;
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'');
-        $ligne += 1000;
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'');
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,7000,'');
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,8000,'');
 
         //Switch masculin = $typeM
-        $ligne += 1000;
 
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,9000,'Contrat ' . $typeM . ' de ' . $contrat->prix  . ' EUR HT');
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,10000,'du ' . $contrat->date_debut . ' au ' . $contrat->date_fin);
 
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'Contrat ' . $typeM . ' de ' . $contrat->prix  . ' EUR HT');
-        $ligne += 1000;
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'du ' . $contrat->date_debut . ' au ' . $contrat->date_fin);
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,11000,'');
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,12000,'');
 
-        $ligne += 1000;
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'');
-        $ligne += 1000;
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'');
-
-        $ligne += 1000;
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'Nos factures de maintenance sont payables à réception.');
-        $ligne += 1000;
-        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,$ligne,'D\'avance, nous vous en remercions');
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,13000,'Nos factures de maintenance sont payables à réception.');
+        $BDD->createDocLineDesign($contrat->org,$DO_PIECE,14000,'D\'avance, nous vous en remercions');
 
         //$BDD = self::getBDD();
         //$BDD->createDocLine();
+
+        //sleep(5);
+
         //}
     }
 
