@@ -11,6 +11,7 @@ $info=($_POST && $errors)?Format::input($_POST):array();
 require_once(SCP_DIR . 'Request/Tickets.php');
 require_once(SCP_DIR . 'Request/Rapport.php');
 require_once(SCP_DIR . 'Request/Atelier.php');
+require_once(INCLUDE_DIR . 'class.contrats.php');
 
 //Get the goodies.
 $dept  = $ticket->getDept();  //Dept
@@ -247,7 +248,7 @@ if($ticket->isOverdue())
     <li><a id="ticket-tasks-tab" href="#tasks"
             data-url="<?php
         echo sprintf('#tickets/%d/tasks', $ticket->getId()); ?>"><?php
-        echo __('Tasks');
+        echo 'Tâches';
         if ($ticket->getNumTasks())
             echo sprintf('&nbsp;(<span id="ticket-tasks-count">%d</span>)', $ticket->getNumTasks());
         ?></a></li>
@@ -526,30 +527,25 @@ if($ticket->isOverdue())
        <br>
                    <!--Gestion des type de rapport-->
 
-            <table class="table table-striped contrat instal">
-                <thead>
-                    <tr>
-                        <th colspan="4"><input type="radio" name="type" value="Contrat" checked>Contrat</th>
-                        <th colspan="1"><input type="radio" name="type" value="Instal">Instal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Hotline</td>
-                        <td>Atelier/Sur site</td>
-                        <td>Régie</td>
-                        <td>Téléphonie</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="checkbox"></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+            <label><input type="radio" name="type" value="Contrat" checked>Contrat</label>
+            <select name="selectContrat" id="selectContrat">
+              <?php
+                $contrats = ContratModel::objects()->filter(array('org'=>'411ADSEA')); //$orgName
+                foreach($contrats as $contrat){
+              ?>
+                <option><?= $contrat->ht['type']; ?></option>
+
+              <?php } ?>
+              <option>OFFERT</option>
+            </select>
+            <label><input type="radio" name="type" value="Instal" checked>Instal</label>
+            <select name="selectInstal" id="selectInstal">
+              <option>Hotline</option>
+              <option>Atelier/Sur site</option>
+              <option>Régie</option>option
+              <option>Téléphonie</option>
+            </select>
+            <label><input style="margin-bottom:15px;" type="radio" name="type" value="Formation" checked>Formation</label>
 
        <label class="required" for="symptomesObservations">
                           Symptômes et observations :
@@ -625,8 +621,8 @@ if($ticket->isOverdue())
                 <td style="background:{{rapport.couleur}};color:white">{{rapport.date_rapport}}</td>
                 <td>{{rapport.firstname}} {{rapport.lastname}}</td>
                 <td>{{rapport.topic}}</td>
-                <td><i ng-class="rapport.contrat != '' ? 'fa fa-check' : ''"  aria-hidden="true"></i></td>
-                <td><i ng-class="rapport.instal != 0 ? 'fa fa-check' : ''"  aria-hidden="true"></i></td>
+                <td>{{rapport.contrat == 0 ? "" : rapport.contrat}}</td>
+                <td>{{rapport.instal == 0 ? "" : rapport.instal}}</td>
             </tr>
         </tbody>
         </table>
@@ -1128,7 +1124,7 @@ if ($errors['err'] && isset($_POST['a'])) {
         <tfoot>
             <tr>
                 <td colspan="3" style="text-align: right;padding-top: 10px;background: white;">
-                    <button ng-click="createDocument('<?php echo $org_name; ?>')">Valider</button>
+                    <button ng-click="createDocument('<?php echo $orgName; ?>')">Valider</button>
                 </td>
             </tr>
         </tfoot>

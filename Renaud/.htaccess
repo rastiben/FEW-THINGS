@@ -1,3 +1,0 @@
-Options +FollowSymlinks
-RewriteEngine On
-RewriteRule	^stocks$    index.html	[L]	

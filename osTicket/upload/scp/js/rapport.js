@@ -203,18 +203,14 @@ app.controller("rapportCtrl",["$scope","rapportFactory","stockFactory","$rootSco
 
         //Récupération des contrat ou instal (a changer)
         if($('input[value="Contrat"]').is(':checked')){
-            var i = 1;
-            $scope.contrat = "";
-            $.each($('.contrat.table.table-striped tbody tr:last-child td'),function(index, element){
-            if($('input',element).is(':checked')){
-                $scope.contrat += $scope.contrat + i + ";";
-            }
-            i += 1;
+            $scope.contrat = $('#selectContrat').val();
             $scope.instal = 0;
-        });
+        } else if($('input[value="Formation"]').is(':checked')){
+            $scope.instal = 0;
+            $scope.contrat = 0;
         } else {
-            $scope.instal = 1;
-            $scope.contrat = null;
+            $scope.instal = $('#selectInstal').val();
+            $scope.contrat = 0;
         }
 
         var comments = $('#new_symptomesObservations').val();

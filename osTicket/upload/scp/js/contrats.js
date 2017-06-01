@@ -32,7 +32,7 @@ app.controller('contratCtrl',['$scope','contratFactory','$log','$http',function(
     });
     return prixTotal;
   };
-
+  
   $scope.contrats = contratFactory.query(function(contrats){
     angular.forEach(contrats,function(contrat,key){
       $scope.initContratData(contrat);

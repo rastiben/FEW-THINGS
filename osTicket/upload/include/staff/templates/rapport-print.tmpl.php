@@ -126,7 +126,7 @@
           <?php echo $createDate->format('H:i'); ?>
         </td>
         <td style="text-align:center;border-left:1px solid black;border-right:1px solid black;">
-        <?php echo $rapport[0]['lastname']; ?>
+        <?php echo  $rapport[0]['firstname'] . ' ' . $rapport[0]['lastname']; ?>
         </td>
         <td style="text-align:center;border-left:1px solid black;border-right:1px solid black;">
 

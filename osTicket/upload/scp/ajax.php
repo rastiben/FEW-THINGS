@@ -23,7 +23,6 @@ function staffLoginPage($msg='Unauthorized') {
 
 define('AJAX_REQUEST', 1);
 require('staff.inc.php');
-
 //Clean house...don't let the world see your crap.
 ini_set('display_errors', '0'); // Set by installer
 ini_set('display_startup_errors', '0'); // Set by installer
@@ -146,6 +145,12 @@ $dispatcher = patterns('',
     url('^/contrats', patterns('ajax.contrat.php:ContratsAjaxAPI',
         url_delete('^/(?P<id>\d+)$', 'delete'),
         url_post('^/(?P<id>\d+)$','update'),
+        url_post('$','add'),
+        url_get('$','index')
+    )),
+    url('^/stocks', patterns('ajax.stock.php:StocksAjaxAPI',
+        url_get('^/(?P<id>\d+)/historiques$','indexHistoriques'),
+        url_get('^/(?P<id>\d+)$','get'),
         url_post('$','add'),
         url_get('$','index')
     )),

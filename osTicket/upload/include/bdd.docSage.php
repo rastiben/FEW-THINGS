@@ -78,7 +78,7 @@ class bdd_docSage{
     /*Ligne type 3 = BL*/
     public function createDocLineCMUP($org,$piece,$line,$ref,$quantite,$stock,$designation,$prix){
         $date = date('\{\d Y-m-d\}');
-        $prepare = $this->DB->prepare("INSERT INTO F_DOCLIGNE (DL_No,DO_Domaine,DO_Type,CT_Num,DO_Date,DO_Piece,DL_Ligne,AR_Ref,EU_Qte,DL_Valorise,DL_Qte,DE_No,PF_Num,DL_DESIGN,DL_PrixUnitaire,EU_Enumere) VALUES (0,0,3,?,?,?,?,?,1,1,?,?,'',?,?,'". utf8_decode('Unité') ."')");
+        $prepare = $this->DB->prepare("INSERT INTO F_DOCLIGNE (DL_No,DO_Domaine,DO_Type,CT_Num,DO_Date,DO_Piece,DL_Ligne,AR_Ref,EU_Qte,DL_Valorise,DL_Qte,DE_No,PF_Num,DL_DESIGN,DL_PrixUnitaire,EU_Enumere,DL_CODETAXE1,DL_TAXE1) VALUES (0,0,3,?,?,?,?,?,1,1,?,?,'',?,?,'". utf8_decode('Unité') ."','C320',20)");
         $values = array($org,$date,$piece,$line,$ref,$quantite,$stock,utf8_decode($designation),$prix);
         $res = $this->DB->execute($prepare,$values);
         return $res;
@@ -87,7 +87,7 @@ class bdd_docSage{
     /*ligne with Serial number*/
     public function createDocLineSN($org,$piece,$line,$ref,$stock,$designation,$prix,$sn){
         $date = date('\{\d Y-m-d\}');
-        $prepare = $this->DB->prepare("INSERT INTO F_DOCLIGNE (DL_No,DO_Domaine,DO_Type,CT_Num,DO_Date,DO_Piece,DL_Ligne,AR_Ref,EU_Qte,DL_Valorise,DL_Qte,DE_No,PF_Num,DL_DESIGN,DL_PrixUnitaire,EU_Enumere,LS_NOSERIE) VALUES (0,0,3,?,?,?,?,?,1,1,1,?,'',?,?,'". utf8_decode('Unité') ."',?)");
+        $prepare = $this->DB->prepare("INSERT INTO F_DOCLIGNE (DL_No,DO_Domaine,DO_Type,CT_Num,DO_Date,DO_Piece,DL_Ligne,AR_Ref,EU_Qte,DL_Valorise,DL_Qte,DE_No,PF_Num,DL_DESIGN,DL_PrixUnitaire,EU_Enumere,LS_NOSERIE,DL_CODETAXE1,DL_TAXE1) VALUES (0,0,3,?,?,?,?,?,1,1,1,?,'',?,?,'". utf8_decode('Unité') ."',?,'C320',20)");
         $values = array($org,$date,$piece,$line,$ref,$stock,utf8_decode($designation),$prix,$sn);
         $res = $this->DB->execute($prepare,$values);
         return $res;
