@@ -9,7 +9,19 @@ if ($thisstaff && !strcasecmp($thisstaff->datetime_format, 'relative')) {
 
 $entryTypes = array('M'=>'message', 'R'=>'response', 'N'=>'note');
 $user = $entry->getUser() ?: $entry->getStaff();
-$name = $user ? $user->getName() : $entry->poster;
+//$name = $user ? $user->getFirstName() : $entry->poster;
+//var_dump($user);
+//var_dump()
+if(empty($user)){
+  $name = $entry->poster;
+} else {
+  if(array_key_exists('staff_id',$user->ht)){
+    $name = $user->getName();
+  } else {
+    $name = ucfirst($user->getFirstName()) . ' ' . ucfirst($user->getName());
+  }
+}
+
 $avatar = '';
 if ($user && $cfg->isAvatarsEnabled())
     $avatar = $user->getAvatar();
@@ -41,19 +53,20 @@ else
 
 <div class="thread-entry <?php echo $toWrite ?>">
 
-<?php if($toWrite == 'message'){ ?>
-<span class="<?php echo 'pull-left'; ?> avatar">
-
-    <img class="avatar" alt="Avatar" src="../assets/default/images/avatar.png"><?php echo '<span>' .  strtoupper(substr(Format::htmlchars($name),0,1)) . '</span>'?></img>
-</span>
-<?php } ?>
 <!--<?php if ($avatar) { ?>
     <span class="<?php echo 'pull-left'; ?> avatar">
 <?php echo $avatar; ?>
     </span>
 <?php } ?>-->
     <div class="header">
-        <div class="pull-right">
+      <?php if($toWrite == 'message'){ ?>
+        <span class="avatar">
+          <img class="avatar" alt="Avatar" src="../assets/default/images/avatar.png"><?php echo '<span>' .  strtoupper(substr(Format::htmlchars($name),0,1)) . '</span>'?></img>
+        </span>
+      <?php } else { ?>
+        <img src="../assets/avatar/<?php echo $avatar ?>"/>
+      <?php } ?>
+        <div class="pull-right" style="display:none">
 <?php   if ($entry->hasActions()) {
             $actions = $entry->getActions(); ?>
         <span class="muted-button pull-right" data-dropdown="#entry-action-more-<?php echo $entry->getId(); ?>">
@@ -90,15 +103,14 @@ else
         </span>
         </div>
 <?php
-        echo sprintf(__('<b>%s</b> posted %s'), $name,
-            sprintf('<a name="entry-%d" href="#entry-%1$s"><time %s
-                datetime="%s" data-toggle="tooltip" title="%s">%s</time></a>',
-                $entry->id,
-                $timeFormat ? 'class="relative"' : '',
-                date(DateTime::W3C, Misc::db2gmtime($entry->created)),
-                Format::daydatetime($entry->created),
-                $timeFormat ? $timeFormat($entry->created) : Format::datetime($entry->created)
-            )
+        echo sprintf(__('<b class="name">%s</b>'), $name);
+        echo sprintf('<div class="hour"><a name="entry-%d" href="#entry-%1$s"><time %s
+            datetime="%s" data-toggle="tooltip" title="%s">%s</time></a></div>',
+            $entry->id,
+            $timeFormat ? 'class="relative"' : '',
+            date(DateTime::W3C, Misc::db2gmtime($entry->created)),
+            Format::daydatetime($entry->created),
+            $timeFormat ? $timeFormat($entry->created) : Format::datetime($entry->created)
         );
         if($toWrite == 'note'){
         ?>
@@ -148,7 +160,7 @@ else
 <?php
     } ?>
 <?php if($toWrite == 'answer'){ ?>
-<div class="<?php echo 'pull-left'; ?> avatar"
+<!--<div class="<?php echo 'pull-left'; ?> avatar"
         style="position: absolute;
             width: 50px;
             height: 50px;
@@ -156,10 +168,9 @@ else
             top: -6px;
             background: url(../assets/avatar/<?php echo $avatar ?>) no-repeat center;
             background-size: 120%;"
-    ></div>
+    ></div>-->
 <!--<span class="pull-right avatar">
     <img class="avatar" alt="Avatar" src="../assets/avatar/<?php echo $avatar[0]['avatar'] ?>"/>
 </span>-->
 <?php } ?>
 </div>
-

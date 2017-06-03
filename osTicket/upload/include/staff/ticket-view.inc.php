@@ -1169,8 +1169,8 @@ if ($errors['err'] && isset($_POST['a'])) {
     <h4>Infos du demandeur</h4>
     <div class="avatar icon">
         <img width="50" src="../assets/default/images/avatar.png">
-        <h3><?php echo strtoupper(substr(Format::htmlchars($ticket->getName()),0,1)) ?></h3>
-        <a href="./users.php?id=<?php echo $ticket->getUserId() ?>#tickets"><span><?php echo Format::htmlchars($ticket->getName()) ?></span></a>
+        <h3><?php echo strtoupper(substr(Format::htmlchars(ucfirst($ticket->getUser()->getFirstName()) . ' ' . ucfirst($ticket->getUser()->getName())),0,1)) ?></h3>
+        <a href="./users.php?id=<?php echo $ticket->getUserId() ?>#tickets"><span><?php echo Format::htmlchars(ucfirst($ticket->getUser()->getFirstName()) . ' ' . ucfirst($ticket->getUser()->getName())) ?></span></a>
     </div>
     <div class="mail icon">
         <?php if(!empty($orgName)) { ?>

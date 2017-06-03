@@ -1,0 +1,62 @@
+html, body{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.container{
+    margin-top: 30px;
+}
+
+.video{
+    margin-bottom: 30px;
+}
+
+.video .thumbnails{
+    position: relative;
+}
+
+.video .thumbnails .date{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 10px;
+    background: #58D68D;
+    color: white;
+    font-size: 10px;
+}
+
+.video .thumbnails img{
+    width: 100%;
+}
+
+.video .infos{
+    background: white;
+    border: 1px solid lightgray;
+    min-height: 132px;
+    max-height: 132px;
+}
+
+.video .infos hr{
+    margin: 0px;
+}
+
+.video .infos .title h4{
+    margin: 0px;
+    line-height: 40px;
+    padding: 0px 10px 0px 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.video .infos .description{
+    padding: 10px;
+}
+
+.video .infos .description p{
+    height: 60px;
+    overflow: hidden;
+    /*white-space: pre;*/
+}

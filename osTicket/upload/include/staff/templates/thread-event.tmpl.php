@@ -1,6 +1,6 @@
 <div class="thread-event <?php echo $event->uid_type == 'U' ? 'user' : 'staff' ?> <?php if ($event->uid) echo 'action'; ?>">
             <?php
-            if($event->uid_type == 'U'){
+            if($event->uid_type == 'S'){
             ?>
             <span class="type-icon">
               <i class="faded icon-<?php echo $event->getIcon(); ?>"></i>
@@ -13,7 +13,7 @@
             </span>
 
             <?php
-            if($event->uid_type == 'S'){
+            if($event->uid_type == 'U'){
             ?>
             <span class="type-icon">
               <i class="faded icon-<?php echo $event->getIcon(); ?>"></i>

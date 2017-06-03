@@ -947,23 +947,30 @@ a#post-note:hover {
 
 .thread-entry {
     margin-bottom: 15px;
-    margin-left: 127px;
-    margin-right: 127px;
+    /*margin-left: 127px;
+    margin-right: 127px;*/
     margin-top: 15px;
     z-index: 0;
     position: relative;
+    width: calc(50% - 20px);
 }
 
 .thread-entry.message{
-    margin-right: 200px;
 }
+
 .thread-entry.answer{
-    margin-left: 200px;
+    margin-left: calc(50% + 20px);
+}
+
+.thread-entry.note{
+  margin: 0 auto;
+  margin-bottom: 15px;
+  margin-top: 15px;
 }
 
 .thread-entry::after {
   content: "";
-  border-bottom: 2px solid whitesmoke;
+  /*border-bottom: 2px solid whitesmoke;*/
   display: block;
 }
 .thread-entry::before {
@@ -1012,18 +1019,32 @@ img.avatar {
 }
 
 .thread-entry .header img{
-    width: 27px;
-    float: left;
+    width: 50px;
+    float: right;
     margin-top: -3px;
-    margin-right: 15px;
+    border-radius: 50%;
 }
 
 .thread-entry .header {
     padding: 8px 0.9em;
     border: 1px solid #ccc;
     border-color: rgba(0,0,0,0.2);
-    border-radius: 5px 5px 0 0;
+    border-radius: 3px 3px 0 0;
+    height: 62px;
 }
+
+.thread-entry .header .hour{
+  float: left;
+  margin-top: -3px;
+  margin-left: 2px;
+}
+
+.thread-entry .header .name{
+    position: absolute;
+    left: 15px;
+    bottom: 5px;
+}
+
 .thread-entry.message .header:before,
 .thread-entry.answer .header:before{
   position: absolute;
@@ -1051,14 +1072,14 @@ img.avatar {
     position: relative;
 }
 
-.thread-entry.message .header:before {
+.thread-entry.answer .header:before {
     border-right: 8px solid darkgray;
     top: 7px;
     left: -8px;
     right: initial;
     border-left: none;
 }
-.thread-entry.answer .header:before{
+.thread-entry.message .header:before{
     border-left: 8px solid #a69c81;
     top: 7px;
     right: -8px;
@@ -1070,8 +1091,8 @@ img.avatar {
     background-color: #f4f4f4;
 }
 
-.thread-entry.message .header:after{
-    border-left: 7px solid #C3D9FF;
+.thread-entry.answer .header:after{
+    border-right: 7px solid beige;
     margin-right: 1px;
     top: 7px;
     left: -8px;
@@ -1080,8 +1101,8 @@ img.avatar {
     margin-left: 1px;
 }
 
-.thread-entry.answer .header:after{
-    border-left: 7px solid beige;
+.thread-entry.message .header:after{
+    border-left: 7px solid aliceblue;
     margin-right: 1px;
     top: 7px;
     right: -8px;
@@ -1090,9 +1111,9 @@ img.avatar {
     margin-left: 1px;
 }
 
-.thread-entry.message .header:after{
+/*.thread-entry.message .header:after{
     border-right: 7px solid aliceblue;
-}
+}*/
 
 .thread-entry .header .title {
     max-width: 500px;
@@ -1107,8 +1128,11 @@ img.avatar {
 .thread-entry .thread-body {
     border: 1px solid #ccc;
     border-top: none;
-    border-bottom:2px solid #aaa;
-    border-radius: 0 0 5px 5px;
+    border-radius: 0 0 3px 3px;
+    width: 100%;
+    -webkit-box-shadow: 0px 10px 17px -10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 10px 17px -10px rgba(0,0,0,0.75);
+    box-shadow: 0px 10px 17px -10px rgba(0,0,0,0.75);
 }
 .thread-body .attachments {
   background-color: #f4faff;
@@ -2857,16 +2881,16 @@ td.indented {
   border-left: 2px dotted #ddd;
   border-bottom-color: rgba(0,0,0,0.1);
   position: absolute;
-  margin-left: 74px;
+  /*margin-left: 74px;*/
   z-index: -1;
   content: "";
   top: -15px;
   bottom: 0;
   right: 0;
-  left: 0;
+  left: 50%;
 }
 
-#thread-items::after {
+/*#thread-items::after {
     border-left: 2px dotted #ddd;
     border-bottom-color: rgba(0,0,0,0.1);
     position: absolute;
@@ -2876,7 +2900,7 @@ td.indented {
     top: -15px;
     bottom: 0;
     right: 0;
-}
+}*/
 
 #thread-items {
   z-index: 0;
@@ -2887,19 +2911,28 @@ td.indented {
 }
 
 .thread-event.user {
-    padding: 0 2px 15px;
-    margin-left: 60px;
-    text-align: left;
+  width: calc(50% + 20px);
+  text-align: right;
+  padding: 0 2px 15px;
 }
 .thread-event.staff {
-    padding: 0 2px 15px;
-    margin-right: 54px;
-    text-align: right;
+  padding: 0 2px 25px;
+  text-align: left;
+  padding-left: 50%;
 }
 
-.thread-event.staff span:first-child{
-    margin-right: 35px;
+.thread-event.staff .description{
+  margin-left: 20px;
+  position: absolute;
 }
+
+.thread-event.staff .type-icon{
+  margin-left: -12px;
+}
+
+/*.thread-event.staff span:first-child{
+    margin-right: 35px;
+}*/
 
 .thread-event a {
     color: inherit;
@@ -2941,10 +2974,10 @@ td.indented {
 .thread-event .description {
     margin-left: 0px;
     padding-top: 6px;
-    padding-left: 30px;
+    /*padding-left: 30px;*/
     display: inline-block;
-    width: 772px;
-    width: calc(100% - 95px);
+    /*width: 772px;
+    width: calc(100% - 95px);*/
     line-height: 1.4em;
 }
 
@@ -3189,7 +3222,7 @@ canvas.chart{
 
 .avatar{
     position: relative;
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
 }
 
 .avatar h3{
@@ -3210,7 +3243,18 @@ position: absolute;
 }*/
 
 span.avatar{
-    top:7%;
+    /*top:7%;*/
+    position: absolute;
+    right: 15px;
+}
+
+span.avatar span{
+    position: absolute;
+    left: 50%;
+    margin-left: -7px;
+    top: 50%;
+    margin-top: -16px;
+    font-size: 20px;
 }
 
 .mail.icon img{
